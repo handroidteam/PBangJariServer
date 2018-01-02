@@ -1,4 +1,3 @@
 .gitignore
 bin/config.js
 node_modules/
-bin/config.js
