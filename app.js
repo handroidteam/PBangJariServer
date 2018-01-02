@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var config = require('./config');
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
@@ -47,7 +49,7 @@ store.on('error', function(err) {
 
 //session 설정
 app.use(session({
-  secret: 'asgnsidjfalsdjf;sadf;sadfoew;',
+  secret: config.values.sessionSecret,
   resave: true,
   saveUninitialized: true,
   cookie: {
@@ -83,8 +85,8 @@ passport.deserializeUser(function(id, done) {
 
 //카카오 로그인 설정
 passport.use('kakao', new KakaoStrategy({
-    clientID: '',
-    clientSecret: '',
+    clientID: config.values.clientID,
+    clientSecret: config.values.clientSecret,
     callbackURL: 'http://localhost:3000/callback'
   },
   function(accessToken, refreshToken, profile, cb) {

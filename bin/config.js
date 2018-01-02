@@ -1,2 +1,5 @@
-var config_port = '3000';
-module.exports.config_port = config_port;
+var values = {
+    port: '3000',
+    sessionSecret: 'asgnsidjfalsdjf;sadf;sadfoew;'
+}
+module.exports.values = values;
