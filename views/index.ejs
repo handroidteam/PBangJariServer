@@ -1,166 +1,70 @@
-<!DOCTYPE html>
-<html lang="ko">
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>피방자리</title>
 
-<head>
-  <!-- Theme Made By www.w3schools.com - No Copyright -->
-  <title>피방자리</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="/stylesheets/styles.css">
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-</head>
-
-<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
-
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-        <a class="navbar-brand" href="#myPage">피방자리</a>
-      </div>
-      <div class="collapse navbar-collapse" id="myNavbar">
-        <ul class="nav navbar-nav navbar-right">
-          <% if(!ceoName) {%>
-            <li><a data-toggle="modal" data-target="#modalOfLogin">로그인</a></li>
-            <% } else{ %>
-              <li><a href='/logout'>로그아웃</a></li>
-              <li><a href='/'>마이페이지</a></li>
-              <% }%>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- login Modal -->
-  <div class="modal fade" id="modalOfLogin" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">CEO 로그인</h4>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="stylesheets/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    </head>
+    <body>
+    <div class="section no-pad-bot blue-grey darken-3" id="index-banner">
+        <div class="container">
+        <br><br>
+        <h1 class="header center white-text"><img src="images/logo.png" alt="logo"></h1>
+        <div class="row center">
+            <h5 class="header col s12 light white-text">PCBang Administrator Page</h5>
         </div>
-        <div class="modal-body text-center">
-          <!-- 카카오 로그인-->
-          <a href="/kakao"> <img id="kakao-login-btn" src="images/kakao_account_login_btn_medium_narrow.png"onmouseover="this.src='images/kakao_account_login_btn_medium_narrow_ov.png'" onmouseout="this.src='images/kakao_account_login_btn_medium_narrow.png'" border="0"> </a>
+        <div class="row center" style="padding: 150px 0">
+            <% if(!ceoName) {%>
+                <a href="/auth/kakao">
+                    <img id="kakao-login-btn"
+                        src="images/kakao_account_login_btn_medium_narrow.png"
+                        onmouseover="this.src='images/kakao_account_login_btn_medium_narrow_ov.png'"
+                        onmouseout="this.src='images/kakao_account_login_btn_medium_narrow.png'" border="0">
+                </a>
+            <% } else { %>
+                <a href="/auth/kakao" 
+                    id="kakao-login-btn"
+                    class="btn-large waves-effect waves-light pulse blue-grey lighten-2">Get Started
+                </a>
+            <% } %>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <br><br>
+
         </div>
-      </div>
     </div>
-  </div>
 
-  <div class="jumbotron text-center">
-    <h1>피 방 자 리</h1>
-    <p>We'll get seats.</p>
-    <form>
-      <div class="input-group">
-        <input type="text" class="form-control text-center" size="30" placeholder="피방 이름" required>
-        <div class="input-group-btn">
-          <button type="button" class="btn btn-success">검색</button>
+
+    <footer class="page-footer black">
+        <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+            <h4 class="white-text">We are Handroid Team!</h4>
+            <br /><br />
+            <h5 class="white-text">Company Bio</h5>
+            <ul>
+                <li><a class="white-text" href="#!">Development Team : Handroid</a></li>
+                <li><a class="white-text" href="#!">Phone : +82 10 8572 7503</a></li>
+                <li><a class="white-text" href="#!">E-mail : pmpdeveloper1@gmail.com</a></li>
+            </ul>
+            </div>
         </div>
-      </div>
-    </form>
-  </div>
+        </div>
+        <div class="footer-copyright">
+        <div class="container">
+        Made by <a class="orange-text text-lighten-3" href="http://www.hansung.ac.kr">Handroid</a>
+        </div>
+        </div>
+    </footer>
 
-  <!-- Container (Services Section) -->
-  <div id="services" class="container-fluid text-center">
-    <h2>SERVICES</h2>
-    <h4>What we offer</h4>
-    <br>
-    <div class="row slideanim">
-      <div class="col-sm-4">
-        <span class="glyphicon glyphicon-off logo-small"></span>
-        <h4>POWER</h4>
-        <p>Lorem ipsum dolor sit amet..</p>
-      </div>
-      <div class="col-sm-4">
-        <span class="glyphicon glyphicon-heart logo-small"></span>
-        <h4>LOVE</h4>
-        <p>Lorem ipsum dolor sit amet..</p>
-      </div>
-      <div class="col-sm-4">
-        <span class="glyphicon glyphicon-lock logo-small"></span>
-        <h4>JOB DONE</h4>
-        <p>Lorem ipsum dolor sit amet..</p>
-      </div>
-    </div>
-    <br><br>
-    <div class="row slideanim">
-      <div class="col-sm-4">
-        <span class="glyphicon glyphicon-leaf logo-small"></span>
-        <h4>GREEN</h4>
-        <p>Lorem ipsum dolor sit amet..</p>
-      </div>
-      <div class="col-sm-4">
-        <span class="glyphicon glyphicon-certificate logo-small"></span>
-        <h4>CERTIFIED</h4>
-        <p>Lorem ipsum dolor sit amet..</p>
-      </div>
-      <div class="col-sm-4">
-        <span class="glyphicon glyphicon-wrench logo-small"></span>
-        <h4 style="color:#303030;">HARD WORK</h4>
-        <p>Lorem ipsum dolor sit amet..</p>
-      </div>
-    </div>
-  </div>
 
-  <footer class="container-fluid text-center">
-    <a href="#myPage" title="To Top">
-    <span class="glyphicon glyphicon-chevron-up"></span>
-  </a>
-    <p>produced by Handroid</p>
-  </footer>
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/materialize.min.js"></script>
+    <script src="javascripts/init.js"></script>
 
-  <script>
-    $(document).ready(function() {
-      // Add smooth scrolling to all links in navbar + footer link
-      $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
-        // Make sure this.hash has a value before overriding default behavior
-        if (this.hash !== "") {
-          // Prevent default anchor click behavior
-          event.preventDefault();
-
-          // Store hash
-          var hash = this.hash;
-
-          // Using jQuery's animate() method to add smooth page scroll
-          // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
-          $('html, body').animate({
-            scrollTop: $(hash).offset().top
-          }, 900, function() {
-
-            // Add hash (#) to URL when done scrolling (default click behavior)
-            window.location.hash = hash;
-          });
-        } // End if
-      });
-
-      $(window).scroll(function() {
-        $(".slideanim").each(function() {
-          var pos = $(this).offset().top;
-
-          var winTop = $(window).scrollTop();
-          if (pos < winTop + 600) {
-            $(this).addClass("slide");
-          }
-        });
-      });
-    })
-  </script>
-
-</body>
-
-</html>
+    </body>
+    </html>

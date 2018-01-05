@@ -1,5 +1,5 @@
 {
-  "name": "server-pbangjari",
+  "name": "pbangjaritest",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "assert": "^1.4.1",
-    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
     "connect-mongodb-session": "^1.4.0",
     "cookie-parser": "~1.4.3",
@@ -16,11 +15,10 @@
     "express": "~4.15.5",
     "express-session": "^1.15.6",
     "helmet": "^3.9.0",
-    "mongoose": "^4.13.7",
+    "mongoose": "^5.0.0-rc2",
     "morgan": "~1.9.0",
     "passport": "^0.4.0",
     "passport-kakao": "0.0.5",
-    "ping": "^0.2.2",
     "serve-favicon": "~2.4.5"
   }
 }
