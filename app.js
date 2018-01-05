@@ -146,7 +146,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // favicon 설정
-app.use(favicon(path.join(__dirname, 'public', 'images/logo.png')));
+app.use(favicon(path.join(__dirname, 'public', 'images/pbangjari-logo.png')));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());

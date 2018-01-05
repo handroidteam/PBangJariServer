@@ -2,3 +2,6 @@ bin/config.js
 node_modules/
 .vscode/
 .DS_Store
+public/stylesheets/materialize.css
+public/javascripts/materialize.js
+.eslintrc.js
