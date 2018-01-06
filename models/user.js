@@ -9,17 +9,24 @@ var userSchema = new Schema(
         name: String,
         distinguishID: String,
         token: String,
-        lastvisited: Date,
+        createdDate: {
+            type: Date,
+            default: Date.now
+        },
+        lastVisited: {
+            type: Date,
+            default: Date.now
+        },
+        lastModified: {
+            type: Date,
+            default: '없음'
+        },
         markPCBang: [
             {
                 type: Schema.Types.ObjectId,
                 ref: 'pcBang'
             }
         ],
-        createDate: {
-            type: Date,
-            default: Date.now
-        }
     }
 );
 module.exports = mongoose.model('user', userSchema);

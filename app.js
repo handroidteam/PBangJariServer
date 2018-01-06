@@ -12,7 +12,7 @@ var Ceo             = require('./models/ceo');
 
 var config          = require('./bin/config');
 
-var app = express();
+const app = express();
 
 // DB 설정
 var mongoose = require('mongoose');
@@ -125,7 +125,7 @@ passport.use('kakao', new KakaoStrategy(
                 var tmp2 = new Date();
                 Ceo.findByIdAndUpdate(ceo._id, {
                     $set: {
-                        lastvisited: tmp2,
+                        lastVisited: tmp2,
                         token: tmp
                     }
                 }, function(err, ceo) {

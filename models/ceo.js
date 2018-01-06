@@ -9,11 +9,18 @@ var ceoSchema = new Schema(
         name: String,
         distinguishID: String,
         token: String,
-        lastvisited: Date,
-        createDate: {
+        createdDate: {
             type: Date,
             default: Date.now
-        }
+        },
+        lastVisited: {
+            type: Date,
+            default: Date.now
+        },
+        modifiedDate: {
+            type: Date,
+            default: ''
+        },
     }
 );
 
