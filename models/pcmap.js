@@ -6,13 +6,13 @@ var Schema = mongoose.Schema;
 var pcMapSchema = new Schema(
     {
         pcBangId: {
-            type: Schema.Types.ObjectId,
-            ref: 'pcBang',
+            type: String,
             require: true
         },
         floor: {
             type: Number,
-            default: 1
+            default: 1,
+            require: true
         },
         pcTableSize: {
             horizontal: {

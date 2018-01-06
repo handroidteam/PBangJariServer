@@ -15,7 +15,7 @@
     <br><br>
     <h1 class="header center white-text"><img src="images/pbangjari-logo.png" alt="logo"></h1>
     <div class="row center">
-        <h5 class="header col s12 light white-text">PCBang Administrator Page</h5>
+        <h5 class="header col s12 light white-text">Admin Page</h5>
     </div>
     <div class="row center" style="padding: 150px 0">
         <% if(!ceoName) { %>
@@ -37,6 +37,14 @@
     </div>
 </div>
 
+<% if(!ceoName) {}
+    else { %>
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large pulse blue-grey lighten-2" href="/logout">
+        Bye! <!--<i class="material-icons">clear</i>-->
+    </a>
+</div>
+<% } %>
 
 <footer class="page-footer black">
     <div class="container">
@@ -46,9 +54,9 @@
         <br /><br />
         <h5 class="white-text">Company Bio</h5>
         <ul>
-            <li><a class="white-text" href="#!">Development Team : Handroid</a></li>
-            <li><a class="white-text" href="#!">Phone : +82 10 8572 7503</a></li>
-            <li><a class="white-text" href="#!">E-mail : pmpdeveloper1@gmail.com</a></li>
+            <li><a class="white-text" href="http://hansung.ac.kr">Development Team : Handroid</a></li>
+            <li><a class="white-text" href="tel:+821085727503">Phone : +82 10 8572 7503</a></li>
+            <li><a class="white-text" href="mailto:pmpdeveloper1@gmail.com">E-mail : pmpdeveloper1@gmail.com</a></li>
         </ul>
         </div>
     </div>
