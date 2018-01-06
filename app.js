@@ -1,16 +1,17 @@
-var express         = require('express');
-var path            = require('path');
-var favicon         = require('serve-favicon');
-var logger          = require('morgan');
-var cookieParser    = require('cookie-parser');
-var bodyParser      = require('body-parser');
+const express         = require('express');
+const path            = require('path');
+const favicon         = require('serve-favicon');
+const logger          = require('morgan');
+const cookieParser    = require('cookie-parser');
+const bodyParser      = require('body-parser');
+const passport        = require('passport'); require('./passport');
 
-var index           = require('./routes/index');
-var users           = require('./routes/users');
+const index           = require('./routes/index');
+const users           = require('./routes/users');
 
-var Ceo             = require('./models/ceo');
+// var Ceo             = require('./models/ceo');
 
-var config          = require('./bin/config');
+const config          = require('./bin/config');
 
 const app = express();
 
@@ -27,17 +28,12 @@ db.once('open', function() {
 
 /***************************************************************/
 // session 및 보안 설정을 위한 모듈
-var session         = require('express-session');
-var helmet          = require('helmet');
-var assert          = require('assert');
-
-// 카카오 로그인 구현
-var passport        = require('passport');
-var KakaoStrategy   = require('passport-kakao').Strategy;
-
+const session         = require('express-session');
+const helmet          = require('helmet');
+const assert          = require('assert');
 
 // MongoDB store 설정, session은 express-session에서 선언한 session
-var MongoDBStore = require('connect-mongodb-session')(session);
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 var store = new MongoDBStore(
     {
@@ -81,63 +77,6 @@ app.use(passport.initialize());
 // passport 세션 사용
 app.use(passport.session());
 
-
-// DB에서 찾은 사용자의 정보를 세션에 저장
-passport.serializeUser(function(ceo, done) {
-    done(null, ceo._id);
-});
-passport.deserializeUser(function(id, done) {
-    Ceo.findOne({
-        _id: id
-    }, function(err, ceo) {
-        done(err, ceo);
-    });
-});
-
-passport.use('kakao', new KakaoStrategy(
-    {
-        clientID: config.clientID,
-        clientSecret: config.clientSecret,
-        callbackURL: '/kakao_oauth'
-    },
-    function(accessToken, refreshToken, profile, done) {
-        Ceo.findOne({
-            sns: 'kakao',
-            distinguishID: profile.id
-        }, function(err, ceo) {
-            if(err) {
-                return done(err);
-            }
-            if(!ceo) {
-                Ceo.create({
-                    name: profile.displayName,
-                    sns: profile.provider,
-                    distinguishID: profile.id,
-                    token: accessToken
-                }, function(err, ceo) {
-                    if(err) {
-                        return done(err);
-                    }
-                    done(null, ceo);
-                });
-            } else {
-                var tmp = accessToken;
-                var tmp2 = new Date();
-                Ceo.findByIdAndUpdate(ceo._id, {
-                    $set: {
-                        lastVisited: tmp2,
-                        token: tmp
-                    }
-                }, function(err, ceo) {
-                    if(err) {
-                        return done(err);
-                    }
-                    else done(null, ceo);
-                });
-            }
-        });
-    }
-));
 /***************************************************************/
 
 
