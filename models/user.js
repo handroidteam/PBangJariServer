@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema(
     {
-        sns: String,
+        sns: String,    // 로그인 방법에 따라 결정 ex)kakao
         name: String,
         distinguishID: String,
         token: String,
@@ -21,7 +21,7 @@ var userSchema = new Schema(
             type: Date,
             default: '없음'
         },
-        markPCBang: [
+        markPCBang: [   // 즐겨찾기 한 PC방 저장
             {
                 type: Schema.Types.ObjectId,
                 ref: 'pcBang'
