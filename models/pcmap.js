@@ -9,34 +9,36 @@ var pcMapSchema = new Schema(
             type: String,
             require: true
         },
-        floor: {                // 맵 구현 층 (기본 : 1)
-            type: Number,
-            default: 1,
-            require: true
-        },
-        TableSize: {            // 자리 배치 사이즈 (한 층 가로, 세로)
-            horizontal: {
-                type: Number,
+        tableSize: {                // 자리 배치 사이즈 (한 층 가로, 세로)
+            col: {
+                type: Number,       // 가로 크기
                 require: true
             },
-            vertical: {
+            row: {                  // 세로 크기
                 type: Number,
                 require: true
             }
         },
-        pcNumberArray: [{       // PC번호
-            type: Number
-        }],
-        pcPlaceArray: [{        // 좌석번호
-            type: Number
-        }],
-        pcIPArray: [{           // PC 각 IP
-            type: String
-        }],
-        pcFlagArray: [{         // 켜진 IP 확인
-            type: Boolean
-        }],
-        lastSearch: {           // PC 전원 마지막 확인 시간
+        pc: [
+            {
+                floor: {            // PC 위치(층)
+                    type: Number
+                },
+                pcNumber: {         // PC 번호
+                    type: Number
+                },
+                pcPlace: {          // 좌석번호
+                    type: Number
+                },
+                pcIP: {             // IP
+                    type: String
+                },
+                pcFlag: {           // 켜진 PC 확인
+                    type: Boolean
+                }
+            }
+        ],
+        lastSearchDate: {           // 마지막 Ping Test 시간
             type: Date,
             default: Date.now
         }
