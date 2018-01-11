@@ -19,12 +19,11 @@ var userSchema = new Schema(
         },
         lastModified: {
             type: Date,
-            default: '없음'
+            default: ''
         },
         markPCBang: [   // 즐겨찾기 한 PC방 저장
             {
-                type: Schema.Types.ObjectId,
-                ref: 'pcBang'
+                type: String,
             }
         ],
     }
