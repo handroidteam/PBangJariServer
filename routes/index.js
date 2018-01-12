@@ -53,4 +53,8 @@ router.get('/logout', function(req, res) {
     });
 });
 
+router.get('/newinfo', function(req, res) {
+  res.render('inputPBangData')
+})
+
 module.exports = router;
