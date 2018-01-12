@@ -6,24 +6,29 @@ const ceoSchema = new Schema(
         sns: String,            // 로그인 방법에 따라 결정 ex)kakao
         name: String,           // CEO 이름
         profileID: String,      // 카카오 계정 - profile.id
-        token: String,          // 카카오 계정 - accessToken
-        ownPCBang: [{           // CEO가 소유한 PC방 리스트
-            type: String
-        }],
+        accessToken: String,    // 카카오 계정 - accessToken
+        ownPCBang: [
+            {                   // CEO가 소유한 PC방 리스트
+                type: String
+            }
+        ],
         createdDate: {
             type: Date,
             default: Date.now
         },
-        lastVisited: {
+        lastVisitedDate: {
             type: Date,
             default: Date.now
         },
-        modifiedDate: {
+        lastModifiedDate: {
             type: Date,
-        },
+        }
     }
 );
 
+
+// 외부 사용 가능 함수
+// CEO DB 검색 함수
 ceoSchema.statics.findCeoByKakaoID = function(id) {
     return this.findOne( { sns: 'kakao' }, { profileID: id } );
 };
@@ -33,7 +38,7 @@ ceoSchema.statics.createCeoDB = function({ displayName, provider, id, accessToke
         name: displayName,
         sns: provider,
         profileID: id,
-        token: accessToken
+        accessToken: accessToken
     });
     return ceo.save();
 };
