@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 // PC방 정보의 경우 CEO 등록 후에는 CEO만 수정 가능하도록
 var pcBangSchema = new Schema(
     {
-        registerd: {                    // CEO 등록 완료?
+        registered: {                   // CEO 등록 완료?
             type: Boolean,
             default: false
         },

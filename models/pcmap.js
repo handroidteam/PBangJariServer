@@ -16,10 +16,10 @@ var pcMapSchema = new Schema(       // PC방 자리배치 정보
                     require: true
                 },
                 col: {
-                    type: Number,       // 가로 크기
+                    type: Number,   // 가로 크기
                     require: true
                 },
-                row: {                  // 세로 크기
+                row: {              // 세로 크기
                     type: Number,
                     require: true
                 }
