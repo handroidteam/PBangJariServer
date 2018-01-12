@@ -6,6 +6,10 @@ var Schema = mongoose.Schema;
 // PC방 정보의 경우 CEO 등록 후에는 CEO만 수정 가능하도록
 var pcBangSchema = new Schema(
     {
+        registerd: {                    // CEO 등록 완료?
+            type: Boolean,
+            default: false
+        },
         pcBangName: {                   // PC방 이름 (한글 우선)
             type: String,
             require: true
@@ -20,6 +24,15 @@ var pcBangSchema = new Schema(
             detailAddress: String,
             require: true
         },
+        location: {                     // 위도, 경도
+            lan: String,
+            lat: String
+        },
+        nearStation: [                  // 주변 지하철역
+            {
+                type: String
+            }
+        ],
         adminIPAddress: [               // 사용하는 IP 주소 입력 (도메인 앞 세자리)
             {
                 first: {
@@ -31,6 +44,23 @@ var pcBangSchema = new Schema(
                 third: {
                     type: Number
                 }
+            }
+        ],
+        userReview: [                   // 리뷰
+            {
+                reviewSubject: String,  // 리뷰 제목
+                reviewContent: String,  // 리뷰 설명
+                rating: [               // 평가 점수
+                    {
+                        type: Number,
+                        default: 0
+                    }
+                ],
+                writtenDate: {          // 리뷰 작성 날짜
+                    type: Date,
+                    default: Date.now
+                },
+                writtenBy: String,      // 리뷰 작성 유저
             }
         ],
         event: [                        // 이벤트 관련
@@ -60,12 +90,11 @@ var pcBangSchema = new Schema(
         },
         modifiedDate: {
             type: Date,
-            // default: '없음'
-            // null, 혹은 코드 삭제 테스트 필요
+            default: ''
         },
         modifiedBy: {
             type: Date,
-            // default: '없음'
+            default: ''
         }
     }
 );

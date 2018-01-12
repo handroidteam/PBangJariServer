@@ -4,5 +4,3 @@ public/javascripts/materialize.js
 public/stylesheets/materialize.css
 .vscode/
 .DS_Store
-.eslintrc.js
-README.md
