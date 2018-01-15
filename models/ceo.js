@@ -27,12 +27,13 @@ const ceoSchema = new Schema(
 );
 
 
-// 외부 사용 가능 함수
+////////////////// 외부 사용 가능 함수 //////////////////
 // CEO DB 검색 함수
 ceoSchema.statics.findCeoByKakaoID = function(id) {
-    return this.findOne( { sns: 'kakao' }, { profileID: id } );
+    return this.findOne( { sns: 'kakao', profileID: id } );
 };
 
+// CEO DB 생성 함수 (최초 로그인 시 사용)
 ceoSchema.statics.createCeoDB = function({ displayName, provider, id, accessToken}) {
     const ceo = new this({
         name: displayName,
@@ -41,6 +42,13 @@ ceoSchema.statics.createCeoDB = function({ displayName, provider, id, accessToke
         accessToken: accessToken
     });
     return ceo.save();
+};
+
+// CEO 삭제 함수
+ceoSchema.statics.deleteCeoByKakaoID = function(id) {
+    return this.remove( {sns: 'kakao', profileID: id }, (err) => {
+        if(err) throw err;
+    } );
 };
 
 module.exports = mongoose.model('ceo', ceoSchema);

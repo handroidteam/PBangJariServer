@@ -10,6 +10,9 @@ var pcBangSchema = new Schema(
             type: Boolean,
             default: false
         },
+        licenseNumber: {                // 사업자 등록번호
+            type: String,
+        },
         pcBangName: {                   // PC방 이름 (한글 우선)
             type: String,
             require: true
@@ -22,7 +25,6 @@ var pcBangSchema = new Schema(
             postCode: String,
             roadAddress: String,
             detailAddress: String,
-            require: true
         },
         location: {                     // 위도, 경도
             lan: String,
@@ -44,6 +46,26 @@ var pcBangSchema = new Schema(
                 third: {
                     type: Number
                 }
+            }
+        ],
+        pcSpec: {                       // PC 스펙 (프론트에서 미리 틀 걸러야함)
+            CPU: {
+                type: String,
+                require: true
+            },
+            RAM: {
+                type: String,
+                require: true
+            },
+            VGA: {
+                type: String,
+                require: true
+            }
+        },
+        pcBangImage: [                  // PC방 이미지
+            {
+                data: Buffer,
+                contentType: String
             }
         ],
         userReview: [                   // 리뷰

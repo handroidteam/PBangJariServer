@@ -49,5 +49,5 @@ passport.use('kakao',
                 done(error);
             }
         );
-    }
-    ));
+    })
+);
