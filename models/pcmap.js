@@ -9,9 +9,9 @@ var pcMapSchema = new Schema(       // PC방 자리배치 정보
             type: String,
             require: true
         },
-        tableSize: [
-            {                       // 자리 배치 사이즈 (한 층 가로, 세로)
-                floor: {
+        tableSize: [                // 자리 배치 사이즈 (한 층 가로, 세로)
+            {
+                floor: {            // 몇 층의 자리 배치도인지?
                     type: Number,
                     require: true
                 },
@@ -41,9 +41,6 @@ var pcMapSchema = new Schema(       // PC방 자리배치 정보
                 },
                 availableFlag: {    // 사용 가능한 PC인지 확인
                     type: Number    // 0 -> 점검중, 1 -> On, 2 -> Off
-                },
-                onOffFlag: {        // 켜진 PC 확인
-                    type: Boolean
                 }
             }
         ],
