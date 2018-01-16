@@ -31,10 +31,6 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/home', function(req, res, next) {
-    res.render('index');
-});
-
 router.get('/auth/kakao', isLoggedIn, passport.authenticate('kakao', {
     successRedirect: '/',       // 성공하면 index로
     failureRedirect: '/fail'    // 실패하면 fail로
