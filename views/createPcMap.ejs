@@ -5,139 +5,172 @@
   <meta charset="utf-8">
   <title>createPcMap</title>
   <style>
-  header{text-align: center; margin-top: 100px;}
-  fieldset{text-align: center; height: 100px; padding-bottom: 20px;}
-  #insertTd {
-    width: 50px;
-    height: 50px;
-    background-color: yellow;
-  }
+    header {
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    fieldset {
+      text-align: center;
+      height: 100px;
+      padding-bottom: 20px;
+    }
+
+    .insertTd {
+      width: 50px;
+      height: 50px;
+      background-color: yellow;
+    }
   </style>
 </head>
 
 <body>
   <header>
-    <p><img src = "./pibang.png" width="320" height="100" alt="logo" text-align="center"></p>
+    <p><img src="./pibang.png" width="320" height="100" alt="logo" text-align="center"></p>
   </header>
   <fieldset align="center">
-    <legend><h2>좌석등록</h2></legend>
-    <span><label>행 : [<span id="cols">10</span>]</label></span>
-    <span><label>열 : [<span id="rows">10</span>]</label></span>
-    <span><label>층 : <input type="number" name="rows" value="1" style="width:40px"></label></span>
-    <input type="button" onclick="plusUp()" value="Up+">
-    <input type="button" onclick="minorUp()" value="Up-">
-    <input type="button" onclick="plusDown()" value="Down+">
-    <input type="button" onclick="minorDown()" value="Down-">
-    <input type="button" onclick="plusLeft()" value="Left+">
-    <input type="button" onclick="minorLeft()" value="Left-">
-    <input type="button" onclick="plusRight()" value="Right+">
-    <input type="button" onclick="minorRight()" value="Right-">
+    <legend>
+      <h2>좌석등록</h2></legend>
+    <span><label>행 : [<span id="cols">10</span>]</label>
+    </span>
+    <span><label>열 : [<span id="rows">10</span>]</label>
+    </span>
+    <span><label>층 : <input type="number" name="floor" value="1" style="width:40px"></label></span>
+    <input type="button" onclick="addTopLine()" value="Top+">
+    <input type="button" onclick="removeTopLine()" value="Top-">
+    <input type="button" onclick="addBottomLine()" value="Bottom+">
+    <input type="button" onclick="removeBottomLine()" value="Bottom-">
+    <input type="button" onclick="addLeftLine()" value="Left+">
+    <input type="button" onclick="removeLeftLine()" value="Left-">
+    <input type="button" onclick="addRightLine()" value="Right+">
+    <input type="button" onclick="removeRightLine()" value="Right-">
   </fieldset>
-  <div id="MapTable">
+
+  <div id="MapDiv">
+
   </div>
+
   <script>
     var pcNum = []; // pc방 컴퓨터 배열
-    var maxCol = 10;
-    var maxRow = 10;
-    createPcMap(maxCol, maxRow); // page 열면 10x10 테이블 출력
+    var PcTable = document.createElement("table"); // 표시할 테이블
+    PcTable.setAttribute("id", "PcMap");
+    createPcMap(5, 5); // page 열면 10x10 테이블 출력
 
-    function createPcMap(co, ro) {
-      var newtable = document.createElement("table"); // 표시할 테이블
-      newtable.setAttribute("id", "PcTable");
-
-      for (var i = 0; i < co; i++) {
+    function createPcMap(ro, co) {
+      for (var i = 0; i < ro; i++) {
         var newTr = document.createElement("tr");
-        newTr.setAttribute("id", "PcMap");
-
-        for (var j = 0; j < ro; j++) {
+        for (var j = 0; j < co; j++) {
           var td = document.createElement("td");
-          insertMap(td);
+          insertTd(td);
+          td.innerHTML = i * 10 + j + 1;
           newTr.appendChild(td);
         }
-        newtable.appendChild(newTr);
+        PcTable.appendChild(newTr);
       }
-      // console.log(newtable); // 주석처리
+      // console.log(PcTable); // 주석처리
 
-      var MapTable = document.getElementById("MapTable"); // MapTable에 추가
-      MapTable.appendChild(newtable);
+      var MapDiv = document.getElementById("MapDiv"); // MapTable에 추가
+      MapDiv.appendChild(PcTable);
     }
-    function insertMap(p){
-      p.setAttribute("id", "insertTd");
+
+    function changePcMapNum(ro, co) {
+      for (var i = 0; i < ro; i++) {
+        for (var j = 0; j < co; j++) {
+          PcTable.children[i].children[j].innerHTML = i * 10 + j + 1;
+        }
+      }
+    }
+
+    function insertTd(p) {
+      p.setAttribute("class", "insertTd");
       p.addEventListener("click", function() {
         if (this.value == null) {
           pcNum[pcNum.length] = this;
-          this.innerHTML = pcNum.length
-          this.value = pcNum.length;
+          pcNum[pcNum.length - 1].value = this.innerText;
+          pcNum[pcNum.length - 1].innerHTML = pcNum.length;
           this.style.backgroundColor = "blue";
-          console.log(pcNum[pcNum.length-1]); // 주석처리
-        }
-        else {
-          for (var i = this.value; i < pcNum.length; i++) {
-            pcNum[i].innerHTML = i;
-            pcNum[i].value = i;
-          }
-          console.log(this.value);
-          pcNum.splice(this.value-1,1);
-          this.value = null;
-          this.innerHTML = "";
-          this.style.backgroundColor = "yellow";
+        } else {
+          deleteTd(this);
         }
       });
     }
-    function deleteMap(p){
-
+    function changeTd(p, q) {
+      var t = document.createElement("td");
+      t.value = q.value;
+      t.innerHTML=q.innerText;
+      t.style.backgroundColor = q.style.backgroundColor;
+      q.value=p.value;
+      q.innerHTML=p.innerText;
+      q.style.backgroundColor = p.style.backgroundColor;
+      p.value=t.value;
+      p.innerHTML=t.innerText;
+      p.style.backgroundColor = t.style.backgroundColor;
     }
 
-    function plusUp() {
-      var table = document.getElementById('PcTable');
-      var row = table.insertRow(0);
+    function deleteTd(p) {
+      for (var i = p.innerHTML; i < pcNum.length; i++) {
+        pcNum[i].innerHTML = i;
+      }
+      pcNum.splice(p.innerText-1, 1);
+      p.innerHTML = p.value;
+      p.value = null;
+      p.style.backgroundColor = "yellow";
+    }
+
+    function addTopLine() {
+      var row = PcTable.insertRow(0);
+      for (var i = 0; i < PcTable.children[1].children.length; i++) {
+        var inTd = row.insertCell(i);
+        inTd.innerHTML = i+1;
+        insertTd(inTd);
+      }
+      document.getElementById('cols').innerHTML = PcTable.children.length;
+      changePcMapNum(PcTable.children.length, PcTable.children[0].children.length);
+    }
+
+    function removeTopLine() {
+      if (PcTable.rows.length < 1) return;
+      for (var i = 0; i < PcTable.children[0].children.length; i++) {
+        for (var j = 1; j < PcTable.children.length; j++) {
+          changeTd(PcTable.children[j-1].children[i], PcTable.children[j].children[i]);
+        }
+        // deleteTd(PcTable.children[PcTable.children.length-1].children[i]); // 선택해제
+      }
+      PcTable.deleteRow(0);
+      document.getElementById('cols').innerHTML = PcTable.children.length;
+      changePcMapNum(PcTable.children.length, PcTable.children[0].children.length);
+    }
+
+    function addBottomLine() {
+      var row = PcTable.insertRow(PcTable.rows.length);
       for (var i = 0; i < maxRow; i++) {
-        insertMap(row.insertCell(i));
+        insertTd(row.insertCell(i));
       }
       maxCol++;
-      document.getElementById('cols').innerHTML=maxCol;
+      document.getElementById('cols').innerHTML = maxCol;
     }
-    function minorUp() {
-      var del = document.getElementById('PcMap');
-      var table = document.getElementById('PcTable');
-      if (table.rows.length<1) return;
-      table.deleteRow(0);
+
+    function removeBottomLine() {
+      if (PcTable.rows.length < 1) return;
+      PcTable.deleteRow(PcTable.rows.length - 1);
       maxCol--;
-      document.getElementById('cols').innerHTML=maxCol;
+      document.getElementById('cols').innerHTML = maxCol;
     }
-    function plusDown() {
-      var table = document.getElementById('PcTable');
-      var row = table.insertRow(table.rows.length);
+
+    function addLeftLine() {
+      var col = PcTable.insertRow(PcTable.rows.length);
       for (var i = 0; i < maxRow; i++) {
-        insertMap(row.insertCell(i));
+        insertTd(col.insertCell(i));
       }
       maxCol++;
-      document.getElementById('cols').innerHTML=maxCol;
+      document.getElementById('cols').innerHTML = maxCol;
     }
-    function minorDown() {
-      var del = document.getElementById('PcMap');
-      var table = document.getElementById('PcTable');
-      if (table.rows.length<1) return;
-      table.deleteRow(table.rows.length-1);
+
+    function removeLeftLine() {
+      if (PcTable.rows.length < 1) return;
+      PcTable.deleteRow(PcTable.rows.length - 1);
       maxCol--;
-      document.getElementById('cols').innerHTML=maxCol;
-    }
-    function plusLeft() {
-      var tr = document.getElementById('PcMap');
-      var col = table.insertRow(table.rows.length);
-      for (var i = 0; i < maxRow; i++) {
-        insertMap(col.insertCell(i));
-      }
-      maxCol++;
-      document.getElementById('cols').innerHTML=maxCol;
-    }
-    function minorLeft() {
-      var del = document.getElementById('PcMap');
-      var table = document.getElementById('PcTable');
-      if (table.rows.length<1) return;
-      table.deleteRow(table.rows.length-1);
-      maxCol--;
-      document.getElementById('cols').innerHTML=maxCol;
+      document.getElementById('cols').innerHTML = maxCol;
     }
   </script>
 
