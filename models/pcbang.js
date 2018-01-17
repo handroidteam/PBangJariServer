@@ -27,7 +27,7 @@ var pcBangSchema = new Schema(
             detailAddress: String,
         },
         location: {                     // 위도, 경도
-            lan: String,
+            lon: String,
             lat: String
         },
         nearStation: [                  // 주변 지하철역
@@ -37,15 +37,7 @@ var pcBangSchema = new Schema(
         ],
         adminIPAddress: [               // 사용하는 IP 주소 입력 (도메인 앞 세자리)
             {
-                first: {
-                    type: Number
-                },
-                second: {
-                    type: Number
-                },
-                third: {
-                    type: Number
-                }
+                type: String,
             }
         ],
         pcSpec: {                       // PC 스펙 (프론트에서 미리 틀 걸러야함)
@@ -108,6 +100,7 @@ var pcBangSchema = new Schema(
         },
         createdBy: {
             type: String,
+            default: 'Administrator',
             require: true,
         },
         modifiedDate: {
@@ -120,5 +113,29 @@ var pcBangSchema = new Schema(
         }
     }
 );
+
+
+////////////////// 외부 사용 가능 함수 //////////////////
+// PC방 생성 함수
+pcBangSchema.statics.createPCBang = function(req) {
+    const newPCBang = new this({
+        registered: true,
+        licenseNumber: req.body.licenseNumber,
+        pcBangName: req.body.pcBangName,
+        tel: req.body.tel,
+        address: req.body.address,
+        location: req.body.location,
+        adminIPAddress: req.body.adminIPAddress,
+        pcSpec: req.body.pcSpec,
+        pcBangImage: req.body.pcBangImage,
+        createdDate: req.body.createdDate,
+        createdBy: req.params.ceoId
+    });
+
+    return newPCBang.save( (err) => {
+        if(err) throw err;
+    } );
+};
+
 
 module.exports = mongoose.model('pcbang', pcBangSchema);
