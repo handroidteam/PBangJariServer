@@ -35,13 +35,13 @@ ceoSchema.statics.findCeoByKakaoID = function(id) {
 
 // CEO DB 생성 함수 (최초 로그인 시 사용)
 ceoSchema.statics.createCeoDB = function({ displayName, provider, id, accessToken}) {
-    const ceo = new this({
+    const newCeo = new this({
         name: displayName,
         sns: provider,
         profileID: id,
         accessToken: accessToken
     });
-    return ceo.save();
+    return newCeo.save();
 };
 
 // CEO 삭제 함수
