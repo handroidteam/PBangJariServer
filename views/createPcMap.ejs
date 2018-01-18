@@ -31,9 +31,9 @@
   <fieldset align="center">
     <legend>
       <h2>좌석등록</h2></legend>
-    <span><label>행 : [<span id="cols">10</span>]</label>
+    <span><label>행 : [<span id="cols">5</span>]</label>
     </span>
-    <span><label>열 : [<span id="rows">10</span>]</label>
+    <span><label>열 : [<span id="rows">5</span>]</label>
     </span>
     <span><label>층 : <input type="number" name="floor" value="1" style="width:40px"></label></span>
     <input type="button" onclick="addTopLine()" value="Top+">
@@ -51,110 +51,213 @@
   </div>
 
   <script>
-    var pcNum = []; // pc방 컴퓨터 배열
+    var pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열
     var PcTable = document.createElement("table"); // 표시할 테이블
-    PcTable.setAttribute("id", "PcMap");
-    createPcMap(5, 5); // page 열면 10x10 테이블 출력
+    var Row, Col; // 가로 세로 크기
+    createPcMap(5, 5); // page 열면 테이블 출력
 
-    function createPcMap(ro, co) {
-      for (var i = 0; i < ro; i++) {
-        var newTr = document.createElement("tr");
-        for (var j = 0; j < co; j++) {
-          var td = document.createElement("td");
-          insertTd(td);
-          td.innerHTML = i * 10 + j + 1;
-          newTr.appendChild(td);
+    function createPcMap(co, ro) { // 맵생성
+      for (var i = 0; i < co; i++) {
+        var newTr = document.createElement("tr"); // 세로크기만큼 tr 생성
+        for (var j = 0; j < ro; j++) {
+          var td = document.createElement("td"); // 가로크기만큼 td 생성
+          insertTd(td); // td 속성 부여
+          td.innerHTML = ro*i + j+1; // 번호부여
+          newTr.appendChild(td); // i번째 tr에 j번째 td를 하나씩 추가
         }
-        PcTable.appendChild(newTr);
+        PcTable.appendChild(newTr); // PcTable에 i번째 tr을 하나씩 추가
       }
-      // console.log(PcTable); // 주석처리
-
       var MapDiv = document.getElementById("MapDiv"); // MapTable에 추가
-      MapDiv.appendChild(PcTable);
+      MapDiv.appendChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
+      Row=PcTable.children[0].children.length; // 가로크기 설정
+      Col=PcTable.children.length; // 세로크기 설정
     }
 
-    function changePcMapNum(ro, co) {
-      for (var i = 0; i < ro; i++) {
-        for (var j = 0; j < co; j++) {
-          PcTable.children[i].children[j].innerHTML = i * 10 + j + 1;
+    function changePcMapNum(co, ro, state) { // 맵변경
+      for (var i = 0; i < co; i++) {
+        for (var j = 0; j < ro; j++) {
+          if(state==1){
+            if(i==0) continue; // 윗줄의 내용을 추가했으므로 i가 1까지 무시
+            if (PcTable.children[i].children[j].getAttribute("value")==="null") {
+              PcTable.children[i].children[j].innerHTML = ro*i + j+1; // 번호부여
+            }
+            else {
+              for (var k = 0; k < pcNum.length; k++) { // 윗줄을 추가했으므로 Row만큼 더하기
+                if ((ro*i + j+1)==Number(pcNum[k].getAttribute("value"))+Row) { // 선택한 셀의 value값이 원소의 value값과 같으면
+                  pcNum[k].setAttribute("value", ro*i+j+1); // 원소의 value값에 row만큼 더하고
+                  PcTable.children[i].children[j].innerHTML = k+1; // html을 배열의 순서로 나타내고
+                  PcTable.children[i].children[j].setAttribute("value", ro*i+j+1); // 해당 셀의 value 값을 원소와 동일하게
+                  console.log(pcNum[k].innerHTML + "번째 : " + pcNum[k].getAttribute("value"));
+                }
+              }
+            }
+          }
+          else if(state == 2){
+            if(i==co-1) break; // 한줄의 내용을 삭제했으므로 마지막 i는 무시
+            if (PcTable.children[i].children[j].getAttribute("value")==="null") {
+              PcTable.children[i].children[j].innerHTML = ro*i + j+1; // 번호부여
+            }
+            else {
+              for (var k = 0; k < pcNum.length; k++) { // 윗줄을 삭제했으므로 Row만큼 빼기
+                if ((ro*i + j+1)==Number(pcNum[k].getAttribute("value"))-Row) { // 선택한 셀의 value값이 원소의 value값과 같으면
+                  pcNum[k].setAttribute("value", ro*i+j+1); // 원소의 value값에 row만큼 더하고
+                  PcTable.children[i].children[j].innerHTML = k+1; // html을 배열의 순서로 나타내고
+                  PcTable.children[i].children[j].setAttribute("value", pcNum[k].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
+                  console.log(pcNum[k].innerHTML + "번째 : " + pcNum[k].getAttribute("value"));
+                }
+              }
+            }
+          }
+          else if(state == 4){
+            if(i==co-1) break; // 한줄의 내용을 삭제했으므로 마지막 i는 무시
+            if (PcTable.children[i].children[j].getAttribute("value")==="null") {
+              PcTable.children[i].children[j].innerHTML = ro*i + j+1; // 번호부여
+            }
+            else {
+              for (var k = 0; k < pcNum.length; k++) { // 윗줄을 추가했으므로 Row만큼 더하기
+                if ((ro*i + j+1)==Number(pcNum[k].getAttribute("value"))-Row) { // 멈춘 곳이 원소의 value값과 같으면
+                  pcNum[k].setAttribute("value", ro*(i-1)+j+1); // 원소의 value값에 row만큼 더하고
+                  PcTable.children[i].children[j].innerHTML = k+1; // html을 배열의 순서로 나타내고
+                  PcTable.children[i].children[j].setAttribute("value", ro*(i-1)+j+1); // 해당 셀의 value 값을 원소와 동일하게
+                  console.log(pcNum[k].innerHTML + "번째 : " + pcNum[k].getAttribute("value"));
+                }
+              }
+            }
+          }
         }
       }
     }
 
-    function insertTd(p) {
-      p.setAttribute("class", "insertTd");
-      p.addEventListener("click", function() {
-        if (this.value == null) {
-          pcNum[pcNum.length] = this;
-          pcNum[pcNum.length - 1].value = this.innerText;
-          pcNum[pcNum.length - 1].innerHTML = pcNum.length;
-          this.style.backgroundColor = "blue";
-        } else {
-          deleteTd(this);
+    function insertTd(p) { // p(선택한 셀)Td생성
+      p.setAttribute("class", "insertTd"); // 클래스부여
+      p.setAttribute("value", "null"); // value값 null로 초기화
+      p.addEventListener("click", function() { // 클릭리스너 부여
+        if (this.getAttribute("value")==="null") { // value값이 null이면 선택되지 않았을 때 선택한것이므로
+          pcNum[pcNum.length] = document.createElement("td"); // pcNum배열원소를 td로 생성
+          pcNum[pcNum.length - 1].setAttribute("value", this.innerHTML); // pcNum의 value를 선택한 번호값 입력
+          pcNum[pcNum.length - 1].innerHTML = pcNum.length; // pcNum의 html을 배열의 순서(index+1)번호를 부여
+          this.setAttribute("value", pcNum[pcNum.length - 1].getAttribute("value")); // 선택한 셀의 value를 pcNum과 동일하게
+          this.innerHTML = pcNum.length; // 선택한 셀의 html을 pcNum과 동일하게
+          this.style.backgroundColor = "lime"; // 선택한 셀의 배경색 변경
+        }
+        else { // value값이 null이 아니라면, 이미 선택한 것을 선택한 것이므로
+          deleteTd(this); // 배열에서 선택한 셀을 삭제한다.
         }
       });
     }
-    function changeTd(p, q) {
-      var t = document.createElement("td");
-      t.value = q.value;
-      t.innerHTML=q.innerText;
+
+    function deleteTd(p) { // pcNum배열에서 p원소(선택한 셀)를 빼는 함수
+      for (var i = p.innerHTML; i < pcNum.length; i++) { // 선택한 셀의 html(배열의 순서)부터 배열이 끝까지
+        pcNum[i].innerHTML = i; // html값을 하나씩 줄인다. (선택한 셀을 삭제할 것이기 때문에)
+        for (var j = 0; j < Col; j++) {
+          for (var k = 0; k < Row; k++) {
+            if (PcTable.children[j].children[k].getAttribute("value")===pcNum[i].getAttribute("value")) {
+              PcTable.children[j].children[k].innerHTML=i; // 선택된 셀 번호 앞당기기
+            }
+          }
+        }
+      }
+      if (pcNum.length==0) { // 마지막 배열원소일 경우
+        pcNum.splice(p.innerHTML-1);
+      }
+      pcNum.splice(p.innerHTML-1, 1); // pcNum배열에서의 p원소 뺌
+      p.innerHTML = p.getAttribute("value"); // p원소의 html 원래 값으로 돌려놓음
+      p.setAttribute("value", "null"); // p원소의 value null 값으로 초기화
+      p.style.backgroundColor = "yellow"; // p원소의 배경색 변경
+    }
+
+    function changeTd(p, q) { // p와 q의 정보를 바꾼다.
+      var t = document.createElement("td"); // 빈 td 객체 생성(교환하기 위해)
+      t.setAttribute("value",q.getAttribute("value"));
+      t.innerHTML=q.innerHTML;
       t.style.backgroundColor = q.style.backgroundColor;
-      q.value=p.value;
-      q.innerHTML=p.innerText;
+      q.setAttribute("value",p.getAttribute("value"));
+      q.innerHTML=p.innerHTML;
       q.style.backgroundColor = p.style.backgroundColor;
-      p.value=t.value;
-      p.innerHTML=t.innerText;
+      p.setAttribute("value",t.getAttribute("value"));
+      p.innerHTML=t.innerHTML;
       p.style.backgroundColor = t.style.backgroundColor;
     }
 
-    function deleteTd(p) {
-      for (var i = p.innerHTML; i < pcNum.length; i++) {
-        pcNum[i].innerHTML = i;
-      }
-      pcNum.splice(p.innerText-1, 1);
-      p.innerHTML = p.value;
-      p.value = null;
-      p.style.backgroundColor = "yellow";
-    }
-
-    function addTopLine() {
-      var row = PcTable.insertRow(0);
-      for (var i = 0; i < PcTable.children[1].children.length; i++) {
+    function addTopLine() { // 위로 줄 추가
+      var row = PcTable.insertRow(0); // PcTable의 윗줄을 추가한다.
+      for (var i = 0; i < Row; i++) {
         var inTd = row.insertCell(i);
         inTd.innerHTML = i+1;
-        insertTd(inTd);
+        insertTd(inTd); // 추가한 윗줄에 td를 포함시킨다.
       }
-      document.getElementById('cols').innerHTML = PcTable.children.length;
-      changePcMapNum(PcTable.children.length, PcTable.children[0].children.length);
+      Row=PcTable.children[0].children.length; // 가로크기 설정
+      Col=PcTable.children.length; // 세로크기 설정
+      document.getElementById('cols').innerHTML = Col; // 행 크기 출력
+      console.log("[윗줄추가]");
+      changePcMapNum(Col, Row, 1);
     }
 
     function removeTopLine() {
-      if (PcTable.rows.length < 1) return;
-      for (var i = 0; i < PcTable.children[0].children.length; i++) {
-        for (var j = 1; j < PcTable.children.length; j++) {
-          changeTd(PcTable.children[j-1].children[i], PcTable.children[j].children[i]);
+      if (Row < 1) return; // 가로가 1보다 작으면 종료
+      for (var i = 0; i < Row; i++) {
+        for (var j = 0; j < Col; j++) {
+          if (j==Col-1) { // 마지막줄 삭제(맨첫줄에 있던 정보)
+            if (PcTable.children[j].children[i].getAttribute("value")!="null") { // 배열원소이면
+              deleteTd(PcTable.children[j].children[i]); // 첫째줄에 선택한게 있으면 삭제
+            }
+          }
+          else{
+            if (PcTable.children[j].children[i].getAttribute("value")!="null") { // 배열원소이면
+              deleteTd(PcTable.children[j].children[i]); // 첫째줄에 선택한게 있으면 삭제
+            }
+            else {
+              changeTd(PcTable.children[j].children[i],PcTable.children[j+1].children[i]);
+              // 아랫줄과 정보를 바꾼다.
+            }
+          }
         }
-        // deleteTd(PcTable.children[PcTable.children.length-1].children[i]); // 선택해제
       }
-      PcTable.deleteRow(0);
-      document.getElementById('cols').innerHTML = PcTable.children.length;
-      changePcMapNum(PcTable.children.length, PcTable.children[0].children.length);
+      console.log("[윗줄삭제]");
+      changePcMapNum(Col, Row, 2);
+      Row=PcTable.children[0].children.length; // 가로크기 설정
+      Col=PcTable.children.length-1; // 세로크기 설정
+      PcTable.deleteRow(Col);
+      document.getElementById('cols').innerHTML = Col; // 행 크기 출력
     }
 
     function addBottomLine() {
-      var row = PcTable.insertRow(PcTable.rows.length);
-      for (var i = 0; i < maxRow; i++) {
-        insertTd(row.insertCell(i));
+      var row = PcTable.insertRow(Col); // PcTable의 윗줄을 추가한다.
+      for (var i = 0; i < Row; i++) {
+        var inTd = row.insertCell(i);
+        inTd.innerHTML = Number(PcTable.children[Col-1].children[i].innerHTML)+Row;
+        insertTd(inTd); // 추가한 아랫줄에 td를 포함시킨다.
       }
-      maxCol++;
-      document.getElementById('cols').innerHTML = maxCol;
+      Row=PcTable.children[0].children.length; // 가로크기 설정
+      Col=PcTable.children.length; // 세로크기 설정
+      document.getElementById('cols').innerHTML = Col; // 행 크기 출력
+      console.log("[아랫줄추가]");
+      changePcMapNum(Col, Row, 3);
     }
 
     function removeBottomLine() {
-      if (PcTable.rows.length < 1) return;
-      PcTable.deleteRow(PcTable.rows.length - 1);
-      maxCol--;
-      document.getElementById('cols').innerHTML = maxCol;
+      if (Row < 1) return; // 가로가 1보다 작으면 종료
+      for (var i = 0; i < Row; i++) {
+        if (PcTable.children[0].children[i].getAttribute("value")!="null") { // 배열원소이면
+          console.log("ok");
+          for (var j = 0; j < Col; j++) {
+            if (j==Col-1) { // 마지막줄 삭제(맨첫줄에 있던 정보)
+              console.log("ok");
+              deleteTd(PcTable.children[i].children[j]); // 첫째줄에 선택한게 있으면 삭제
+            }
+            // if (PcTable.children[j+1].children[i].getAttribute("value")!="null"){ // 바꾸려는 셀이 선택되어 있다면
+            //
+            // }
+            changeTd(PcTable.children[j].children[i],PcTable.children[j+1].children[i]);
+            // 아랫줄과 정보를 바꾼다.
+          }
+        }
+      }
+      changePcMapNum(Col, Row, 4);
+      Row=PcTable.children[0].children.length; // 가로크기 설정
+      Col=PcTable.children.length-1; // 세로크기 설정
+      PcTable.deleteRow(Col);
+      document.getElementById('cols').innerHTML = Col; // 행 크기 출력
     }
 
     function addLeftLine() {
@@ -162,7 +265,6 @@
       for (var i = 0; i < maxRow; i++) {
         insertTd(col.insertCell(i));
       }
-      maxCol++;
       document.getElementById('cols').innerHTML = maxCol;
     }
 
