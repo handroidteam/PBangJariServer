@@ -1,31 +1,19 @@
 const Ceo           = require('../../models/ceo');
 const Pcbang        = require('../../models/pcbang');
 
-const getAllPCBang = (req, res) => { //모든 피방 조회
-    var selects = {
-        'pcBangName': 1,
-        'tel': 1,
-        'address': 1,
-        'location': 1
-    };
-
-    Pcbang.find({}, selects, (err, pcbangs) => {
-        if (err) res.status(404).end();
-        else if (!pcbangs) res.status(403).json({
-            message: 'no ceo'
-        });
-        else res.status(200).json(pcbangs);
-    });
+// 모든 PC방 조회
+const getAllPCBang = (req, res) => {
+    Pcbang.findAllPCBang(req, res);
 };
 
-const postCreatePCBang = (req, res) => { // 피방 생성
-    console.log('CEO' + req.params.ceoId + 'requested create PCBang');
-    Pcbang.createPCBang(req);
-    res.status(201).json({
-        success: true
-    });
+// PC방 생성
+const postCreatePCBang = (req, res) => {
+    console.log('***** CEO "' + req.params.ceoId + '" requested create PCBang *****');
+
+    Pcbang.createPCBang(req, res);
 };
 
+// PC방 고유 ID로 PC방 조회
 const getPCBangList = (req, res) => {
     var ceoSelects = 'ceoId';
     var pbangSelects = 'pcBangName pcBangTel pcBangAdress pcBangIPAddress';
@@ -41,7 +29,8 @@ const getPCBangList = (req, res) => {
     });
 };
 
-const deletePCBang = (req, res) => { // 피방 삭제
+// 특정 PC방 삭제
+const deletePCBang = (req, res) => {
     Pcbang.findByIdAndRemove(req.params.pcBangId, (err) => {
         if (err) res.status(404).end();
         else Ceo.update({

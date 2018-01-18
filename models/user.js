@@ -9,11 +9,6 @@ var userSchema = new Schema(
         name: String,
         profileID: String,
         accesstoken: String,
-        markPCBang: [       // 즐겨찾기 한 PC방 저장
-            {
-                type: String,
-            }
-        ],
         createdDate: {
             type: Date,
             default: Date.now

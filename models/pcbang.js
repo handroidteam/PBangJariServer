@@ -1,10 +1,8 @@
-var mongoose = require('mongoose');
-
-mongoose.Promise = Promise;
-var Schema = mongoose.Schema;
+const mongoose      = require('mongoose');
+const { Schema }    = mongoose;
 
 // PC방 정보의 경우 CEO 등록 후에는 CEO만 수정 가능하도록
-var pcBangSchema = new Schema(
+const pcBangSchema = new Schema(
     {
         registered: {                   // CEO 등록 완료?
             type: Boolean,
@@ -27,8 +25,8 @@ var pcBangSchema = new Schema(
             detailAddress: String,
         },
         location: {                     // 위도, 경도
-            lon: String,
-            lat: String
+            lon: Number,
+            lat: Number
         },
         nearStation: [                  // 주변 지하철역
             {
@@ -116,8 +114,8 @@ var pcBangSchema = new Schema(
 
 
 ////////////////// 외부 사용 가능 함수 //////////////////
-// PC방 생성 함수
-pcBangSchema.statics.createPCBang = function(req) {
+// PC방 DB 생성 함수
+pcBangSchema.statics.createPCBang = function(req, res) {
     const newPCBang = new this({
         registered: true,
         licenseNumber: req.body.licenseNumber,
@@ -133,9 +131,42 @@ pcBangSchema.statics.createPCBang = function(req) {
     });
 
     return newPCBang.save( (err) => {
-        if(err) throw err;
+        if(err)
+            throw err;
+        else
+            return res.status(201).json({
+                success: true
+            });
     } );
 };
+
+// PC방 DB 전체 조회 함수
+pcBangSchema.statics.findAllPCBang = function(req, res) {
+    const selects = {
+        'pcBangName': 1,
+        'tel': 1,
+        'address': 1,
+        'location': 1
+    };
+
+    this.find( {}, selects, (err, pcbangs) => { 
+        if(err)
+            return res.status(500).end();
+        else if(!pcbangs)
+            return res.status(404).json({
+                message: 'No PCBang was found'
+            });
+        else
+            return res.status(200).json(pcbangs);
+    });
+};
+
+// // PC방 고유 ID로 DB 검색하는 함수
+// pcBangSchema.statics.findPCBangById = function(req, res) {
+
+// };
+
+// 경도,위도를 받아서 PC방 목록 출력하는 함수
 
 
 module.exports = mongoose.model('pcbang', pcBangSchema);

@@ -28,7 +28,7 @@ const ceoSchema = new Schema(
 
 
 ////////////////// 외부 사용 가능 함수 //////////////////
-// CEO DB 검색 함수
+// CEO DB 조회 함수
 ceoSchema.statics.findCeoByKakaoID = function(id) {
     return this.findOne( { sns: 'kakao', profileID: id } );
 };
