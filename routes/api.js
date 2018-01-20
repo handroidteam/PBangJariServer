@@ -18,7 +18,7 @@ router.post('/user/signUp', userAPI.postSignUser);
 // PCBang API
 router.get('/pcBang/getAll', pcBangAPI.getAllPCBang);
 router.post('/pcBang/create/:ceoId', pcBangAPI.postCreatePCBang);
-router.get('/pcBang/list/:ceoId', pcBangAPI.getPCBangList);
+router.get('/pcBang/getDetail/:pcBangId', pcBangAPI.getPCBangDetail);
 router.delete('/pcBang/delete/:pcBangId', pcBangAPI.deletePCBang);
 
 // PCMap API
