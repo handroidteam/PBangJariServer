@@ -9,24 +9,12 @@ const getAllPCBang = (req, res) => {
 // PC방 생성
 const postCreatePCBang = (req, res) => {
     console.log('***** CEO "' + req.params.ceoId + '" requested create PCBang *****');
-
     Pcbang.createPCBang(req, res);
 };
 
-// PC방 고유 ID로 PC방 조회
-const getPCBangList = (req, res) => {
-    var ceoSelects = 'ceoId';
-    var pbangSelects = 'pcBangName pcBangTel pcBangAdress pcBangIPAddress';
-
-    Pcbang.findOne({
-        '_id': req.params.ceoId
-    }, pbangSelects).populate('ceoId', ceoSelects).exec((err, pbang) => {
-        if (err) res.status(404).end();
-        else if (!pbang) res.status(404).json({
-            message: 'no pbang'
-        });
-        else res.status(200).json(pbang);
-    });
+// PC방 상세 조회 페이지
+const getPCBangDetail = (req, res) => {
+    Pcbang.findPCBangById(req, res);
 };
 
 // 특정 PC방 삭제
@@ -51,6 +39,6 @@ const deletePCBang = (req, res) => {
 module.exports = {
     getAllPCBang, 
     postCreatePCBang, 
-    getPCBangList, 
+    getPCBangDetail, 
     deletePCBang
 };

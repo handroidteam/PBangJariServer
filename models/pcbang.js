@@ -58,11 +58,15 @@ const pcBangSchema = new Schema(
                 contentType: String
             }
         ],
+        ratingScore: {
+            type: Number,
+            default: null
+        },
         userReview: [                   // 리뷰
             {
                 reviewSubject: String,  // 리뷰 제목
                 reviewContent: String,  // 리뷰 설명
-                rating: [               // 평가 점수
+                rating: [               // 리뷰 점수
                     {
                         type: Number,
                         default: 0
@@ -142,14 +146,14 @@ pcBangSchema.statics.createPCBang = function(req, res) {
 
 // PC방 DB 전체 조회 함수
 pcBangSchema.statics.findAllPCBang = function(req, res) {
-    const selects = {
+    const proj = {
         'pcBangName': 1,
         'tel': 1,
         'address': 1,
         'location': 1
     };
 
-    this.find( {}, selects, (err, pcbangs) => { 
+    this.find( {}, proj, (err, pcbangs) => { 
         if(err)
             return res.status(500).end();
         else if(!pcbangs)
@@ -161,10 +165,33 @@ pcBangSchema.statics.findAllPCBang = function(req, res) {
     });
 };
 
-// // PC방 고유 ID로 DB 검색하는 함수
-// pcBangSchema.statics.findPCBangById = function(req, res) {
+// PC방 고유 ID로 DB 검색하는 함수 (상세페이지)
+pcBangSchema.statics.findPCBangById = function(req, res) {
+    const key = {
+        '_id': req.params.pcBangId
+    };
+    console.log(key);
+    const proj = {
+        'pcBangName': 1,
+        'address': 1,
+        'ratingScore': 1,
+        'location': 1,
+        'event': 1,
+        'pcSpec': 1,
+        'userReview': 1,
+    };
 
-// };
+    this.find( key, proj, (err, pcbangs) => {
+        if(err)
+            return res.status(500).end();
+        else if(!pcbangs)
+            return res.status(404).json({
+                message: 'No PCBang was found'
+            });
+        else
+            return res.status(200).json(pcbangs);
+    });
+};
 
 // 경도,위도를 받아서 PC방 목록 출력하는 함수
 
