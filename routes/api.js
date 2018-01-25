@@ -20,6 +20,7 @@ router.get('/pcBang/getAll', pcBangAPI.getAllPCBang);
 router.post('/pcBang/create/:ceoId', pcBangAPI.postCreatePCBang);
 router.get('/pcBang/getDetail/:pcBangId', pcBangAPI.getPCBangDetail);
 router.delete('/pcBang/delete/:pcBangId', pcBangAPI.deletePCBang);
+router.post('/pcBang/getRange', pcBangAPI.getPCBangsInHere);
 
 // PCMap API
 router.get('/pcMap/status/:pcBangId', pcMapAPI.getPCStatus);

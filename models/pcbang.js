@@ -172,6 +172,7 @@ pcBangSchema.statics.findPCBangById = function(req, res) {
     };
     const proj = {
         'pcBangName': 1,
+        'tel': 1,
         'address': 1,
         'ratingScore': 1,
         'location': 1,
@@ -207,6 +208,27 @@ pcBangSchema.statics.deletePCbangById = function(req, res) {
     });
 };
 
-// 경도,위도를 받아서 PC방 목록 출력하는 함수
+// 위도, 경도를 받아서 PC방 목록 출력하는 함수
+pcBangSchema.statics.findPCBangsByLonLat = function(req, res) {
+    const topLon = req.body.topLon;
+    const bottomLon = req.body.bottomLon;
+    const leftLat = req.body.leftLat;
+    const rightLat = req.body.rightLat;
+    const comp = {
+        'location.lon': { $lt: topLon, $gt: bottomLon },
+        'location.lat': { $lt: rightLat, $gt: leftLat }
+    };
+    
+    this.find( comp, (err, pcbangs) => { 
+        if(err)
+            return res.status(500).end();
+        else if(!pcbangs)
+            return res.status(404).json({
+                message: 'No PCBang was found'
+            });
+        else
+            return res.status(200).json(pcbangs);
+    });
+};
 
 module.exports = mongoose.model('pcbang', pcBangSchema);

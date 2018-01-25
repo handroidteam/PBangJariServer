@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <title>로그인</title>
+  <style>
+    nav {
+      text-align: right;
+    }
+
+    article {
+      text-align: center;
+    }
+  </style>
+
+  <script>
+  </script>
+</head>
+
+<body>
+  <header>
+  </header>
+  <nav style="margin:10px;">
+    <a id="logout" href="testIndex.ejs">로그아웃</a>
+    <br>
+  </nav>
+  <aside>
+  </aside>
+  <section>
+    <article style="margin-top:100px;">
+      <button type="button" name="button" style="height:100px" onclick="Sit()">
+        <h2>좌석관리</h2>
+        <p>pc방의 좌석을 등록, 수정한다.</p>
+      </button>
+      <button type="button" name="button" style="height:100px">
+        <h2>이벤트관리</h2>
+        <p>pc방의 이벤트, 대회 등을 등록한다.</p>
+      </button>
+      <button type="button" name="button" style="height:100px">
+        <h2>정보관리</h2>
+        <p>pc방의 정보를 수정한다.</p>
+      </button>
+    </article>
+  </section>
+  <footer></footer>
+  <script>
+    function Sit() {
+      location.href = "./createPcMap.ejs";
+    }
+  </script>
+</body>
+
+</html>
