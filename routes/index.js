@@ -51,24 +51,27 @@ router.get('/logout', function(req, res) {
 });
 
 router.get('/ceo', function(req, res) {
-    if(req.session.passport) {
-        Ceo.findById(req.session.passport.user, (err, ceo) => {
-            if(ceo.ownPCBang[0] == undefined) {
-                res.render('newPCBangPage');
-            } else {
-                res.render('ceoPage');
-            }
-        });
-    } else {
-        res.redirect('/');
-    }
+    res.render('ceoPage');
+
+    // 완성 때 추가
+    // if(req.session.passport) {
+    //     Ceo.findById(req.session.passport.user, (err, ceo) => {
+    //         if(ceo.ownPCBang[0] == undefined) {
+    //             res.render('newPCBangPage');
+    //         } else {
+    //             res.render('ceoPage');
+    //         }
+    //     });
+    // } else {
+    //     res.redirect('/');
+    // }
 });
 
-router.get('/ceo/newPCBang', function(req, res) {
+router.get('/newPCBang', function(req, res) {
     res.render('newPCBangPage');
 });
 
-router.get('/ceo/newPCMap', function(req, res) {
+router.get('/newPCMap', function(req, res) {
     res.render('newPCMapPage');
 });
 

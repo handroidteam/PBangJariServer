@@ -23,7 +23,6 @@ const deletePCBang = (req, res) => {
 
 // 범위 내의 PC방 찾기
 const getPCBangsInHere = (req, res) => {
-    console.log(req.body);
     Pcbang.findPCBangsByLonLat(req, res);
 };
 
