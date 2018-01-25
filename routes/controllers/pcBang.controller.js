@@ -21,9 +21,16 @@ const deletePCBang = (req, res) => {
     Pcbang.deletePCBangById(req, res);
 };
 
+// 범위 내의 PC방 찾기
+const getPCBangsInHere = (req, res) => {
+    console.log(req.body);
+    Pcbang.findPCBangsByLonLat(req, res);
+};
+
 module.exports = {
     getAllPCBang, 
     postCreatePCBang, 
     getPCBangDetail, 
-    deletePCBang
+    deletePCBang,
+    getPCBangsInHere
 };

@@ -19,9 +19,10 @@ function isLoggedIn(req, res, next) {
 router.get('/', function(req, res, next) {
     if(req.session.passport) {
         Ceo.findById(req.session.passport.user, (err, ceo) => {
-            if(ceo.name) res.render('index', {
-                ceoName: ceo.name
-            });
+            if(ceo)
+                res.render('index', {
+                    ceoName: ceo.name
+                });
             else res.render('index', {
                 ceoName: ''
             });
@@ -49,8 +50,26 @@ router.get('/logout', function(req, res) {
     });
 });
 
-router.get('/newinfo', function(req, res) {
-    res.render('inputPBangData');
+router.get('/ceo', function(req, res) {
+    if(req.session.passport) {
+        Ceo.findById(req.session.passport.user, (err, ceo) => {
+            if(ceo.ownPCBang[0] == undefined) {
+                res.render('newPCBangPage');
+            } else {
+                res.render('ceoPage');
+            }
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
+router.get('/ceo/newPCBang', function(req, res) {
+    res.render('newPCBangPage');
+});
+
+router.get('/ceo/newPCMap', function(req, res) {
+    res.render('newPCMapPage');
 });
 
 module.exports = router;
