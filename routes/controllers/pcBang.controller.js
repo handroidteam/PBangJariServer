@@ -1,4 +1,3 @@
-const Ceo           = require('../../models/ceo');
 const Pcbang        = require('../../models/pcbang');
 
 // 모든 PC방 조회
@@ -19,21 +18,7 @@ const getPCBangDetail = (req, res) => {
 
 // 특정 PC방 삭제
 const deletePCBang = (req, res) => {
-    Pcbang.findByIdAndRemove(req.params.pcBangId, (err) => {
-        if (err) res.status(404).end();
-        else Ceo.update({
-            'pcBang._id': req.params.pcBangId
-        }, {
-            $pull: {
-                'pcBang': req.params.pcBangId
-            }
-        }, (err) => {
-            if (err) res.status(404).end();
-            else res.status(200).json({
-                message: 'delete sucess'
-            });
-        });
-    });
+    Pcbang.deletePCBangById(req, res);
 };
 
 module.exports = {

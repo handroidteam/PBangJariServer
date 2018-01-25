@@ -170,7 +170,6 @@ pcBangSchema.statics.findPCBangById = function(req, res) {
     const key = {
         '_id': req.params.pcBangId
     };
-    console.log(key);
     const proj = {
         'pcBangName': 1,
         'address': 1,
@@ -193,7 +192,21 @@ pcBangSchema.statics.findPCBangById = function(req, res) {
     });
 };
 
-// 경도,위도를 받아서 PC방 목록 출력하는 함수
+// PC방 고유 ID로 PC방을 찾아 삭제하는 함수
+pcBangSchema.statics.deletePCbangById = function(req, res) {
+    const key = {
+        'id': req.params.pcBangId
+    };
+    this.findByIdAndRemove(key, (err) => {
+        if(err)
+            return res.status(500).end();
+        else
+            return res.status(200).json({
+                message: 'Deleted successfully'
+            });
+    });
+};
 
+// 경도,위도를 받아서 PC방 목록 출력하는 함수
 
 module.exports = mongoose.model('pcbang', pcBangSchema);
