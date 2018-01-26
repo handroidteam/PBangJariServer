@@ -75,4 +75,14 @@ router.get('/newPCMap', function(req, res) {
     res.render('newPCMapPage');
 });
 
+router.get('/newPCBangTest', function(req, res) {
+    res.render('newPCBangTest', {
+        ceoId: req.session.passport.user
+    });
+});
+
+router.get('/newPCMapTest', function(req, res) {
+    res.render('newPCMapTest');
+});
+
 module.exports = router;

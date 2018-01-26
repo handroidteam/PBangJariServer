@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>새로운 PC방 등록</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="stylesheets/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <header class="section no-pad-bot" id="index-banner">
+        <br />
+        <div class="container">
+            <h1 class="header center">
+                <a href="/"><img src="images/pbangjari-logo.png" alt="logo"></a>
+            </h1>
+        </div>
+        <br />
+    </header>
+
+    
+    <div>
+        <form method="post" enctype="application/json" action="api/pcBang/create/<%=ceoId%>" class="container">
+            <div class="divider"></div>
+            <div class="section">
+                <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
+                    <blockquote class="right" style="margin-top:0">PC방 기본 정보</blockquote>
+                </div>
+                
+                <div class="row">
+                    <div class="input-field col s12 m6">
+                        <input placeholder="ex) 000-00-00000" name="licenseNumber" id="licenseNumber" type="text" class="validate">
+                        <label for="licenseNumber">사업자등록번호</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input placeholder="ex) 짱나라PC방" name="pcBangName" id="pcBangName" type="text" class="validate">
+                        <label for="pcBangName">PC방 이름</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input placeholder="ex) 02-000-0000" name="tel" id="tel" type="text" class="validate">
+                        <label for="tel">PC방 전화번호</label>
+                    </div>
+                    <!--
+                    <div class="input-field col s10">
+                        <input id="tel" type="tel" class="validate">
+                        <label for="tel">PC방 연락처</label>
+                    </div>
+                    <div class="col s2 grey-text" style="margin-top:1.5rem">
+                        <i class="small material-icons">add_circle_outline</i>
+                    </div>
+                    -->
+                    <div class="input-field col s12 m6">
+                        <input placeholder="ex) 서울시 성북구 삼선동1가 000" id="address" type="text" class="validate">
+                        <label for="address">PC방 주소</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="divider" style="margin-top:30px"></div>
+            <div class="section">
+                <div class="row grey-text text-darken-1" style="margin:0 1rem 1rem 0">
+                    <blockquote class="right" style="margin-top:0">PC 정보</blockquote>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4 m3 l2">
+                        <input placeholder="ex) i5-8600K" name="pcSpec[CPU]" id="CPU" type="text" class="validate">
+                        <label for="CPU">CPU</label>
+                    </div>
+                    <div class="input-field col s4 m3 l2">
+                        <input placeholder="ex) DDR4 8G" name="pcSpec[RAM]" id="RAM" type="text" class="validate">
+                        <label for="RAM">RAM</label>
+                    </div>
+                    <div class="input-field col s4 m3 l2">
+                        <input placeholder="ex) 1080ti 11GB" name="pcSpec[VGA]" id="VGA" type="text" class="validate">
+                        <label for="VGA">VGA</label>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="input-field col s2 m1 l1">
+                        <input placeholder="XXX" name="adminIPAddress[0][ipFirst]" id="ipFirst" type="text" class="validate">
+                        <label for="ipFirst">IP주소</label>
+                    </div>
+                    <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                    <div class="input-field col s2 m1 l1">
+                        <input placeholder="XXX" name="adminIPAddress[0][ipSecond]" id="ipSecond" type="text" class="validate">
+                        <label for="ipSecond"></label>
+                    </div>
+                    <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                    <div class="input-field col s2 m1 l1">
+                        <input placeholder="XXX" name="adminIPAddress[0][ipThird]" id="ipThird" type="text" class="validate">
+                    </div>
+                    <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                    <div class="input-field col s2 m1 l1">
+                        <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate">
+                    </div>
+                    <div class="col s1 m1 l1 grey-text" style="margin-top:1.5rem">
+                        <i class="material-icons">add_circle_outline</i>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div id="image">
+                        <label class="col s12" for="image">PC방 대표이미지</label>
+                        <div class="file-field input-field col s12">
+                            <div class="btn small disabled">
+                                <span>찾아보기</span>
+                                <input disabled type="file" name="pcBangImage[]" multiple>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="&nbsp;&nbsp;이미지 업로드 기능 준비중">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row center" style="margin-bottom:50px">
+                <button class="btn-large waves-effect waves-light pulse" type="submit" name="action">등록하기
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+            
+        </form>
+    </div>
+    
+
+    <!--Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/materialize.min.js"></script>
+    <script src="javascripts/init.js"></script>
+
+</body>
+
+</html>
