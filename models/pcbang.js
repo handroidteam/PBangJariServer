@@ -25,8 +25,8 @@ const pcBangSchema = new Schema(
             detailAddress: String,
         },
         location: {                     // 위도, 경도
-            lon: Number,
-            lat: Number
+            lat: Number,
+            lon: Number
         },
         nearStation: [                  // 주변 지하철역
             {
@@ -208,15 +208,15 @@ pcBangSchema.statics.deletePCbangById = function(req, res) {
     });
 };
 
-// 위도, 경도를 받아서 PC방 목록 출력하는 함수
+// 경도, 위도를 받아서 PC방 목록 출력하는 함수
 pcBangSchema.statics.findPCBangsByLonLat = function(req, res) {
-    const topLon = req.body.topLon;
-    const bottomLon = req.body.bottomLon;
-    const leftLat = req.body.leftLat;
-    const rightLat = req.body.rightLat;
+    const leftLon = req.body.leftLon;
+    const rightLon = req.body.rightLon;
+    const topLat = req.body.topLat;
+    const bottomLat = req.body.bottomLat;
     const comp = {
-        'location.lon': { $lt: topLon, $gt: bottomLon },
-        'location.lat': { $lt: rightLat, $gt: leftLat }
+        'location.lon': { $lt: rightLon, $gt: leftLon },
+        'location.lat': { $lt: topLat, $gt: bottomLat }
     };
     
     this.find( comp, (err, pcbangs) => { 

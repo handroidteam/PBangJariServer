@@ -15,6 +15,7 @@ function isLoggedIn(req, res, next) {
     }
 }
 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     if(req.session.passport) {
@@ -76,9 +77,7 @@ router.get('/newPCMap', function(req, res) {
 });
 
 router.get('/newPCBangTest', function(req, res) {
-    res.render('newPCBangTest', {
-        ceoId: req.session.passport.user
-    });
+    res.render('newPCBangTest');
 });
 
 router.get('/newPCMapTest', function(req, res) {
