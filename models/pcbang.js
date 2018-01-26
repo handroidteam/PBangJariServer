@@ -35,7 +35,9 @@ const pcBangSchema = new Schema(
         ],
         adminIPAddress: [               // 사용하는 IP 주소 입력 (도메인 앞 세자리)
             {
-                type: String,
+                ipFirst: Number,
+                ipSecond: Number,
+                ipThird: Number
             }
         ],
         pcSpec: {                       // PC 스펙 (프론트에서 미리 틀 걸러야함)
@@ -138,9 +140,7 @@ pcBangSchema.statics.createPCBang = function(req, res) {
         if(err)
             throw err;
         else
-            return res.status(201).json({
-                success: true
-            });
+            return res.redirect('/ceo');
     } );
 };
 
