@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <title>회원가입</title>
+</head>
+<style>
+    h2 {
+        text-align: center;
+        margin-top: 50px;
+    }
+</style>
+
+<body>
+    <h2>가입정보</h2>
+    <form id="Pibang">
+        <table border="2" align="center">
+            <tr>
+                <td>
+                    <div>사업자번호</div>
+                </td>
+                <td>
+                    <div>
+                        <input type="number" name="sajangNumber">*번호제한</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>PC방 이름</div>
+                </td>
+                <td>
+                    <div>
+                        <input type="text" name="pibangName">*이름수제한</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>PC방번호</div>
+                </td>
+                <td>
+                    <span>
+                        <select name="num1">
+                            <option value="010">010</option>
+                            <option value="011">011</option>
+                            <option value="017">017</option>
+                            <option value="018">018</option>
+                            <option value="019">019</option>
+                        </select>
+                    </span>
+                    <input type="text" name="num2" style="width:40px;">
+                    <input type="text" name="num2" style="width:40px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>우편번호</div>
+                </td>
+                <td>
+                    <input type="text" name="woo" style="width:100px;">* 숫자 여섯자리
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>PC방 주소</div>
+                </td>
+                <td>
+                    <div>(주소검색상자)</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>상세주소</div>
+                </td>
+                <td>
+                    <input type="text" name="where" style="width:200px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>PC사양</div>
+                </td>
+                <td>
+                    <div>
+                        RAM
+                        <select name="Ram_value">
+                            <option value="4G">4G</option>
+                            <option value="8G">8G</option>
+                            <option value="16G">16G</option>
+                        </select>
+                        GPU
+                        <select name="Gpu_value">
+                            <option value="760">760</option>
+                            <option value="1050">1050</option>
+                            <option value="1060">1060</option>
+                        </select>
+                        CPU
+                        <select name="Cpu_value">
+                            <option value="i5">i5</option>
+                            <option value="i7">i7</option>
+                            <option value="i8">i8</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>ip address</div>
+                </td>
+                <td>
+                    <span>
+                        <input type="text" name="ip_First" style="width:40px;">
+                    </span>
+                    <span>
+                        <input type="text" name="ip_Second" style="width:40px;">
+                    </span>
+                    <span>
+                        <input type="text" name="ip_Third" style="width:40px;">
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div>
+                        <strong>
+                            <input type="button" value="Yes" onclick="Submit()">
+                        </strong>
+                        <strong>
+                            <input type="button" value="No" onclick="Back()"> </strong>
+                    </div>
+                    <script>
+                        function Submit() {
+                            // 가입 정보를 서버로 전송하여 저장한다.
+                            location.href = "/ceo";
+                        }
+
+                        function Back() {
+                            window.history.back();
+                        }
+                    </script>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>

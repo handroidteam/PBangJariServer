@@ -1,17 +1,16 @@
-const express         = require('express');
-const path            = require('path');
-const favicon         = require('serve-favicon');
-const logger          = require('morgan');
-const cookieParser    = require('cookie-parser');
-const bodyParser      = require('body-parser');
-const passport        = require('passport'); require('./passport');
+const express       = require('express');
+const path          = require('path');
+const favicon       = require('serve-favicon');
+const logger        = require('morgan');
+const cookieParser  = require('cookie-parser');
+const bodyParser    = require('body-parser');
+const passport      = require('passport'); require('./passport');
 
-const index           = require('./routes/index');
-const users           = require('./routes/users');
+const index         = require('./routes/index');
+const users         = require('./routes/users');
+const api           = require('./routes/api');
 
-// var Ceo             = require('./models/ceo');
-
-const config          = require('./bin/config');
+const config        = require('./bin/config');
 
 const app = express();
 
@@ -28,12 +27,12 @@ db.once('open', function() {
 
 /***************************************************************/
 // session 및 보안 설정을 위한 모듈
-const session         = require('express-session');
-const helmet          = require('helmet');
-const assert          = require('assert');
+const session       = require('express-session');
+const helmet        = require('helmet');
+const assert        = require('assert');
 
 // MongoDB store 설정, session은 express-session에서 선언한 session
-const MongoDBStore = require('connect-mongodb-session')(session);
+const MongoDBStore  = require('connect-mongodb-session')(session);
 
 var store = new MongoDBStore(
     {
@@ -95,6 +94,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/api', api);
 
 
 // catch 404 and forward to error handler
