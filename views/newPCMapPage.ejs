@@ -36,11 +36,11 @@
         </legend>
         <span>
             <label>행 : [
-                <span id="cols">5</span>]</label>
+                <span id="cols">10</span>]</label>
         </span>
         <span>
             <label>열 : [
-                <span id="rows">5</span>]</label>
+                <span id="rows">10</span>]</label>
         </span>
         <span>
             <label>층 :
@@ -87,37 +87,34 @@
         function changePcMapNum(co, ro, state) { // 맵변경
             for (var i = 0; i < co; i++) {
                 for (var j = 0; j < ro; j++) {
-                    if (state == 1) { // 윗줄 추가할 때
-                        if (i == 0) continue; // 윗줄의 내용을 추가했으므로 i가 1까지 무시
-                        if (PcTable.children[i].children[j].getAttribute("value") === "null") {
-                            PcTable.children[i].children[j].innerHTML = ro * i + j + 1; // 번호부여
-                        } else {
-                            if ((ro * i + j + 1) == Number(pcNum[PcTable.children[i].children[j].innerHTML - 1].getAttribute(
-                                    "value")) +
-                                Row) {
-                                // 선택한 셀의 value값이 원소의 value값과 같으면
-                                pcNum[PcTable.children[i].children[j].innerHTML - 1].setAttribute("value", ro * i + j +
-                                    1);
-                                // 원소의 value값에 row만큼 더하고
-                                PcTable.children[i].children[j].setAttribute("value", ro * i + j + 1); // 해당 셀의 value 값을 원소와 동일하게
-                                console.log(pcNum[k].innerHTML + "번째 : " + pcNum[k].getAttribute("value"));
-                            }
-                        }
-                    } else if (state == 2) { // 윗줄 제거할 때
-                        if (i == co - 1) break; // 한줄의 내용을 삭제했으므로 마지막 i는 무시
-                        if (PcTable.children[i].children[j].getAttribute("value") === "null") {
-                            PcTable.children[i].children[j].innerHTML = ro * i + j + 1; // 번호부여
-                        } else {
-                            for (var k = 0; k < pcNum.length; k++) { // 윗줄을 삭제했으므로 Row만큼 빼기
-                                if ((ro * i + j + 1) == Number(pcNum[k].getAttribute("value")) - Row) { // 선택한 셀의 value값이 원소의 value값과 같으면
-                                    pcNum[k].setAttribute("value", ro * i + j + 1); // 원소의 value값에 row만큼 더하고
-                                    PcTable.children[i].children[j].innerHTML = k + 1; // html을 배열의 순서로 나타내고
-                                    PcTable.children[i].children[j].setAttribute("value", pcNum[k].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
-                                    console.log(pcNum[k].innerHTML + "번째 : " + pcNum[k].getAttribute("value"));
-                                }
-                            }
-                        }
-                    } else if (state == 3) { // 왼쪽줄 추가할 때
+                  if(state==1){ // 윗줄 추가할 때
+                  if(i==0) continue; // 윗줄의 내용을 추가했으므로 i가 1까지 무시
+                  if (PcTable.children[i].children[j].getAttribute("value")==="null") {
+                    PcTable.children[i].children[j].innerHTML = ro*i + j+1; // 번호부여
+                  }
+                  else {
+                    if ((ro*i + j+1)==Number(pcNum[PcTable.children[i].children[j].innerHTML-1].getAttribute("value"))+Row) {
+                      // 선택한 셀의 value값이 원소의 value값과 같으면
+                      pcNum[PcTable.children[i].children[j].innerHTML-1].setAttribute("value", ro*i+j+1);
+                      // 원소의 value값에 row만큼 더하고
+                      PcTable.children[i].children[j].setAttribute("value", ro*i+j+1); // 해당 셀의 value 값을 원소와 동일하게
+                      console.log(pcNum[PcTable.children[i].children[j].innerHTML-1].innerHTML + "번째 : " + pcNum[PcTable.children[i].children[j].innerHTML-1].getAttribute("value"));
+                    }
+                  }
+                }
+                else if(state == 2){ // 윗줄 제거할 때
+                  if(i==co-1) break; // 한줄의 내용을 삭제했으므로 마지막 i는 무시
+                  if (PcTable.children[i].children[j].getAttribute("value")==="null") {
+                    PcTable.children[i].children[j].innerHTML = ro*i + j+1; // 번호부여
+                  }
+                  else {
+                    if ((ro*i + j+1)==Number(pcNum[PcTable.children[i].children[j].innerHTML-1].getAttribute("value"))-Row) { // 선택한 셀의 value값이 원소의 value값과 같으면
+                      pcNum[PcTable.children[i].children[j].innerHTML-1].setAttribute("value", ro*i+j+1); // 원소의 value값에 row만큼 더하고
+                      PcTable.children[i].children[j].setAttribute("value", pcNum[PcTable.children[i].children[j].innerHTML-1].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
+                      console.log(pcNum[PcTable.children[i].children[j].innerHTML-1].innerHTML + "번째 : " + pcNum[PcTable.children[i].children[j].innerHTML-1].getAttribute("value"));
+                    }
+                  }
+                } else if (state == 3) { // 왼쪽줄 추가할 때
                         if (PcTable.children[i].children[j].getAttribute("value") === "null") { // 선택된 셀이 아니면
                             PcTable.children[i].children[j].innerHTML = ro * i + j + 1; // 번호부여
                         } else {
