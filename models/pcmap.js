@@ -9,7 +9,7 @@ var pcMapSchema = new Schema(       // PC방 자리배치 정보
             type: String,
             require: true
         },
-        tableSize: [                // 자리 배치 사이즈 (한 층 가로, 세로)
+        pcMapTable: [                // 자리 배치 사이즈 (한 층 가로, 세로)
             {
                 floor: {            // 몇 층의 자리 배치도인지?
                     type: Number,
@@ -25,7 +25,7 @@ var pcMapSchema = new Schema(       // PC방 자리배치 정보
                 }
             }
         ],
-        pc: [                       // PC 정보
+        pcInfo: [                       // PC 정보
             {
                 floor: {            // PC가 위치한 층
                     type: Number
@@ -50,5 +50,21 @@ var pcMapSchema = new Schema(       // PC방 자리배치 정보
         }
     }
 );
+
+
+pcMapSchema.statics.createPCMap = function(req, res) {
+    const newPCMap = new this({
+        pcBangId: req.body.pcBangId,
+        pcMapTable: req.body.pcMapTable,
+        pcInfo: req.body.pcInfo
+    });
+
+    return newPCMap.save( (err) => {
+        if(err)
+            throw err;
+        else
+            return res.redirect('/ceo');
+    } );
+};
 
 module.exports = mongoose.model('pcmap', pcMapSchema);

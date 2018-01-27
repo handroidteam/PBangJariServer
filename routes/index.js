@@ -6,15 +6,27 @@ var passport    = require('passport');
 var Ceo         = require('../models/ceo');
 
 
-// 중복 로그인을 막기 위한 함수
+// 중복 로그인을 막기 위한 함수 (index 페이지)
 function isLoggedIn(req, res, next) {
-    if(!req.isAuthenticated()){
+    if(!req.isAuthenticated()) {
         return next();
     } else {
         res.redirect('/');
     }
 }
 
+// 현재 세션에 값이 없을 때 로그인 페이지로 이동시키기
+function checkLoggedinAndCallBack(req, res, next) {
+    var loginInfo = req.session.passport;
+    if(loginInfo) {
+        return next();
+    } else {
+        res.render('/auth/kakao', {
+            ceoName: '',
+            ceoId: ''
+        });
+    }
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -53,19 +65,6 @@ router.get('/logout', function(req, res) {
 
 router.get('/ceo', function(req, res) {
     res.render('ceoPage');
-
-    // 완성 때 추가
-    // if(req.session.passport) {
-    //     Ceo.findById(req.session.passport.user, (err, ceo) => {
-    //         if(ceo.ownPCBang[0] == undefined) {
-    //             res.render('newPCBangPage');
-    //         } else {
-    //             res.render('ceoPage');
-    //         }
-    //     });
-    // } else {
-    //     res.redirect('/');
-    // }
 });
 
 router.get('/newPCBang', function(req, res) {

@@ -62,18 +62,16 @@ const pcBangSchema = new Schema(
         ],
         ratingScore: {
             type: Number,
-            default: null
+            default: 0
         },
         userReview: [                   // 리뷰
             {
                 reviewSubject: String,  // 리뷰 제목
                 reviewContent: String,  // 리뷰 설명
-                rating: [               // 리뷰 점수
-                    {
-                        type: Number,
-                        default: 0
-                    }
-                ],
+                rating: {               // 리뷰 점수
+                    type: Number,
+                    default: 0
+                },
                 writtenDate: {          // 리뷰 작성 날짜
                     type: Date,
                     default: Date.now
