@@ -32,20 +32,20 @@
 
                 <div class="row">
                     <div class="input-field col s12 m6">
-                        <input placeholder="ex) 000-00-00000" name="licenseNumber" id="licenseNumber" type="text" class="validate">
+                        <input placeholder="숫자 10자리를 입력하세요." name="licenseNumber" id="licenseNumber" type="text" class="validate" onkeydown="onKeyDown()" required>
                         <label for="licenseNumber">사업자등록번호</label>
                     </div>
                     <div class="input-field col s12 m6">
-                        <input placeholder="ex) 짱나라PC방" name="pcBangName" id="pcBangName" type="text" class="validate">
+                        <input placeholder="PC방 이름을 입력하세요." name="pcBangName" id="pcBangName" type="text" class="validate" required>
                         <label for="pcBangName">PC방 이름</label>
                     </div>
                     <div class="input-field col s12 m6">
-                        <input placeholder="ex) 02-000-0000" name="tel" id="tel" type="text" class="validate">
+                        <input placeholder="01012345678" name="tel" id="tel" type="text" class="validate" onkeydown="onKeyDown()" required>
                         <label for="tel">PC방 전화번호</label>
                     </div>
                     <div class="input-field col s12 m6">
-                        <input placeholder="ex) 서울시 성북구 삼선동1가 000" id="address" type="text" class="validate">
-                        <label for="address">PC방 주소</label>
+                        <input placeholder="" id="address" type="text" class="validate" required>
+                        <label for="address">PC방 주소  <button type="button" name="button">주소검색</button></label>
                     </div>
                 </div>
             </div>
@@ -57,15 +57,15 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s4 m3 l2">
-                        <input placeholder="ex) i5-8600K" name="pcSpec[CPU]" id="CPU" type="text" class="validate">
+                        <input placeholder="ex) i5-8600K" name="pcSpec[CPU]" id="CPU" type="text" class="validate" required>
                         <label for="CPU">CPU</label>
                     </div>
                     <div class="input-field col s4 m3 l2">
-                        <input placeholder="ex) DDR4 8G" name="pcSpec[RAM]" id="RAM" type="text" class="validate">
+                        <input placeholder="ex) DDR4 8G" name="pcSpec[RAM]" id="RAM" type="text" class="validate" required>
                         <label for="RAM">RAM</label>
                     </div>
                     <div class="input-field col s4 m3 l2">
-                        <input placeholder="ex) 1080ti 11GB" name="pcSpec[VGA]" id="VGA" type="text" class="validate">
+                        <input placeholder="ex) 1080ti 11GB" name="pcSpec[VGA]" id="VGA" type="text" class="validate" required>
                         <label for="VGA">VGA</label>
                     </div>
                 </div>
