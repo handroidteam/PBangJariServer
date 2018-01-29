@@ -29,7 +29,7 @@
                 <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
                     <blockquote class="right" style="margin-top:0">PC방 기본 정보</blockquote>
                 </div>
-                
+
                 <div class="row">
                     <div class="input-field col s12 m6">
                         <input placeholder="ex) 000-00-00000" name="licenseNumber" id="licenseNumber" type="text" class="validate">
@@ -43,22 +43,13 @@
                         <input placeholder="ex) 02-000-0000" name="tel" id="tel" type="text" class="validate">
                         <label for="tel">PC방 전화번호</label>
                     </div>
-                    <!--
-                    <div class="input-field col s10">
-                        <input id="tel" type="tel" class="validate">
-                        <label for="tel">PC방 연락처</label>
-                    </div>
-                    <div class="col s2 grey-text" style="margin-top:1.5rem">
-                        <i class="small material-icons">add_circle_outline</i>
-                    </div>
-                    -->
                     <div class="input-field col s12 m6">
                         <input placeholder="ex) 서울시 성북구 삼선동1가 000" id="address" type="text" class="validate">
                         <label for="address">PC방 주소</label>
                     </div>
                 </div>
             </div>
-            
+
             <div class="divider" style="margin-top:30px"></div>
             <div class="section">
                 <div class="row grey-text text-darken-1" style="margin:0 1rem 1rem 0">
@@ -78,30 +69,34 @@
                         <label for="VGA">VGA</label>
                     </div>
                 </div>
-                
-                <div class="row">
-                    <div class="input-field col s2 m1 l1">
-                        <input placeholder="XXX" name="adminIPAddress[0][ipFirst]" id="ipFirst" type="text" class="validate">
-                        <label for="ipFirst">IP주소</label>
-                    </div>
-                    <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                    <div class="input-field col s2 m1 l1">
-                        <input placeholder="XXX" name="adminIPAddress[0][ipSecond]" id="ipSecond" type="text" class="validate">
-                        <label for="ipSecond"></label>
-                    </div>
-                    <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                    <div class="input-field col s2 m1 l1">
-                        <input placeholder="XXX" name="adminIPAddress[0][ipThird]" id="ipThird" type="text" class="validate">
-                    </div>
-                    <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                    <div class="input-field col s2 m1 l1">
-                        <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate">
-                    </div>
-                    <div class="col s1 m1 l1 grey-text" style="margin-top:1.5rem">
-                        <i class="material-icons">add_circle_outline</i>
+
+                <div id="ipList">
+                    <div class="row">
+                        <div id="ipHead">
+                            <div class="input-field col s2 m1 l1">
+                              <input placeholder="XXX" name="adminIPAddress[0][ipFirst]" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown()" required>
+                              <label for="ipFirst">IP주소</label>
+                            </div>
+                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                            <div class="input-field col s2 m1 l1">
+                              <input placeholder="XXX" name="adminIPAddress[0][ipSecond]" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown()" required>
+                              <label for="ipSecond"></label>
+                            </div>
+                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                            <div class="input-field col s2 m1 l1">
+                              <input placeholder="XXX" name="adminIPAddress[0][ipThird]" id="ipThird" type="text" class="validate" onkeydown="onKeyDown()" required>
+                            </div>
+                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                            <div class="input-field col s2 m1 l1">
+                              <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate">
+                            </div>
+                        </div>
+                        <div class="col s1 m1 l1 grey-text" style="margin-top:1.5rem">
+                          <i class="material-icons" onclick="ipPlus()">add_circle_outline</i>
+                        </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div id="image">
                         <label class="col s12" for="image">PC방 대표이미지</label>
@@ -123,16 +118,53 @@
                     <i class="material-icons right">send</i>
                 </button>
             </div>
-            
+
         </form>
     </div>
-    
+
 
     <!--Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="javascripts/materialize.min.js"></script>
     <script src="javascripts/init.js"></script>
+    <script>
+        var ipList = document.getElementById("ipList");
+        ipList.length = 0;
+        var ipHead = document.getElementById("ipHead");
 
+        function onKeyDown() { // 숫자, 백스페이스, 탭키만 입력받게함
+            if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
+                if (event.keyCode == 8 || event.keyCode == 9) {} else {
+                    event.preventDefault(); // 입력안되게 함
+                }
+            }
+        }
+
+        function ipPlus() { // ip를 추가함
+            ipList.length++;
+            var addIp = document.createElement("div");
+            addIp.setAttribute("class", "row");
+            addIp.innerHTML = ipHead.innerHTML;
+            addIp.children[0].children[0].setAttribute("name", "adminIPAddress["+ipList.length+"][ipFirst]");
+            addIp.children[2].children[0].setAttribute("name", "adminIPAddress["+ipList.length+"][ipSecond]");
+            addIp.children[4].children[0].setAttribute("name", "adminIPAddress["+ipList.length+"][ipThird]");
+            var addButton = document.createElement("div");
+            addButton.setAttribute("class", "col s1 m1 l1 grey-text");
+            addButton.setAttribute("style", "margin-top:1.5rem");
+            var addRemove = document.createElement("i");
+            addRemove.setAttribute("class", "material-icons");
+            addRemove.addEventListener("click", function () { // 클릭리스너 부여
+                ipList.removeChild(this.parentElement.parentElement);
+                ipList.length--;
+                console.log(ipList.length);
+            });
+            addRemove.innerHTML = "remove_circle_outline";
+            addButton.appendChild(addRemove);
+            addIp.appendChild(addButton);
+            ipList.appendChild(addIp);
+            console.log(ipList.length);
+        }
+    </script>
 </body>
 
 </html>
