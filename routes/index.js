@@ -21,7 +21,7 @@ function checkLoggedinAndCallBack(req, res, next) {
     if(loginInfo) {
         return next();
     } else {
-        res.render('/auth/kakao', {
+        res.render('index', {
             ceoName: '',
             ceoId: ''
         });
@@ -63,19 +63,19 @@ router.get('/logout', function(req, res) {
     });
 });
 
-router.get('/ceo', function(req, res) {
+router.get('/ceo', checkLoggedinAndCallBack, function(req, res) {
     res.render('ceoPage');
 });
 
-router.get('/newPCBang', function(req, res) {
+router.get('/newPCBang', checkLoggedinAndCallBack, function(req, res) {
     res.render('newPCBangPage');
 });
 
-router.get('/newPCMap', function(req, res) {
+router.get('/newPCMap', checkLoggedinAndCallBack, function(req, res) {
     res.render('newPCMapPage');
 });
 
-router.get('/newPCMapTest', function(req, res) {
+router.get('/newPCMapTest', checkLoggedinAndCallBack, function(req, res) {
     res.render('newPCMapTest');
 });
 
