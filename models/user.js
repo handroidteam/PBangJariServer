@@ -1,9 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose      = require('mongoose');
+const { Schema }    = mongoose;
 
-mongoose.Promise = Promise;
-var Schema = mongoose.Schema;
-
-var userSchema = new Schema(
+const userSchema = new Schema(
     {
         sns: String,        // 로그인 방법에 따라 결정 ex)kakao
         name: String,
@@ -23,7 +21,5 @@ var userSchema = new Schema(
         },
     }
 );
-
-
 
 module.exports = mongoose.model('user', userSchema);

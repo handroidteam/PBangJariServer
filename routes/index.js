@@ -1,9 +1,9 @@
-var express     = require('express');
-var router      = express.Router();
+const express       = require('express');
+const router        = express.Router();
 
-var passport    = require('passport');
+const passport      = require('passport');
 
-var Ceo         = require('../models/ceo');
+const Ceo           = require('../models/ceo');
 
 
 // 중복 로그인을 막기 위한 함수 (index 페이지)
@@ -73,10 +73,6 @@ router.get('/newPCBang', function(req, res) {
 
 router.get('/newPCMap', function(req, res) {
     res.render('newPCMapPage');
-});
-
-router.get('/newPCBangTest', function(req, res) {
-    res.render('newPCBangTest');
 });
 
 router.get('/newPCMapTest', function(req, res) {

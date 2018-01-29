@@ -2,147 +2,169 @@
 <html lang="ko">
 
 <head>
-    <meta charset="utf-8">
-    <title>회원가입</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>새로운 PC방 등록</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="stylesheets/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
 </head>
-<style>
-    h2 {
-        text-align: center;
-        margin-top: 50px;
-    }
-</style>
 
 <body>
-    <h2>가입정보</h2>
-    <form id="Pibang">
-        <table border="2" align="center">
-            <tr>
-                <td>
-                    <div>사업자번호</div>
-                </td>
-                <td>
-                    <div>
-                        <input type="number" name="sajangNumber">*번호제한</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div>PC방 이름</div>
-                </td>
-                <td>
-                    <div>
-                        <input type="text" name="pibangName">*이름수제한</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div>PC방번호</div>
-                </td>
-                <td>
-                    <span>
-                        <select name="num1">
-                            <option value="010">010</option>
-                            <option value="011">011</option>
-                            <option value="017">017</option>
-                            <option value="018">018</option>
-                            <option value="019">019</option>
-                        </select>
-                    </span>
-                    <input type="text" name="num2" style="width:40px;">
-                    <input type="text" name="num2" style="width:40px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div>우편번호</div>
-                </td>
-                <td>
-                    <input type="text" name="woo" style="width:100px;">* 숫자 여섯자리
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div>PC방 주소</div>
-                </td>
-                <td>
-                    <div>(주소검색상자)</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div>상세주소</div>
-                </td>
-                <td>
-                    <input type="text" name="where" style="width:200px;">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div>PC사양</div>
-                </td>
-                <td>
-                    <div>
-                        RAM
-                        <select name="Ram_value">
-                            <option value="4G">4G</option>
-                            <option value="8G">8G</option>
-                            <option value="16G">16G</option>
-                        </select>
-                        GPU
-                        <select name="Gpu_value">
-                            <option value="760">760</option>
-                            <option value="1050">1050</option>
-                            <option value="1060">1060</option>
-                        </select>
-                        CPU
-                        <select name="Cpu_value">
-                            <option value="i5">i5</option>
-                            <option value="i7">i7</option>
-                            <option value="i8">i8</option>
-                        </select>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div>ip address</div>
-                </td>
-                <td>
-                    <span>
-                        <input type="text" name="ip_First" style="width:40px;">
-                    </span>
-                    <span>
-                        <input type="text" name="ip_Second" style="width:40px;">
-                    </span>
-                    <span>
-                        <input type="text" name="ip_Third" style="width:40px;">
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <div>
-                        <strong>
-                            <input type="button" value="Yes" onclick="Submit()">
-                        </strong>
-                        <strong>
-                            <input type="button" value="No" onclick="Back()"> </strong>
-                    </div>
-                    <script>
-                        function Submit() {
-                            // 가입 정보를 서버로 전송하여 저장한다.
-                            location.href = "/ceo";
-                        }
+    <header class="section no-pad-bot" id="index-banner">
+        <br />
+        <div class="container">
+            <h1 class="header center">
+                <a href="/"><img src="images/pbangjari-logo.png" alt="logo" width="300px"></a>
+            </h1>
+        </div>
+        <br />
+    </header>
 
-                        function Back() {
-                            window.history.back();
-                        }
-                    </script>
-                </td>
-            </tr>
-        </table>
-    </form>
+    <div class="container">
+        <form method="post" enctype="application/json" action="api/pcBang/create/ServerTest">
+            <div class="divider"></div>
+            <div class="section">
+                <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
+                    <blockquote class="right" style="margin-top:0">PC방 기본 정보</blockquote>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12 m6">
+                        <input placeholder="숫자 10자리를 입력하세요." name="licenseNumber" id="licenseNumber" type="text" class="validate" onkeydown="onKeyDown()" required>
+                        <label for="licenseNumber">사업자등록번호</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input placeholder="PC방 이름을 입력하세요." name="pcBangName" id="pcBangName" type="text" class="validate" required>
+                        <label for="pcBangName">PC방 이름</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input placeholder="01012345678" name="tel" id="tel" type="text" class="validate" onkeydown="onKeyDown()" required>
+                        <label for="tel">PC방 전화번호</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input placeholder="" id="address" type="text" class="validate" required>
+                        <label for="address">PC방 주소  <button type="button" name="button">주소검색</button></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider" style="margin-top:30px"></div>
+            <div class="section">
+                <div class="row grey-text text-darken-1" style="margin:0 1rem 1rem 0">
+                    <blockquote class="right" style="margin-top:0">PC 정보</blockquote>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4 m3 l2">
+                        <input placeholder="ex) i5-8600K" name="pcSpec[CPU]" id="CPU" type="text" class="validate" required>
+                        <label for="CPU">CPU</label>
+                    </div>
+                    <div class="input-field col s4 m3 l2">
+                        <input placeholder="ex) DDR4 8G" name="pcSpec[RAM]" id="RAM" type="text" class="validate" required>
+                        <label for="RAM">RAM</label>
+                    </div>
+                    <div class="input-field col s4 m3 l2">
+                        <input placeholder="ex) 1080ti 11GB" name="pcSpec[VGA]" id="VGA" type="text" class="validate" required>
+                        <label for="VGA">VGA</label>
+                    </div>
+                </div>
+
+                <div id="ipList">
+                    <div class="row">
+                        <div id="ipHead">
+                            <div class="input-field col s2 m1 l1">
+                              <input placeholder="XXX" name="adminIPAddress[0][ipFirst]" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown()" required>
+                              <label for="ipFirst">IP주소</label>
+                            </div>
+                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                            <div class="input-field col s2 m1 l1">
+                              <input placeholder="XXX" name="adminIPAddress[0][ipSecond]" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown()" required>
+                              <label for="ipSecond"></label>
+                            </div>
+                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                            <div class="input-field col s2 m1 l1">
+                              <input placeholder="XXX" name="adminIPAddress[0][ipThird]" id="ipThird" type="text" class="validate" onkeydown="onKeyDown()" required>
+                            </div>
+                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
+                            <div class="input-field col s2 m1 l1">
+                              <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate">
+                            </div>
+                        </div>
+                        <div class="col s1 m1 l1 grey-text" style="margin-top:1.5rem">
+                          <i class="material-icons" onclick="ipPlus()">add_circle_outline</i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div id="image">
+                        <label class="col s12" for="image">PC방 대표이미지</label>
+                        <div class="file-field input-field col s12">
+                            <div class="btn small disabled">
+                                <span>찾아보기</span>
+                                <input disabled type="file" name="pcBangImage[]" multiple>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="&nbsp;&nbsp;이미지 업로드 기능 준비중">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row center" style="margin-bottom:50px">
+                <button class="btn-large waves-effect waves-light pulse" type="submit" name="action">등록하기
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+
+    <!--Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/materialize.min.js"></script>
+    <script src="javascripts/init.js"></script>
+    <script>
+        var ipList = document.getElementById("ipList");
+        ipList.length = 0;
+        var ipHead = document.getElementById("ipHead");
+
+        function onKeyDown() { // 숫자, 백스페이스, 탭키만 입력받게함
+            if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
+                if (event.keyCode == 8 || event.keyCode == 9) {} else {
+                    event.preventDefault(); // 입력안되게 함
+                }
+            }
+        }
+
+        function ipPlus() { // ip를 추가함
+            ipList.length++;
+            var addIp = document.createElement("div");
+            addIp.setAttribute("class", "row");
+            addIp.innerHTML = ipHead.innerHTML;
+            addIp.children[0].children[0].setAttribute("name", "adminIPAddress["+ipList.length+"][ipFirst]");
+            addIp.children[2].children[0].setAttribute("name", "adminIPAddress["+ipList.length+"][ipSecond]");
+            addIp.children[4].children[0].setAttribute("name", "adminIPAddress["+ipList.length+"][ipThird]");
+            var addButton = document.createElement("div");
+            addButton.setAttribute("class", "col s1 m1 l1 grey-text");
+            addButton.setAttribute("style", "margin-top:1.5rem");
+            var addRemove = document.createElement("i");
+            addRemove.setAttribute("class", "material-icons");
+            addRemove.addEventListener("click", function () { // 클릭리스너 부여
+                ipList.removeChild(this.parentElement.parentElement);
+                ipList.length--;
+                console.log(ipList.length);
+            });
+            addRemove.innerHTML = "remove_circle_outline";
+            addButton.appendChild(addRemove);
+            addIp.appendChild(addButton);
+            ipList.appendChild(addIp);
+            console.log(ipList.length);
+        }
+    </script>
 </body>
 
 </html>
