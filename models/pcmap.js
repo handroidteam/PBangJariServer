@@ -1,15 +1,15 @@
 const mongoose      = require('mongoose');
 const { Schema }    = mongoose;
 
-const pcMapSchema = new Schema(       // PC방 자리배치 정보
+const pcMapSchema = new Schema(     // PC방 자리배치 정보
     {
         pcBangId: {
             type: String,
             require: true
         },
-        pcMapTable: [                // 자리 배치 사이즈 (한 층 가로, 세로)
+        pcMapTable: [               // 자리 배치 사이즈 (한 층 가로, 세로)
             {
-                floor: {            // 몇 층의 자리 배치도인지?
+                sector: {           // 몇 층의 자리 배치도인지?
                     type: Number,
                     require: true
                 },
@@ -23,9 +23,9 @@ const pcMapSchema = new Schema(       // PC방 자리배치 정보
                 }
             }
         ],
-        pcInfo: [                       // PC 정보
+        pcInfo: [                   // PC 정보
             {
-                floor: {            // PC가 위치한 층
+                sector: {           // PC가 위치한 층
                     type: Number
                 },
                 pcNumber: {         // PC 번호
