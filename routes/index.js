@@ -75,10 +75,6 @@ router.get('/newPCMap', function(req, res) {
     res.render('newPCMapPage');
 });
 
-router.get('/newPCBangTest', function(req, res) {
-    res.render('newPCBangTest');
-});
-
 router.get('/newPCMapTest', function(req, res) {
     res.render('newPCMapTest');
 });
