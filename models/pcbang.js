@@ -1,7 +1,6 @@
 const mongoose      = require('mongoose');
 const { Schema }    = mongoose;
 
-// PC방 정보의 경우 CEO 등록 후에는 CEO만 수정 가능하도록
 const pcBangSchema = new Schema(
     {
         registered: {                   // CEO 등록 완료?

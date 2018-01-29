@@ -1,9 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose      = require('mongoose');
+const { Schema }    = mongoose;
 
-mongoose.Promise = Promise;
-var Schema = mongoose.Schema;
-
-var pcMapSchema = new Schema(       // PC방 자리배치 정보
+const pcMapSchema = new Schema(       // PC방 자리배치 정보
     {
         pcBangId: {
             type: String,
