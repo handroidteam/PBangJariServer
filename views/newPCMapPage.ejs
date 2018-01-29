@@ -115,6 +115,7 @@
                     }
                   }
                 } else if (state == 3) { // 왼쪽줄 추가할 때
+
                         if (PcTable.children[i].children[j].getAttribute("value") === "null") { // 선택된 셀이 아니면
                             PcTable.children[i].children[j].innerHTML = ro * i + j + 1; // 번호부여
                         } else {
@@ -363,3 +364,4 @@
 </body>
 
 </html>
+
