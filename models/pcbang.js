@@ -1,7 +1,6 @@
 const mongoose      = require('mongoose');
 const { Schema }    = mongoose;
 
-// PC방 정보의 경우 CEO 등록 후에는 CEO만 수정 가능하도록
 const pcBangSchema = new Schema(
     {
         registered: {                   // CEO 등록 완료?
@@ -25,8 +24,8 @@ const pcBangSchema = new Schema(
             detailAddress: String,
         },
         location: {                     // 위도, 경도
-            lon: Number,
-            lat: Number
+            lat: Number,
+            lon: Number
         },
         nearStation: [                  // 주변 지하철역
             {
@@ -62,18 +61,16 @@ const pcBangSchema = new Schema(
         ],
         ratingScore: {
             type: Number,
-            default: null
+            default: 0
         },
         userReview: [                   // 리뷰
             {
                 reviewSubject: String,  // 리뷰 제목
                 reviewContent: String,  // 리뷰 설명
-                rating: [               // 리뷰 점수
-                    {
-                        type: Number,
-                        default: 0
-                    }
-                ],
+                rating: {               // 리뷰 점수
+                    type: Number,
+                    default: 0
+                },
                 writtenDate: {          // 리뷰 작성 날짜
                     type: Date,
                     default: Date.now
@@ -208,15 +205,15 @@ pcBangSchema.statics.deletePCbangById = function(req, res) {
     });
 };
 
-// 위도, 경도를 받아서 PC방 목록 출력하는 함수
+// 경도, 위도를 받아서 PC방 목록 출력하는 함수
 pcBangSchema.statics.findPCBangsByLonLat = function(req, res) {
-    const topLon = req.body.topLon;
-    const bottomLon = req.body.bottomLon;
-    const leftLat = req.body.leftLat;
-    const rightLat = req.body.rightLat;
+    const leftLon = req.body.leftLon;
+    const rightLon = req.body.rightLon;
+    const topLat = req.body.topLat;
+    const bottomLat = req.body.bottomLat;
     const comp = {
-        'location.lon': { $lt: topLon, $gt: bottomLon },
-        'location.lat': { $lt: rightLat, $gt: leftLat }
+        'location.lon': { $lt: rightLon, $gt: leftLon },
+        'location.lat': { $lt: topLat, $gt: bottomLat }
     };
     
     this.find( comp, (err, pcbangs) => { 

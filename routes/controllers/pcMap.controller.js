@@ -66,26 +66,10 @@ const getPCMapList = (req, res) => { // pcmap 조회
     });
 };
 
-const postCreatePCMap = (req, res) => { //pcmap 생성
-    var mapArray = [];
-    var newMap = new PCmap({
-        'pcBangId': req.params.pcBangId,
-        'floor': req.body.floor,
-        'pcTableSize.horizontal': req.body.horizontal,
-        'pcTableSize.vertical': req.body.vertical,
-        'pcNumberArray':req.body.pcNumberArray,
-        'pcPlaceArray':req.body.pcPlaceArray,
-        'pcIPArray':req.body.pcIPArray,
-        'pcFlagArray':req.body.pcFlagArray
-    });
-
-    newMap.save((err, pcmap) => {
-        if (err) res.status(404).end();
-        else if (!pcmap) res.status(403).json({
-            message: 'no map'
-        });
-        else res.status(200).json(pcmap);
-    });
+// PC맵 생성
+const postCreatePCMap = (req, res) => {
+    console.log('***** PCBang "' + req.params.pcBangId + '" requested create PCMap *****');
+    PCmap.createPCMap(req, res);
 };
 
 const putUpdatePCMap = (req, res) => { // pcmap 업데이트
