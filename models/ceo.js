@@ -28,9 +28,14 @@ const ceoSchema = new Schema(
 
 
 ////////////////// 외부 사용 가능 함수 //////////////////
-// CEO DB 조회 함수
+// CEO DB 조회 함수 (passport용)
 ceoSchema.statics.findCeoByKakaoID = function(id) {
     return this.findOne( { sns: 'kakao', profileID: id } );
+};
+
+// CEO DB 조회 함수 (CEO 페이지용)
+ceoSchema.statics.findPCBangByCeoId = function(id) {
+    return this.findById({})
 };
 
 // CEO DB 생성 함수 (최초 로그인 시 사용)
