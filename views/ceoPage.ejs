@@ -2,53 +2,102 @@
 <html lang="ko">
 
 <head>
-    <meta charset="utf-8">
-    <title>로그인</title>
-    <style>
-        nav {
-            text-align: right;
-        }
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>PC방 관리 페이지</title>
 
-        article {
-            text-align: center;
-        }
-    </style>
-
-    <script>
-    </script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="stylesheets/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
 </head>
 
 <body>
-    <header>
+    <header class="section no-pad-bot" id="index-banner">
+        <br />
+        <div class="container">
+            <h1 class="header center">
+                <a href="/"><img src="images/pbangjari-logo.png" alt="logo" width="300px"></a>
+            </h1>
+        </div>
+        <br />
     </header>
-    <nav style="margin:10px;">
-        <a id="logout" href="/logout">로그아웃</a>
-        <br>
-    </nav>
-    <aside>
-    </aside>
-    <section>
-        <article style="margin-top:100px;">
-            <button type="button" name="button" style="height:100px" onclick="location.href='/newPCMap'">
-                <h2>좌석관리</h2>
-                <p>pc방의 좌석을 등록, 수정한다.</p>
-            </button>
-            <button type="button" name="button" style="height:100px">
-                <h2>이벤트관리</h2>
-                <p>pc방의 이벤트, 대회 등을 등록한다.</p>
-            </button>
-            <button type="button" name="button" style="height:100px" onclick="location.href='/newPCBang'">
-                <h2>정보관리</h2>
-                <p>pc방의 정보를 수정한다.</p>
-            </button>
-        </article>
-    </section>
-    <footer></footer>
-    <script>
-        function Sit() {
-            location.href = "./createPcMap.ejs";
-        }
-    </script>
+
+    
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="http://materializecss.com/images/office.jpg">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator teal-text text-darken-2"><b>좌석관리</b>
+                            <i class="material-icons right">more_vert</i>
+                        </span>
+                        <p><a href="/newPCMap">출발!</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">좌석관리
+                            <i class="material-icons right">close</i>
+                        </span>
+                        <p>여기서 사장님의 PC방 좌석을 등록, 수정하세요!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="http://materializecss.com/images/office.jpg">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator teal-text text-darken-2"><b>이벤트관리</b>
+                            <i class="material-icons right">more_vert</i>
+                        </span>
+                        <p><a href="#">출발!</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">이벤트관리
+                            <i class="material-icons right">close</i>
+                        </span>
+                        <p>여기서 사장님의 PC방 이벤트를 등록, 수정하세요!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="http://materializecss.com/images/office.jpg">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator teal-text text-darken-2"><b>정보관리</b>
+                            <i class="material-icons right">more_vert</i>
+                        </span>
+                        <p><a href="/newPCBang">출발!</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">정보관리
+                            <i class="material-icons right">close</i>
+                        </span>
+                        <p>여기서 사장님의 PC방 정보를 등록, 수정하세요!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large pulse teal" href="/logout">
+            Bye!
+            <!--<i class="material-icons">clear</i>-->
+        </a>
+    </div>
+    
+
+    <!--Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/materialize.min.js"></script>
+    <script src="javascripts/init.js"></script>
+
 </body>
 
 </html>

@@ -54,16 +54,10 @@ const getPCStatus = (pcMapId, searchDate) => {
     });
 };
 
-const getPCMapList = (req, res) => { // pcmap 조회
-    PCmap.find({
-        'pcBangId': req.params.pcBangId
-    }, (err, pcmaps) => {
-        if (err) res.status(404).end();
-        else if (!pcmaps) res.status(403).json({
-            message: 'no pcmaps'
-        });
-        else res.status(200).json(pcmaps);
-    });
+// PC맵 조회
+const getPCMapDetail = (req, res) => { // pcmap 조회
+    console.log('***** PCBang "' + req.params.pcBangId + '" requested find PCMap *****');
+    PCmap.findPCMapByPCBangId(req, res);
 };
 
 // PC맵 생성
@@ -72,6 +66,7 @@ const postCreatePCMap = (req, res) => {
     PCmap.createPCMap(req, res);
 };
 
+// PC맵 업데이트
 const putUpdatePCMap = (req, res) => { // pcmap 업데이트
     var updateMap = {
         'floor': req.body.floor,
@@ -110,7 +105,7 @@ const deletePCMap = (req, res) => { // pcmap 삭제
 
 module.exports = {
     getPCStatus,
-    getPCMapList,
+    getPCMapDetail,
     postCreatePCMap,
     putUpdatePCMap,
     deletePCMap

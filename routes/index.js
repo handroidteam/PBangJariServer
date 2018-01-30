@@ -6,7 +6,7 @@ const passport      = require('passport');
 const Ceo           = require('../models/ceo');
 
 
-// 중복 로그인을 막기 위한 함수 (index 페이지)
+// Index 페이지에서 SNS 계정 중복 로그인을 막기 위한 함수
 function isLoggedIn(req, res, next) {
     if(!req.isAuthenticated()) {
         return next();
@@ -65,6 +65,10 @@ router.get('/logout', function(req, res) {
 
 router.get('/ceo', checkLoggedinAndCallBack, function(req, res) {
     res.render('ceoPage');
+});
+
+router.get('/ceoTest', checkLoggedinAndCallBack, function(req, res) {
+    res.render('ceoTest');
 });
 
 router.get('/newPCBang', checkLoggedinAndCallBack, function(req, res) {

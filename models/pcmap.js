@@ -49,7 +49,8 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
     }
 );
 
-
+////////////////// 외부 사용 가능 함수 //////////////////
+// PC맵 DB 생성 함수
 pcMapSchema.statics.createPCMap = function(req, res) {
     const newPCMap = new this({
         pcBangId: req.body.pcBangId,
@@ -63,6 +64,24 @@ pcMapSchema.statics.createPCMap = function(req, res) {
         else
             return res.redirect('/ceo');
     } );
+};
+
+// PC방 고유 ID로 해당 PC방의 PCMap을 가져오는 함수
+pcMapSchema.statics.findPCMapByPCBangId = function(req, res) {
+    const key = {
+        '_id': req.params.pcBangId
+    };
+
+    this.find( key, (err, pcmaps) => {
+        if(err)
+            return res.status(500).end();
+        else if(!pcmaps)
+            return res.status(404).json({
+                message: 'No PCMap was found'
+            });
+        else
+            return res.status(200).json(pcmaps);
+    });
 };
 
 module.exports = mongoose.model('pcmap', pcMapSchema);
