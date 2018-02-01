@@ -24,7 +24,7 @@
     </style>
 </head>
 
-<body>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
     <header>
         <p>
             <img src="images/pbangjari-logo.png" width="320" height="100" alt="logo" text-align="center">
@@ -75,16 +75,13 @@
     </form>
 
     <script>
-        function pcMapSend() {
-            document.getElementById("pcMapForm").submit();
-        }
+        var pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열
+        var PcTable = document.createElement("table"); // 표시할 테이블
+        var MapDiv = document.getElementById("MapDiv"); // MapTable에 추가
+        var Row, Col; // 가로 세로 크기
+        var click_check = false; // 클릭한 상태인지(드래그를 위해)
+        var add_check = false; // 추가상태인지
 
-
-
-        let pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열
-        let PcTable = document.createElement("table"); // 표시할 테이블
-        let MapDiv = document.getElementById("MapDiv"); // MapTable에 추가
-        let Row, Col; // 가로 세로 크기
         createPcMap(10, 10); // page 열면 테이블 출력
 
         function createPcMap(co, ro) { // 맵생성
@@ -180,8 +177,10 @@
         function insertTd(p) { // p(선택한 셀)Td속성부여
             p.setAttribute("class", "insertTd"); // 클래스부여
             p.setAttribute("value", "null"); // value값 null로 초기화
-            p.addEventListener("click", function () { // 클릭리스너 부여
+            p.addEventListener("mousedown", function () { // 클릭리스너 부여
+                click_check = true;
                 if (this.getAttribute("value") === "null") { // value값이 null이면 선택되지 않았을 때 선택한것이므로
+                    add_check = true;
                     pcNum[pcNum.length] = document.createElement("td"); // pcNum배열원소를 td로 생성
                     pcNum[pcNum.length - 1].setAttribute("value", this.innerHTML); // pcNum의 value를 선택한 번호값 입력
                     pcNum[pcNum.length - 1].innerHTML = pcNum.length; // pcNum의 html을 배열의 순서(index+1)번호를 부여
@@ -189,7 +188,25 @@
                     this.innerHTML = pcNum.length; // 선택한 셀의 html을 pcNum과 동일하게
                     this.style.backgroundColor = "lime"; // 선택한 셀의 배경색 변경
                 } else { // value값이 null이 아니라면, 이미 선택한 것을 선택한 것이므로
+                    add_check = false;
                     deleteTd(this); // 배열에서 선택한 셀을 삭제한다.
+                }
+            });
+            p.addEventListener("mouseup", function(){
+                click_check = false;
+            });
+            p.addEventListener("mouseover", function(){
+                if (click_check) {
+                    if (add_check&&this.getAttribute("value") === "null") { // value값이 null이면 선택되지 않았을 때 선택한것이므로
+                        pcNum[pcNum.length] = document.createElement("td"); // pcNum배열원소를 td로 생성
+                        pcNum[pcNum.length - 1].setAttribute("value", this.innerHTML); // pcNum의 value를 선택한 번호값 입력
+                        pcNum[pcNum.length - 1].innerHTML = pcNum.length; // pcNum의 html을 배열의 순서(index+1)번호를 부여
+                        this.setAttribute("value", pcNum[pcNum.length - 1].getAttribute("value")); // 선택한 셀의 value를 pcNum과 동일하게
+                        this.innerHTML = pcNum.length; // 선택한 셀의 html을 pcNum과 동일하게
+                        this.style.backgroundColor = "lime"; // 선택한 셀의 배경색 변경
+                    } else if(!add_check&&this.getAttribute("value") != "null") { // value값이 null이 아니라면, 이미 선택한 것을 선택한 것이므로
+                        deleteTd(this); // 배열에서 선택한 셀을 삭제한다.
+                    }
                 }
             });
         }
