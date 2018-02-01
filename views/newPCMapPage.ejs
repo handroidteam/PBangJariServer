@@ -24,7 +24,7 @@
     </style>
 </head>
 
-<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+<body onload="createPcMap(10, 10)" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
     <header>
         <p>
             <img src="images/pbangjari-logo.png" width="320" height="100" alt="logo" text-align="center">
@@ -75,14 +75,12 @@
     </form>
 
     <script>
-        var pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열
-        var PcTable = document.createElement("table"); // 표시할 테이블
-        var MapDiv = document.getElementById("MapDiv"); // MapTable에 추가
-        var Row, Col; // 가로 세로 크기
-        var click_check = false; // 클릭한 상태인지(드래그를 위해)
-        var add_check = false; // 추가상태인지
-
-        createPcMap(10, 10); // page 열면 테이블 출력
+        let pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열
+        let PcTable = document.createElement("table"); // 표시할 테이블
+        let MapDiv = document.getElementById("MapDiv"); // MapTable에 추가
+        let Row, Col; // 가로 세로 크기
+        let click_check = false; // 클릭한 상태인지(드래그를 위해)
+        let add_check = false; // 추가상태인지
 
         function createPcMap(co, ro) { // 맵생성
             for (let i = 0; i < co; i++) {
@@ -98,6 +96,15 @@
             MapDiv.appendChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
             Row = PcTable.children[0].children.length; // 가로크기 설정
             Col = PcTable.children.length; // 세로크기 설정
+
+
+            // body에 mouseup 이벤트 리스너 추가
+            let doc = document;
+            doc.addEventListener("mouseup", function(){
+                if (click_check) {
+                    click_check = false;
+                }
+            });
         }
 
         function changePcMapNum(co, ro, state) { // 맵변경

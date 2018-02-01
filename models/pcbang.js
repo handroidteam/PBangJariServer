@@ -153,7 +153,7 @@ pcBangSchema.statics.findAllPCBang = function(req, res) {
     this.find( {}, proj, (err, pcbangs) => { 
         if(err)
             return res.status(500).end();
-        else if(!pcbangs)
+        else if(pcbangs.length === 0)
             return res.status(404).json({
                 message: 'No PCBang was found'
             });
@@ -181,7 +181,7 @@ pcBangSchema.statics.findPCBangById = function(req, res) {
     this.find( key, proj, (err, pcbangs) => {
         if(err)
             return res.status(500).end();
-        else if(!pcbangs)
+        else if(pcbangs.length === 0)
             return res.status(404).json({
                 message: 'No PCBang was found'
             });
@@ -219,7 +219,7 @@ pcBangSchema.statics.findPCBangsByLonLat = function(req, res) {
     this.find( comp, (err, pcbangs) => { 
         if(err)
             return res.status(500).end();
-        else if(!pcbangs)
+        else if(pcbangs.length === 0)
             return res.status(404).json({
                 message: 'No PCBang was found'
             });

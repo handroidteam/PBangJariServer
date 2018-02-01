@@ -75,7 +75,7 @@ pcMapSchema.statics.findPCMapByPCBangId = function(req, res) {
     this.find( key, (err, pcmaps) => {
         if(err)
             return res.status(500).end();
-        else if(!pcmaps)
+        else if(pcmaps.length === 0)
             return res.status(404).json({
                 message: 'No PCMap was found'
             });
