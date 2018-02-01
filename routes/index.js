@@ -80,4 +80,8 @@ router.get('/newPCMapTest', checkLoggedinAndCallBack, function(req, res) {
     res.render('newPCMapTest');
 });
 
+router.get('/doro', function(req, res) {
+    res.render('doroTestPage');
+});
+
 module.exports = router;

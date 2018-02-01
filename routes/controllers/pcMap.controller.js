@@ -56,13 +56,13 @@ const getPCStatus = (pcMapId, searchDate) => {
 
 // PC맵 조회
 const getPCMapDetail = (req, res) => { // pcmap 조회
-    console.log('***** PCBang "' + req.params.pcBangId + '" requested find PCMap *****');
+    console.log('***** PCMap was requested by PCBangId => "' + req.params.pcBangId + '" *****');
     PCmap.findPCMapByPCBangId(req, res);
 };
 
 // PC맵 생성
 const postCreatePCMap = (req, res) => {
-    console.log('***** PCBang "' + req.params.pcBangId + '" requested create PCMap *****');
+    console.log('***** PCMap was requested by PCBangId => "' + req.params.pcBangId + '" *****');
     PCmap.createPCMap(req, res);
 };
 
