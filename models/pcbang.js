@@ -162,7 +162,7 @@ pcBangSchema.statics.findAllPCBang = function(req, res) {
     });
 };
 
-// PC방 고유 ID로 DB 검색하는 함수 (상세페이지)
+// PC방 고유 ID로 PC방 상세 정보 가져오는 함수
 pcBangSchema.statics.findPCBangById = function(req, res) {
     const key = {
         '_id': req.params.pcBangId
