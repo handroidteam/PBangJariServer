@@ -23,7 +23,7 @@
     </header>
 
     <div class="container">
-        <form method="post" enctype="application/json" action="api/pcBang/create/ServerTest">
+        <form method="post" enctype="application/json" action="api/pcBang/create/<%=ceoId%>">
             <div class="divider"></div>
             <div class="section">
                 <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
@@ -131,7 +131,6 @@
         var ipList = document.getElementById("ipList");
         ipList.length = 0;
         var ipHead = document.getElementById("ipHead");
-
         function onKeyDown() { // 숫자, 백스페이스, 탭키만 입력받게함
             if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
                 if (event.keyCode == 8 || event.keyCode == 9) {} else {
@@ -139,7 +138,6 @@
                 }
             }
         }
-
         function ipPlus() { // ip를 추가함
             ipList.length++;
             var addIp = document.createElement("div");

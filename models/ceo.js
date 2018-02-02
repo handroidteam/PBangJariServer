@@ -35,7 +35,7 @@ ceoSchema.statics.findCeoByKakaoID = function(id) {
 
 // CEO DB 조회 함수 (CEO 페이지용)
 ceoSchema.statics.findPCBangByCeoId = function(id) {
-    return this.findById({})
+    return this.findById({});
 };
 
 // CEO DB 생성 함수 (최초 로그인 시 사용)
@@ -47,6 +47,16 @@ ceoSchema.statics.createCeoDB = function({ displayName, provider, id, accessToke
         accessToken: accessToken
     });
     return newCeo.save();
+};
+
+// CEO가 PC방 등록 시 사용하는 함수
+ceoSchema.statics.addPCBangId = function(ceoid, pcbangid, res) {
+    return this.update( { _id: ceoid }, { $push: { ownPCBang : pcbangid } }, (err) => {
+        if(err)
+            res.status(500).end();
+        else
+            res.redirect('/ceo');
+    });
 };
 
 // CEO 삭제 함수
