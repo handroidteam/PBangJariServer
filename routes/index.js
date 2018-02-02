@@ -67,19 +67,21 @@ router.get('/logout', function(req, res) {
 });
 
 router.get('/ceo', checkLoggedinAndCallBack, function(req, res) {
-    res.render('ceoPage');
+    res.render('ceoPage', {
+        ceoId: req.session.passport.user
+    });
 });
 
 router.get('/newPCBang', checkLoggedinAndCallBack, function(req, res) {
-    res.render('newPCBangPage');
+    res.render('newPCBangPage', {
+        ceoId: req.session.passport.user
+    });
 });
 
 router.get('/newPCMap', checkLoggedinAndCallBack, function(req, res) {
-    res.render('newPCMapPage');
-});
-
-router.get('/newPCMapTest', checkLoggedinAndCallBack, function(req, res) {
-    res.render('newPCMapTest');
+    res.render('newPCMapTest', {
+        ceoId: req.session.passport.user
+    });
 });
 
 router.get('/doro', function(req, res) {
