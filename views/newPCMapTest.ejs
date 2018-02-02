@@ -87,9 +87,9 @@
         <input type="button" onclick="addRightLine()" value="Right+">
         <input type="button" onclick="removeRightLine()" value="Right-">
 
-        <form id="pcMapForm" method="post" enctype="application/json" action="api/pcMap/create/ServerTest">
-            <input type="hidden" name="pcBangId" value="ServerTest" />
-            <input type="hidden" name="pcMapTable[sector]" value="" />
+        <form id="pcMapForm" method="post" enctype="application/json" action="api/pcMap/create/<%=ceoId%>">
+            <input type="hidden" name="pcBangId" value="<%=ceoId%>" />
+            <input type="hidden" name="pcMapTable[sector]" value="1층" />
             <div id="pcInfo">
                 <!-- pc방 정보들 입력 -->
             </div>
@@ -115,7 +115,7 @@
         function pcMapSend(){
             let pcInfo = document.getElementById("pcInfo");
             let pcInfoSector = document.getElementsByName("pcMapTable[sector]");
-            pcInfoSector.value = "1층";
+            // pcInfoSector.value = "1층";
             let pcMapRow = document.createElement("input");
             pcMapRow.setAttribute("type", "hidden");
             pcMapRow.setAttribute("name", "pcMapTable[row]");

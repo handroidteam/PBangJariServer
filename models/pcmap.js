@@ -69,7 +69,7 @@ pcMapSchema.statics.createPCMap = function(req, res) {
 // PC방 고유 ID로 해당 PC방의 PCMap을 가져오는 함수
 pcMapSchema.statics.findPCMapByPCBangId = function(req, res) {
     const key = {
-        '_id': req.params.pcBangId
+        'pcBangId': req.params.pcBangId
     };
 
     this.find( key, (err, pcmaps) => {
