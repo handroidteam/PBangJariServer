@@ -21,7 +21,9 @@ function checkLoggedinAndCallBack(req, res, next) {
     var userInfo = req.user;
     if(userInfo) {
         if(userInfo.ownPCBang.length === 0) {
-            res.render('newPCBangPage');
+            res.render('newPCBangPage', {
+                ceoId: userInfo._id
+            });
         } else
             return next();
     } else {

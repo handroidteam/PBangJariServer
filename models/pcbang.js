@@ -118,7 +118,7 @@ const pcBangSchema = new Schema(
 
 ////////////////// 외부 사용 가능 함수 //////////////////
 // PC방 DB 생성 함수
-pcBangSchema.statics.createPCBang = function(req, res) {
+pcBangSchema.statics.createPCBang = function(req) {
     const newPCBang = new this({
         registered: true,
         licenseNumber: req.body.licenseNumber,
@@ -133,12 +133,7 @@ pcBangSchema.statics.createPCBang = function(req, res) {
         createdBy: req.params.ceoId
     });
 
-    return newPCBang.save( (err) => {
-        if(err)
-            throw err;
-        else
-            return res.redirect('/ceo');
-    } );
+    return newPCBang.save();
 };
 
 // PC방 DB 전체 조회 함수
