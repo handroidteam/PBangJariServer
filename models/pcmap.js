@@ -10,7 +10,7 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
         pcMapTable: [               // 자리 배치 사이즈 (한 층 가로, 세로)
             {
                 sector: {           // 몇 층의 자리 배치도인지?
-                    type: Number,
+                    type: String,
                     require: true
                 },
                 col: {
@@ -26,7 +26,7 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
         pcInfo: [                   // PC 정보
             {
                 sector: {           // PC가 위치한 층
-                    type: Number
+                    type: String
                 },
                 pcNumber: {         // PC 번호
                     type: Number
