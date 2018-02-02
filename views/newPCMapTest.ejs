@@ -87,21 +87,17 @@
         <input type="button" onclick="addRightLine()" value="Right+">
         <input type="button" onclick="removeRightLine()" value="Right-">
 
-        
-
         <form id="pcMapForm" method="post" enctype="application/json" action="api/pcMap/create/ServerTest">
             <input type="hidden" name="pcBangId" value="ServerTest" />
-            <input type="hidden" name="pcMapTable[sector]" value="1" />
-            <input type="hidden" name="pcMapTable[col]" value="" />
-            <input type="hidden" name="pcMapTable[row]" value="" />
-            <input type="hidden" name="pcInfo[sector]" value="" />
-            <input type="hidden" name="pcInfo[pcNumber]" value="" />
-            <input type="hidden" name="pcInfo[pcPlace]" value="" />
-            
+            <input type="hidden" name="pcMapTable[sector]" value="" />
+            <div id="pcInfo">
+                <!-- pc방 정보들 입력 -->
+            </div>
+
             <input type="button" onclick="pcMapSend()" value="배치완료" />
-        </form>    
+        </form>
     </div>
-    
+
 
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>
@@ -115,6 +111,45 @@
         let Row, Col; // 가로 세로 크기
         let click_check = false; // 클릭한 상태인지(드래그를 위해)
         let add_check = false; // 추가상태인지
+
+        function pcMapSend(){
+            let pcInfo = document.getElementById("pcInfo");
+            let pcInfoSector = document.getElementsByName("pcMapTable[sector]");
+            pcInfoSector.value = "1층";
+            let pcMapRow = document.createElement("input");
+            pcMapRow.setAttribute("type", "hidden");
+            pcMapRow.setAttribute("name", "pcMapTable[row]");
+            pcMapRow.setAttribute("value", Col);
+
+            let pcMapCol = document.createElement("input");
+            pcMapCol.setAttribute("type", "hidden");
+            pcMapCol.setAttribute("name", "pcMapTable[col]");
+            pcMapCol.setAttribute("value", Row);
+            // Row Col 값 바꿀때 수정해야함!!!!
+
+            pcInfo.appendChild(pcMapRow);
+            pcInfo.appendChild(pcMapCol);
+
+            for (var i = 0; i < pcNum.length; i++) {
+                let pcInfoSector = document.createElement("input");
+                pcInfoSector.setAttribute("type", "hidden");
+                pcInfoSector.setAttribute("name", "pcInfo["+i+"][sector]");
+                pcInfoSector.setAttribute("value", "1층");
+                let pcInfoNumber = document.createElement("input");
+                pcInfoNumber.setAttribute("type", "hidden");
+                pcInfoNumber.setAttribute("name", "pcInfo["+i+"][pcNumber]");
+                pcInfoNumber.setAttribute("value", Number(pcNum[i].innerHTML));
+                let pcInfoPlace = document.createElement("input");
+                pcInfoPlace.setAttribute("type", "hidden");
+                pcInfoPlace.setAttribute("name", "pcInfo["+i+"][pcPlace]");
+                pcInfoPlace.setAttribute("value", Number(pcNum[i].getAttribute("value")));
+                pcInfo.appendChild(pcInfoSector);
+                pcInfo.appendChild(pcInfoNumber);
+                pcInfo.appendChild(pcInfoPlace);
+            }
+            console.log(pcMapForm);
+            document.getElementById("pcMapForm").submit();
+        }
 
         function createPcMap(co, ro) { // 맵생성
             for (let i = 0; i < co; i++) {
@@ -248,7 +283,7 @@
             pcNum.splice(p.innerHTML - 1, 1); // pcNum배열에서의 p원소 뺌
             p.innerHTML = p.getAttribute("value"); // p원소의 html 원래 값으로 돌려놓음
             p.setAttribute("value", "null"); // p원소의 value null 값으로 초기화
-            p.style.backgroundColor = "yellow"; // p원소의 배경색 변경
+            p.style.backgroundColor = "white"; // p원소의 배경색 변경
         }
 
         function changeTd(p, q) { // p와 q의 정보를 바꾼다.
