@@ -148,7 +148,7 @@ pcBangSchema.statics.createPCBang = function(req) {
     return newPCBang.save();
 };
 
-// PC방 고유 ID로 PC방 상세 정보 가져오는 함수
+// PC방 고유 ID로 PC방 상세 정보 가져오는 함수 (App)
 pcBangSchema.statics.findPCBangById = function(req) {
     const key = {
         '_id': req.params.pcBangId
@@ -162,6 +162,25 @@ pcBangSchema.statics.findPCBangById = function(req) {
         'event': 1,
         'pcSpec': 1,
         'userReview': 1,
+    };
+
+    return this.find( key, proj );
+};
+
+// PC방 고유 ID로 PC방 가입 정보(Form Data)불러오는 함수 (Web)
+pcBangSchema.statics.findPCBangForm = function(req) {
+    const key = {
+        '_id': req.params.pcBangId
+    };
+    const proj = {
+        'licenseNumber': 1,
+        'pcBangName': 1,
+        'tel': 1,
+        'address': 1,
+        'adminIPAddress': 1,
+        'pcSpec': 1,
+        'pcBangImage': 1,
+        'modifiedDate': 1
     };
 
     return this.find( key, proj );
