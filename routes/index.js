@@ -39,7 +39,7 @@ function checkPCMapAndCallBack(req, res, next) {
             if(pcmaps.length === 0)
                 return next();
             else
-                return res.render('newPCMapTest', {
+                return res.render('newPCMapPage', {
                     ceoId: req.session.passport.user,
                     pcBangId: req.user.ownPCBang[0],
                     pcMaps: pcmaps
@@ -99,7 +99,7 @@ router.get('/newPCBang', checkPCBangAndCallBack, function(req, res) {
 
 router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndCallBack, function(req, res, pcmaps) {
     console.log(pcmaps);
-    res.render('newPCMapTest', {
+    res.render('newPCMapPage', {
         ceoId: req.session.passport.user,
         pcBangId: req.user.ownPCBang[0]
     });
