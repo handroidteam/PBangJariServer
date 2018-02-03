@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>PC방 좌석 배치도 그리기</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="stylesheets/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
+    <style>
+        .insertTd {
+            text-align: center;
+            border: 1px solid gray;
+            height: 0.5rem;
+        }
+    </style>
+</head>
+
+<body onload="createPcMap(10,10)" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+    <header class="section no-pad-bot" id="index-banner">
+        <br />
+        <div class="container">
+            <h1 class="header center">
+                <a href="/"><img src="images/pbangjari-logo.png" alt="logo" width="300px"></a>
+            </h1>
+        </div>
+        <br />
+    </header>
+
+    <span id="rows" style="display:none;">10</span>
+    <span id="cols" style="display:none;">10</span>
+
+    <div class="container">
+        <div class="divider"></div>
+        <div class="section">
+            <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
+                <blockquote class="right" style="margin-top:0">PC방 좌석 등록</blockquote>
+            </div>
+
+            <div class="row valign-wrapper">
+                <div class="col s1 right">
+                    <i class="material-icons" onclick="addLeftLine()">add</i>
+                    <i class="material-icons" onclick="removeLeftLine()">remove</i>
+                </div>
+                <div class="col s10 center">
+                    <div class="row">
+                        <i class="material-icons" onclick="removeTopLine()">remove</i>
+                        <i class="material-icons" onclick="addTopLine()">add</i>
+                    </div>
+                    <div class="row">
+                        <div id="MapDiv" class="center-align"></div>
+                    </div>
+                    <div class="row">
+                        <i class="material-icons" onclick="removeBottomLine()">remove</i>
+                        <i class="material-icons" onclick="addBottomLine()">add</i>
+                    </div>
+                </div>
+                <div class="col s1 left">
+                    <i class="material-icons" onclick="addRightLine()">add</i>
+                    <i class="material-icons" onclick="removeRightLine()">remove</i>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <select>
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+                <label>Materialize Select</label>
+            </div>
+        </div>
+
+
+        <input type="button" onclick="addTopLine()" value="Top+" />
+        <input type="button" onclick="removeTopLine()" value="Top-" />
+        <input type="button" onclick="addBottomLine()" value="Bottom+" />
+        <input type="button" onclick="removeBottomLine()" value="Bottom-" />
+        <input type="button" onclick="addLeftLine()" value="Left+">
+        <input type="button" onclick="removeLeftLine()" value="Left-">
+        <input type="button" onclick="addRightLine()" value="Right+">
+        <input type="button" onclick="removeRightLine()" value="Right-">
+        <input type="button" onclick="reset()" value="재배치">
+
+        <form id="pcMapForm" method="post" enctype="application/json" action="api/pcMap/create/5a6e8895506b33295c5d73ab">
+            <input type="hidden" name="pcBangId" value="5a6e8895506b33295c5d73ab" />
+            <input type="hidden" name="pcMapTable[sector]" value="1층" />
+            <div id="pcInfo">
+                <!-- pc방 정보들 입력 -->
+            </div>
+            <input type="button" onclick="pcMapSend()" value="배치완료" />
+        </form>
+    </div>
+
+
+    <!--Scripts-->
+    <script src="javascripts/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/materialize.min.js"></script>
+    <script src="javascripts/init.js"></script>
+
+    <script>
+        let pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열
+        let PcTable = document.createElement("table"); // 표시할 테이블
+        let MapDiv = document.getElementById("MapDiv"); // MapTable에 추가
+        let Row, Col; // 행(세로) 열(가로) 크기
+        let click_check = false; // 클릭한 상태인지(드래그를 위해)
+        let add_check = false; // 추가상태인지
+
+        function pcMapSend(){
+            let pcInfo = document.getElementById("pcInfo");
+            let pcInfoSector = document.getElementsByName("pcMapTable[sector]");
+            // pcInfoSector.value = "1층";
+            let pcMapRow = document.createElement("input");
+            pcMapRow.setAttribute("type", "hidden");
+            pcMapRow.setAttribute("name", "pcMapTable[row]");
+            pcMapRow.setAttribute("value", Row);
+
+            let pcMapCol = document.createElement("input");
+            pcMapCol.setAttribute("type", "hidden");
+            pcMapCol.setAttribute("name", "pcMapTable[col]");
+            pcMapCol.setAttribute("value", Col);
+
+            pcInfo.appendChild(pcMapRow);
+            pcInfo.appendChild(pcMapCol);
+
+            for (var i = 0; i < pcNum.length; i++) {
+                let pcInfoSector = document.createElement("input");
+                pcInfoSector.setAttribute("type", "hidden");
+                pcInfoSector.setAttribute("name", "pcInfo["+i+"][sector]");
+                pcInfoSector.setAttribute("value", "1층");
+                let pcInfoNumber = document.createElement("input");
+                pcInfoNumber.setAttribute("type", "hidden");
+                pcInfoNumber.setAttribute("name", "pcInfo["+i+"][pcNumber]");
+                pcInfoNumber.setAttribute("value", Number(pcNum[i].innerHTML));
+                let pcInfoPlace = document.createElement("input");
+                pcInfoPlace.setAttribute("type", "hidden");
+                pcInfoPlace.setAttribute("name", "pcInfo["+i+"][pcPlace]");
+                pcInfoPlace.setAttribute("value", Number(pcNum[i].getAttribute("value")));
+                pcInfo.appendChild(pcInfoSector);
+                pcInfo.appendChild(pcInfoNumber);
+                pcInfo.appendChild(pcInfoPlace);
+            }
+            console.log(pcMapForm);
+            document.getElementById("pcMapForm").submit();
+        }
+
+        function createPcMap(ro, co) { // 맵생성
+            for (let i = 0; i < ro; i++) {
+                let newTr = document.createElement("tr"); // 세로크기만큼 tr 생성
+                for (let j = 0; j < co; j++) {
+                    let td = document.createElement("td"); // 가로크기만큼 td 생성
+                    insertTd(td); // td 속성 부여
+                    td.innerHTML = ro * i + j + 1; // 번호부여
+                    newTr.appendChild(td); // i번째 tr에 j번째 td를 하나씩 추가
+                }
+                PcTable.appendChild(newTr); // PcTable에 i번째 tr을 하나씩 추가
+            }
+            MapDiv.appendChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
+            Col = PcTable.children[0].children.length; // 가로크기 설정
+            Row = PcTable.children.length; // 세로크기 설정
+
+
+            // body에 mouseup 이벤트 리스너 추가
+            let doc = document;
+            doc.addEventListener("mouseup", function(){
+                if (click_check) {
+                    click_check = false;
+                }
+            });
+        }
+
+        function changePcMapNum(ro, co, state) { // 맵변경
+            for (let j = 0; j < co; j++) {
+                for (let i = 0; i < ro; i++) {
+                    let changeSell = PcTable.children[i].children[j]; // 변경될 셀
+                    if (state == 1) { // 윗줄 추가할 때
+                        if (i == 0) continue; // 윗줄의 내용을 추가했으므로 i가 1까지 무시
+                        if (changeSell.getAttribute("value") === "null") {
+                            changeSell.innerHTML = co * i + j + 1; // 번호부여
+                        } else {
+                            if ((co * i + j + 1) == Number(pcNum[changeSell.innerHTML - 1].getAttribute("value")) + Col) {
+                                // 선택한 셀의 value값이 원소의 value값과 같으면
+                                pcNum[changeSell.innerHTML - 1].setAttribute("value", co * i + j + 1);
+                                // 원소의 value값에 row만큼 더하고
+                                changeSell.setAttribute("value", co * i + j + 1); // 해당 셀의 value 값을 원소와 동일하게
+                            }
+                        }
+                    } else if (state == 2) { // 윗줄 제거할 때
+                        if (i == ro - 1) break; // 한줄의 내용을 삭제했으므로 마지막 i는 무시
+                        if (changeSell.getAttribute("value") === "null") {
+                            changeSell.innerHTML = co * i + j + 1; // 번호부여
+                        } else {
+                            if ((co * i + j + 1) == Number(pcNum[changeSell.innerHTML - 1].getAttribute("value")) - Col) { // 선택한 셀의 value값이 원소의 value값과 같으면
+                                pcNum[changeSell.innerHTML - 1].setAttribute("value", co * i + j + 1); // 원소의 value값에 row만큼 더하고
+                                changeSell.setAttribute("value", pcNum[changeSell.innerHTML - 1].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
+                            }
+                        }
+                    } else if (state == 3) { // 왼쪽줄 추가할 때
+
+                        if (changeSell.getAttribute("value") === "null") { // 선택된 셀이 아니면
+                            changeSell.innerHTML = co * i + j + 1; // 번호부여
+                        } else {
+                            if ((co * i + j + 1) == Number(pcNum[changeSell.innerHTML - 1].getAttribute("value")) + 1 + i) { // 선택한 셀의 value값이 원소의 value값과 같으면
+                                pcNum[changeSell.innerHTML - 1].setAttribute("value", co * i + j + 1); // 원소의 value값에 row만큼 더하고
+                                changeSell.setAttribute("value", pcNum[changeSell.innerHTML - 1].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
+                            }
+                        }
+                    } else if (state == 4) { // 오른쪽줄 추가할 때
+                        if (changeSell.getAttribute("value") === "null") { // 선택된 셀이 아니면
+                            changeSell.innerHTML = co * i + j + 1; // 번호부여
+                        } else {
+                            if ((co * i + j + 1) == Number(pcNum[changeSell.innerHTML - 1].getAttribute("value")) + i) { // 선택한 셀의 value값이 원소의 value값과 같으면
+                                pcNum[changeSell.innerHTML - 1].setAttribute("value", co * i + j + 1); // 원소의 value값에 row만큼 더하고
+                                changeSell.setAttribute("value", pcNum[changeSell.innerHTML - 1].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
+                            }
+                        }
+                    }
+                    else if (state == 5) {
+                        if (j != Col - 1) { // 마지막 줄이 아니면 정보를 오른쪽 줄과 교환
+                            changeTd(changeSell, PcTable.children[i].children[j + 1]);
+                            if (changeSell.getAttribute("value") != "null") { // 옮긴 셀이 배열원소이면
+                                for (let k = 0; k < pcNum.length; k++) { // value 값이 변경되야 하므로 몇번째 원소인지 찾는다.
+                                    if (Number(changeSell.getAttribute("value")) === Number(pcNum[k].getAttribute("value"))) {
+                                        pcNum[k].setAttribute("value", changeSell.getAttribute("value")-1*(i+1)); // 원소의 value값에 1만큼 빼고
+                                        changeSell.setAttribute("value", pcNum[k].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
+                                        break;
+                                    }
+                                }
+                            } else {
+                                changeSell.innerHTML = (Col - 1) * i + j + 1; // 번호 새로 부여
+                            }
+                        }
+                        else {
+                            if (changeSell.getAttribute("value") != "null") { // 마지막셀이 배열원소이면
+                                deleteTd(changeSell); // 첫째열에 선택한게 있으면 삭제
+                            }
+                        }
+                    }
+                    else if (state == 6) {
+                        if (j != Col - 1) { // 마지막 줄이 아니면 정보를 수정
+                            if (changeSell.getAttribute("value") != "null") { // 셀이 배열원소이면
+                                for (let k = 0; k < pcNum.length; k++) { // value 값이 변경되야 하므로 몇번째 원소인지 찾는다.
+                                    if (Number(changeSell.getAttribute("value")) === Number(pcNum[k].getAttribute("value"))) {
+                                        pcNum[k].setAttribute("value", changeSell.getAttribute("value")-1*i); // 원소의 value값에 1만큼 빼고
+                                        changeSell.setAttribute("value", pcNum[k].getAttribute("value")); // 해당 셀의 value 값을 원소와 동일하게
+                                        break;
+                                    }
+                                }
+                            } else {
+                                changeSell.innerHTML = (Col - 1) * i + j + 1; // 번호 새로 부여
+                            }
+                        }
+                        else {
+                            if (changeSell.getAttribute("value") != "null") { // 마지막셀이 배열원소이면
+                                deleteTd(changeSell); // 첫째열에 선택한게 있으면 삭제
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function insertTd(checkSell) { // checkSell(선택한 셀)Td속성부여
+            // pcNum -> (value : 좌석번호 + innerHTML : index+1)
+            // 선택된 각 sell -> (value : 좌석번호 + innerHTML : index+1)
+            // 정보를 이렇게 입력해주는 이유는 셀이 선택되었는지 판단하고 배열번호 수정을 위해
+            checkSell.setAttribute("class", "insertTd"); // 클래스부여
+            checkSell.setAttribute("value", "null"); // value값 null로 초기화
+            checkSell.addEventListener("mousedown", function () { // 클릭리스너 부여
+                click_check = true;
+                if (this.getAttribute("value") === "null") { // value값이 null이면 선택되지 않았을 때 선택한것이므로
+                    add_check = true;
+                    pcNum[pcNum.length] = document.createElement("td"); // pcNum배열원소를 td로 생성
+                    pcNum[pcNum.length - 1].setAttribute("value", this.innerHTML); // pcNum의 value를 선택한 번호값 입력
+                    pcNum[pcNum.length - 1].innerHTML = pcNum.length; // pcNum의 html을 배열의 순서(index+1)번호를 부여
+                    this.setAttribute("value", pcNum[pcNum.length - 1].getAttribute("value")); // 선택한 셀의 value를 pcNum과 동일하게
+                    this.innerHTML = pcNum.length; // 선택한 셀의 html을 pcNum과 동일하게
+                    this.style.backgroundColor = "lime"; // 선택한 셀의 배경색 변경
+                } else { // value값이 null이 아니라면, 이미 선택한 것을 선택한 것이므로
+                    add_check = false;
+                    deleteTd(this); // 배열에서 선택한 셀을 삭제한다.
+                }
+            });
+            checkSell.addEventListener("mouseup", function(){
+                click_check = false;
+            });
+            checkSell.addEventListener("mouseover", function(){
+                if (click_check) {
+                    if (add_check&&this.getAttribute("value") === "null") { // value값이 null이면 선택되지 않았을 때 선택한것이므로
+                        pcNum[pcNum.length] = document.createElement("td"); // pcNum배열원소를 td로 생성
+                        pcNum[pcNum.length - 1].setAttribute("value", this.innerHTML); // pcNum의 value를 선택한 번호값 입력
+                        pcNum[pcNum.length - 1].innerHTML = pcNum.length; // pcNum의 html을 배열의 순서(index+1)번호를 부여
+                        this.setAttribute("value", pcNum[pcNum.length - 1].getAttribute("value")); // 선택한 셀의 value를 pcNum과 동일하게
+                        this.innerHTML = pcNum.length; // 선택한 셀의 html을 pcNum과 동일하게
+                        this.style.backgroundColor = "lime"; // 선택한 셀의 배경색 변경
+                    } else if(!add_check&&this.getAttribute("value") != "null") { // value값이 null이 아니라면, 이미 선택한 것을 선택한 것이므로
+                        deleteTd(this); // 배열에서 선택한 셀을 삭제한다.
+                    }
+                }
+            });
+        }
+
+        function deleteTd(delSell) { // pcNum배열에서 삭제한 셀을 빼는 함수
+            for (let i = delSell.innerHTML; i < pcNum.length; i++) { // 선택한 셀의 html(배열의 순서)부터 배열이 끝까지
+                pcNum[i].innerHTML = i; // html값을 하나씩 줄인다. (선택한 셀을 삭제할 것이기 때문에)
+                for (let j = 0; j < Row; j++) {
+                    for (let k = 0; k < Col; k++) {
+                        let setSell = PcTable.children[j].children[k]; // 번호 앞당길 셀
+                        if (setSell.getAttribute("value") === pcNum[i].getAttribute("value")) {
+                            setSell.innerHTML = i; // 선택된 셀 번호 앞당기기
+                        }
+                    }
+                }
+            }
+            if (pcNum.length == 0) { // 마지막 배열원소일 경우
+                pcNum.splice(delSell.innerHTML - 1);
+            }
+            pcNum.splice(delSell.innerHTML - 1, 1); // pcNum배열에서의 p원소 뺌
+            delSell.innerHTML = delSell.getAttribute("value"); // p원소의 html 원래 값으로 돌려놓음
+            delSell.setAttribute("value", "null"); // p원소의 value null 값으로 초기화
+            delSell.style.backgroundColor = "white"; // p원소의 배경색 변경
+        }
+
+        function changeTd(frontSell, backendSell) { // p와 q의 정보를 바꾼다.
+            let swapSell = document.createElement("td"); // 빈 td 객체 생성(교환하기 위해)
+            swapSell.setAttribute("value", backendSell.getAttribute("value"));
+            swapSell.innerHTML = backendSell.innerHTML;
+            swapSell.style.backgroundColor = backendSell.style.backgroundColor;
+            backendSell.setAttribute("value", frontSell.getAttribute("value"));
+            backendSell.innerHTML = frontSell.innerHTML;
+            backendSell.style.backgroundColor = frontSell.style.backgroundColor;
+            frontSell.setAttribute("value", swapSell.getAttribute("value"));
+            frontSell.innerHTML = swapSell.innerHTML;
+            frontSell.style.backgroundColor = swapSell.style.backgroundColor;
+        }
+
+        function addTopLine() { // 위로 줄 추가
+            let row = PcTable.insertRow(0); // PcTable의 윗줄을 추가한다.
+            for (let i = 0; i < Col; i++) {
+                let inTd = row.insertCell(i);
+                inTd.innerHTML = i + 1;
+                insertTd(inTd); // 추가한 윗줄에 td를 포함시킨다.
+            }
+            Col = PcTable.children[0].children.length; // 가로크기 설정
+            Row = PcTable.children.length; // 세로크기 설정
+            document.getElementById('rows').innerHTML = Row; // 행 크기 출력
+            changePcMapNum(Row, Col, 1);
+        }
+
+        function removeTopLine() {
+            if (Row < 2) return; // 세로가 2보다 작으면 삭제하지 않고 함수종료
+            for (let i = 0; i < Row; i++) {
+                for (let j = 0; j < Col; j++) {
+                    let setSell = PcTable.children[i].children[j]; // 수정할 셀
+                    if (i == Row - 1) { // 마지막줄 삭제(맨첫줄에 있던 정보)
+                        if (setSell.getAttribute("value") != "null") { // 배열원소이면
+                            deleteTd(setSell); // 첫째줄에 선택한게 있으면 삭제
+                        }
+                    } else { // 마지막 줄이 아니면 정보를 윗줄과 교환
+                        changeTd(setSell, PcTable.children[i + 1].children[j]);
+                    }
+                }
+            }
+            changePcMapNum(Row, Col, 2);
+            Col = PcTable.children[0].children.length; // 가로크기 설정
+            Row = PcTable.children.length - 1; // 세로크기 설정
+            PcTable.deleteRow(Row); // 윗줄을 아랫줄로 옮겼으므로 삭제
+            document.getElementById('rows').innerHTML = Row; // 행 크기 출력
+        }
+
+        function addBottomLine() {
+            let row = PcTable.insertRow(Row); // PcTable의 윗줄을 추가한다.
+            for (let i = 0; i < Col; i++) {
+                let inTd = row.insertCell(i);
+                let setSell = PcTable.children[Row - 1].children[i]; // 수정할 셀
+                if (setSell.getAttribute("value") == "null") {
+                    inTd.innerHTML = Number(setSell.innerHTML) + Col;
+                } else {
+                    inTd.innerHTML = Number(setSell.getAttribute("value")) + Col;
+                }
+                insertTd(inTd); // 추가한 아랫줄에 td를 포함시킨다.
+            }
+            Row = PcTable.children.length; // 세로크기 설정
+            document.getElementById('rows').innerHTML = Row; // 행 크기 출력
+        }
+
+        function removeBottomLine() {
+            if (Row < 2) return; // 세로가 2보다 작으면 삭제하지 않고 함수종료
+            for (let i = 0; i < Col; i++) {
+                let setSell = PcTable.children[Row - 1].children[i]; // 수정할 셀
+                if (setSell.getAttribute("value") != "null") { // 배열원소이면
+                    deleteTd(setSell); // 마지막줄에 선택한게 있으면 삭제
+                }
+            }
+            Row = PcTable.children.length - 1; // 세로크기 설정
+            PcTable.deleteRow(Row); // 마지막줄 삭제
+            document.getElementById('rows').innerHTML = Row; // 행 크기 출력
+        }
+
+        function addLeftLine() {
+            for (let i = 0; i < Row; i++) {
+                let inTd = PcTable.children[i].insertCell(0); // Tr의 첫번째 부분에 Td를 추가한다.
+                inTd.innerHTML = (Col + 1) * i + 1;
+                insertTd(inTd); // td속성부여
+            }
+            Col = PcTable.children[0].children.length; // 가로크기 설정
+            document.getElementById('cols').innerHTML = Col; // 열 크기 출력
+            changePcMapNum(Row, Col, 3); // 맵 수정
+        }
+
+        function removeLeftLine() {
+            if (Col < 2) return;
+            changePcMapNum(Row, Col, 5); // 삭제할 왼쪽열 오른쪽끝으로 옮기기
+            Col = PcTable.children[0].children.length - 1; // 가로크기 설정
+            document.getElementById('cols').innerHTML = Col; // 열 크기 출력
+            for (let i = 0; i < Row; i++) {
+                PcTable.children[i].deleteCell(Col); // Tr의 첫번째 부분에 있던 Td를 삭제한다.
+            }
+
+        }
+
+        function addRightLine() {
+            for (let i = 0; i < Row; i++) {
+                let inTd = PcTable.children[i].insertCell(Col); // Tr의 첫번째 부분에 Td를 추가한다.
+                inTd.innerHTML = (Col + 1) * (i + 1) - 1;
+                insertTd(inTd); // td속성부여
+            }
+            Col = PcTable.children[0].children.length; // 가로크기 설정
+            document.getElementById('cols').innerHTML = Col; // 열 크기 출력
+            changePcMapNum(Row, Col, 4); // 맵 수정
+        }
+
+        function removeRightLine() {
+            if (Col < 2) return; // 가로가 2보다 작으면 삭제하지 않고 함수종료
+            changePcMapNum(Row, Col, 6);
+            Col = PcTable.children[0].children.length - 1; // 가로크기 설정
+            document.getElementById('cols').innerHTML = Col; // 열 크기 출력
+            for (let i = 0; i < Row; i++) {
+                PcTable.children[i].deleteCell(Col); // Tr의 마지막 부분에 Td를 삭제한다.
+            }
+        }
+
+        function reset() { // 좌석배치 초기화
+            pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열 초기화
+            MapDiv.removeChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
+            PcTable = document.createElement("table"); // 표시할 테이블 재설정
+            createPcMap(Row, Col); // page 열면 테이블 출력
+        }
+    </script>
+
+</body>
+
+</html>
