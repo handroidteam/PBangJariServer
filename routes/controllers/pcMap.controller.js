@@ -57,13 +57,30 @@ const getPCStatus = (pcMapId, searchDate) => {
 // PC맵 조회
 const getPCMapDetail = (req, res) => { // pcmap 조회
     console.log('***** PCMap was requested by PCBangId => "' + req.params.pcBangId + '" *****');
-    PCmap.findPCMapByPCBangId(req, res);
+    PCmap.findPCMapsByPCBangId(req)
+        .then((pcmaps) => {
+            if(pcmaps.length === 0)
+                return res.status(404).json({
+                    message: 'No PCMap was found'
+                });
+            else
+                return res.status(200).json(pcmaps);
+        }).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 };
 
 // PC맵 생성
 const postCreatePCMap = (req, res) => {
-    console.log('***** PCMap was requested by PCBangId => "' + req.params.pcBangId + '" *****');
-    PCmap.createPCMap(req, res);
+    console.log('***** PCMap creating was requested by PCBangId => "' + req.params.pcBangId + '" *****');
+    PCmap.createPCMap(req)
+        .then(() => {
+            res.redirect('/ceo');
+        }).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 };
 
 // PC맵 업데이트

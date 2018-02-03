@@ -4,7 +4,7 @@ const router        = express.Router();
 const passport      = require('passport');
 
 const Ceo           = require('../models/ceo');
-
+const Pcmap         = require('../models/pcmap');
 
 // Index 페이지에서 SNS 계정 중복 로그인을 막기 위한 함수
 function isLoggedIn(req, res, next) {
@@ -17,8 +17,8 @@ function isLoggedIn(req, res, next) {
 
 // 현재 세션에 값이 없을 때 Index로 이동시키기
 // 세션에 CEO 정보가 있으면 PC방 정보 확인하고, 없으면 등록페이지 표시
-function checkLoggedinAndCallBack(req, res, next) {
-    var userInfo = req.user;
+function checkPCBangAndCallBack(req, res, next) {
+    const userInfo = req.user;
     if(userInfo) {
         if(userInfo.ownPCBang.length === 0) {
             res.render('newPCBangPage', {
@@ -29,6 +29,25 @@ function checkLoggedinAndCallBack(req, res, next) {
     } else {
         res.redirect('/');
     }
+}
+
+// 로그인 한 사용자의 DB에 PCMap 정보가 있으면, PCMap 페이지에 정보 로딩
+function checkPCMapAndCallBack(req, res, next) {
+    req.params.pcBangId = req.user.ownPCBang[0];
+    Pcmap.findPCMapsByPCBangId(req)
+        .then((pcmaps) => {
+            if(pcmaps.length === 0)
+                return next();
+            else
+                return res.render('newPCMapTest', {
+                    ceoId: req.session.passport.user,
+                    pcBangId: req.user.ownPCBang[0],
+                    pcMaps: pcmaps
+                });
+        }).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 }
 
 /* GET home page. */
@@ -66,21 +85,23 @@ router.get('/logout', function(req, res) {
     });
 });
 
-router.get('/ceo', checkLoggedinAndCallBack, function(req, res) {
+router.get('/ceo', checkPCBangAndCallBack, function(req, res) {
     res.render('ceoPage', {
         ceoId: req.session.passport.user
     });
 });
 
-router.get('/newPCBang', checkLoggedinAndCallBack, function(req, res) {
+router.get('/newPCBang', checkPCBangAndCallBack, function(req, res) {
     res.render('newPCBangPage', {
         ceoId: req.session.passport.user
     });
 });
 
-router.get('/newPCMap', checkLoggedinAndCallBack, function(req, res) {
+router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndCallBack, function(req, res, pcmaps) {
+    console.log(pcmaps);
     res.render('newPCMapTest', {
-        ceoId: req.session.passport.user
+        ceoId: req.session.passport.user,
+        pcBangId: req.user.ownPCBang[0]
     });
 });
 
