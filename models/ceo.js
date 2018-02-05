@@ -28,9 +28,24 @@ const ceoSchema = new Schema(
 
 
 ////////////////// 외부 사용 가능 함수 //////////////////
-// CEO DB 조회 함수
+// CEO DB 조회 함수 (passport용)
 ceoSchema.statics.findCeoByKakaoID = function(id) {
-    return this.findOne( { sns: 'kakao', profileID: id } );
+    return this.findOne( { sns: 'kakao', profileID: id } ).exec();
+};
+
+// 모든 CEO 조회 (API용)
+ceoSchema.statics.findAllCeo = function() {
+    const proj = {
+        'name': 1,
+        'ownPCBang': 1,
+    };
+
+    return this.find( {}, proj ).exec();
+};
+
+// CEO DB 조회 함수 (CEO 페이지용)
+ceoSchema.statics.findCeoById = function(id) {
+    return this.findById({});
 };
 
 // CEO DB 생성 함수 (최초 로그인 시 사용)
@@ -42,6 +57,19 @@ ceoSchema.statics.createCeoDB = function({ displayName, provider, id, accessToke
         accessToken: accessToken
     });
     return newCeo.save();
+};
+
+// CEO가 PC방 등록 시 사용하는 함수
+ceoSchema.statics.addPCBangId = function(ceoid, pcbangid) {
+    const query = {
+        '_id': ceoid
+    };
+    const what = {
+        $push: { 
+            'ownPCBang': pcbangid
+        }
+    };
+    return this.update( query, what ).exec();
 };
 
 // CEO 삭제 함수

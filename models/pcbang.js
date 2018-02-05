@@ -117,8 +117,20 @@ const pcBangSchema = new Schema(
 
 
 ////////////////// 외부 사용 가능 함수 //////////////////
+// PC방 DB 전체 조회 함수
+pcBangSchema.statics.findAllPCBang = function(req, res) {
+    const proj = {
+        'pcBangName': 1,
+        'tel': 1,
+        'address': 1,
+        'location': 1
+    };
+
+    return this.find( {}, proj );
+};
+
 // PC방 DB 생성 함수
-pcBangSchema.statics.createPCBang = function(req, res) {
+pcBangSchema.statics.createPCBang = function(req) {
     const newPCBang = new this({
         registered: true,
         licenseNumber: req.body.licenseNumber,
@@ -133,37 +145,11 @@ pcBangSchema.statics.createPCBang = function(req, res) {
         createdBy: req.params.ceoId
     });
 
-    return newPCBang.save( (err) => {
-        if(err)
-            throw err;
-        else
-            return res.redirect('/ceo');
-    } );
+    return newPCBang.save();
 };
 
-// PC방 DB 전체 조회 함수
-pcBangSchema.statics.findAllPCBang = function(req, res) {
-    const proj = {
-        'pcBangName': 1,
-        'tel': 1,
-        'address': 1,
-        'location': 1
-    };
-
-    this.find( {}, proj, (err, pcbangs) => { 
-        if(err)
-            return res.status(500).end();
-        else if(!pcbangs)
-            return res.status(404).json({
-                message: 'No PCBang was found'
-            });
-        else
-            return res.status(200).json(pcbangs);
-    });
-};
-
-// PC방 고유 ID로 DB 검색하는 함수 (상세페이지)
-pcBangSchema.statics.findPCBangById = function(req, res) {
+// PC방 고유 ID로 PC방 상세 정보 가져오는 함수 (App)
+pcBangSchema.statics.findPCBangById = function(req) {
     const key = {
         '_id': req.params.pcBangId
     };
@@ -178,35 +164,38 @@ pcBangSchema.statics.findPCBangById = function(req, res) {
         'userReview': 1,
     };
 
-    this.find( key, proj, (err, pcbangs) => {
-        if(err)
-            return res.status(500).end();
-        else if(!pcbangs)
-            return res.status(404).json({
-                message: 'No PCBang was found'
-            });
-        else
-            return res.status(200).json(pcbangs);
-    });
+    return this.find( key, proj );
+};
+
+// PC방 고유 ID로 PC방 가입 정보(Form Data)불러오는 함수 (Web)
+pcBangSchema.statics.findPCBangForm = function(req) {
+    const key = {
+        '_id': req.params.pcBangId
+    };
+    const proj = {
+        'licenseNumber': 1,
+        'pcBangName': 1,
+        'tel': 1,
+        'address': 1,
+        'adminIPAddress': 1,
+        'pcSpec': 1,
+        'pcBangImage': 1,
+        'modifiedDate': 1
+    };
+
+    return this.find( key, proj );
 };
 
 // PC방 고유 ID로 PC방을 찾아 삭제하는 함수
-pcBangSchema.statics.deletePCbangById = function(req, res) {
+pcBangSchema.statics.deletePCbangById = function(req) {
     const key = {
         'id': req.params.pcBangId
     };
-    this.findByIdAndRemove(key, (err) => {
-        if(err)
-            return res.status(500).end();
-        else
-            return res.status(200).json({
-                message: 'Deleted successfully'
-            });
-    });
+    return this.findByIdAndRemove( key );
 };
 
 // 경도, 위도를 받아서 PC방 목록 출력하는 함수
-pcBangSchema.statics.findPCBangsByLonLat = function(req, res) {
+pcBangSchema.statics.findPCBangsByLonLat = function(req) {
     const leftLon = req.body.leftLon;
     const rightLon = req.body.rightLon;
     const topLat = req.body.topLat;
@@ -216,16 +205,7 @@ pcBangSchema.statics.findPCBangsByLonLat = function(req, res) {
         'location.lat': { $lt: topLat, $gt: bottomLat }
     };
     
-    this.find( comp, (err, pcbangs) => { 
-        if(err)
-            return res.status(500).end();
-        else if(!pcbangs)
-            return res.status(404).json({
-                message: 'No PCBang was found'
-            });
-        else
-            return res.status(200).json(pcbangs);
-    });
+    return this.find( comp );
 };
 
 module.exports = mongoose.model('pcbang', pcBangSchema);

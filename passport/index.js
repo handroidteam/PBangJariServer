@@ -35,13 +35,12 @@ passport.use('kakao',
                         accessToken
                     }, function(err, ceo) {
                         if(err) {
-                            return done(err);
+                            done(err);
                         }
                         done(null, ceo);
                     });
                 } else {
                     done(null, ceo);
-                    return;
                 }
             }
         ).catch(

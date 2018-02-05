@@ -10,7 +10,7 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
         pcMapTable: [               // 자리 배치 사이즈 (한 층 가로, 세로)
             {
                 sector: {           // 몇 층의 자리 배치도인지?
-                    type: Number,
+                    type: String,
                     require: true
                 },
                 col: {
@@ -26,7 +26,7 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
         pcInfo: [                   // PC 정보
             {
                 sector: {           // PC가 위치한 층
-                    type: Number
+                    type: String
                 },
                 pcNumber: {         // PC 번호
                     type: Number
@@ -49,20 +49,25 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
     }
 );
 
+////////////////// 외부 사용 가능 함수 //////////////////
+// PC방 고유 ID로 해당 PC방의 PCMap을 가져오는 함수
+pcMapSchema.statics.findPCMapsByPCBangId = function(req) {
+    const key = {
+        'pcBangId': req.params.pcBangId
+    };
 
-pcMapSchema.statics.createPCMap = function(req, res) {
+    return this.find( key );
+};
+
+// PC맵 DB 생성 함수
+pcMapSchema.statics.createPCMap = function(req) {
     const newPCMap = new this({
         pcBangId: req.body.pcBangId,
         pcMapTable: req.body.pcMapTable,
         pcInfo: req.body.pcInfo
     });
 
-    return newPCMap.save( (err) => {
-        if(err)
-            throw err;
-        else
-            return res.redirect('/ceo');
-    } );
+    return newPCMap.save();
 };
 
 module.exports = mongoose.model('pcmap', pcMapSchema);
