@@ -9,21 +9,30 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="stylesheets/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
+    <style>
+        .ipDot {
+            margin: 0 5px 20px 5px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
-<body>
+<body onload="saveProto()">
     <header class="section no-pad-bot" id="index-banner">
         <br />
         <div class="container">
             <h1 class="header center">
-                <a href="/"><img src="images/pbangjari-logo.png" alt="logo" width="300px"></a>
+                <a href="/">
+                    <img src="images/pbangjari-logo.png" alt="logo" width="300px">
+                </a>
             </h1>
         </div>
         <br />
     </header>
 
     <div class="container">
-        <form method="post" enctype="application/json" action="api/pcBang/create/<%=ceoId%>">
+        <form method="post" enctype="application/json" action="api/pcBang/create/ServerTest">
             <div class="divider"></div>
             <div class="section">
                 <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
@@ -45,7 +54,9 @@
                     </div>
                     <div class="input-field col s12 m6">
                         <input placeholder="" id="address" type="text" class="validate" required>
-                        <label for="address">PC방 주소  <button type="button" name="button">주소검색</button></label>
+                        <label for="address">PC방 주소
+                            <button type="button" name="button">주소검색</button>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -68,31 +79,18 @@
                         <input placeholder="ex) 1080ti 11GB" name="pcSpec[VGA]" id="VGA" type="text" class="validate" required>
                         <label for="VGA">VGA</label>
                     </div>
-                </div>
 
-                <div id="ipList">
-                    <div class="row">
-                        <div id="ipHead">
-                            <div class="input-field col s2 m1 l1">
-                              <input placeholder="XXX" name="adminIPAddress[ipFirst]" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown()" required>
-                              <label for="ipFirst">IP주소</label>
-                            </div>
-                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                            <div class="input-field col s2 m1 l1">
-                              <input placeholder="XXX" name="adminIPAddress[ipSecond]" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown()" required>
-                              <label for="ipSecond"></label>
-                            </div>
-                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                            <div class="input-field col s2 m1 l1">
-                              <input placeholder="XXX" name="adminIPAddress[ipThird]" id="ipThird" type="text" class="validate" onkeydown="onKeyDown()" required>
-                            </div>
-                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                            <div class="input-field col s2 m1 l1">
-                              <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate">
-                            </div>
-                        </div>
-                        <div class="col s1 m1 l1 grey-text" style="margin-top:1.5rem">
-                          <i class="material-icons" onclick="ipPlus()">add_circle_outline</i>
+                    <div id="ipList" class="input-field col s12 offset-l1 l5">
+                        <div id="ipSet" class="valign-wrapper">
+                            <label for="ipFirst">IP주소</label>
+                            <input placeholder="XXX" name="adminIPAddress[ipFirst]" id="ipFirst" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <span class="ipDot">.</span>
+                            <input placeholder="XXX" name="adminIPAddress[ipSecond]" id="ipSecond" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <span class="ipDot">.</span>
+                            <input placeholder="XXX" name="adminIPAddress[ipThird]" id="ipThird" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <span class="ipDot">.</span>
+                            <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate center" style="width:40px; height:2rem;">
+                            <i id="plusButton" class="material-icons teal-text" onclick="addIpSet()" style="margin:0 15px 15px 15px;">add_circle_outline</i>
                         </div>
                     </div>
                 </div>
@@ -122,16 +120,13 @@
         </form>
     </div>
 
-    <%=pcBang%>
 
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>
     <script src="javascripts/materialize.min.js"></script>
     <script src="javascripts/init.js"></script>
+    
     <script>
-        var ipList = document.getElementById("ipList");
-        ipList.length = 0;
-        var ipHead = document.getElementById("ipHead");
         function onKeyDown() { // 숫자, 백스페이스, 탭키만 입력받게함
             if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
                 if (event.keyCode == 8 || event.keyCode == 9) {} else {
@@ -139,26 +134,44 @@
                 }
             }
         }
-        function ipPlus() { // ip를 추가함
-            ipList.length++;
-            var addIp = document.createElement("div");
-            addIp.setAttribute("class", "row");
-            addIp.innerHTML = ipHead.innerHTML;
-            var addButton = document.createElement("div");
-            addButton.setAttribute("class", "col s1 m1 l1 grey-text");
-            addButton.setAttribute("style", "margin-top:1.5rem");
-            var addRemove = document.createElement("i");
-            addRemove.setAttribute("class", "material-icons");
-            addRemove.addEventListener("click", function () { // 클릭리스너 부여
-                ipList.removeChild(this.parentElement.parentElement);
-                ipList.length--;
-                console.log(ipList.length);
-            });
-            addRemove.innerHTML = "remove_circle_outline";
-            addButton.appendChild(addRemove);
-            addIp.appendChild(addButton);
-            ipList.appendChild(addIp);
-            console.log(ipList.length);
+
+        let ipList = document.getElementById("ipList");
+        let ipSet = document.getElementById("ipSet");
+        let ipSetProto = ipSet.cloneNode(true);
+        let ipIcon = document.getElementById("ipIcon");
+        let ipLength = 1;
+
+        function saveProto() {
+            let label = ipSetProto.getElementsByTagName("label");
+            let iTag = ipSetProto.getElementsByTagName("i");
+            ipSetProto.removeChild(label[0]);
+            ipSetProto.removeChild(iTag[0]);
+        }
+
+        function addIpSet() { // ipSet 추가
+            if(ipLength <= 10) {
+                // 마이너스 버튼
+                let minusButton = document.createElement("i");
+                minusButton.setAttribute("class", "material-icons red-text text-lighten-2");
+                minusButton.setAttribute("style", "margin:0 15px 15px 15px;");
+                minusButton.innerHTML = "remove_circle_outline";
+                minusButton.addEventListener("click", function () { // 클릭리스너 부여
+                    ipList.removeChild(this.parentElement);
+                    ipLength--;
+                });
+                
+                // 추가할 ipSet
+                let newIpSet = document.createElement("div");
+                newIpSet.setAttribute("class", "valign-wrapper")
+                newIpSet.innerHTML = ipSetProto.innerHTML;
+
+                // ipListSet 삽입
+                newIpSet.appendChild(minusButton);
+                ipList.appendChild(newIpSet);
+                ipLength++;
+            } else {
+                return alert("최대 10개까지 설정 가능합니다");
+            }
         }
     </script>
 </body>

@@ -12,7 +12,7 @@ const getAllPCBang = (req, res) => {
             else
                 return res.status(200).json(pcbangs);
         }).catch((err) => {
-            console.log(err);
+            // console.log(err);
             res.status(500).end();
         });
 };
@@ -23,10 +23,10 @@ const postCreatePCBang = (req, res) => {
     console.log('***** CEO "' + req.params.ceoId + '" requested create PCBang *****');
     Pcbang.createPCBang(req)
         .then((newpcbang) => {
-            Ceo.addPCBangId(req.params.ceoId, newpcbang._id, res);
+            Ceo.addPCBangId(req.params.ceoId, newpcbang._id);
         }).then(
             res.redirect('/ceo')
-        ).catch( (err)=> {
+        ).catch((err)=> {
             console.log(err);
             res.status(500).end();
         });

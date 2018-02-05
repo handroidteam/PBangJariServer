@@ -116,12 +116,6 @@ router.get('/newPCBang', checkPCBangAndCallBack, checkPCBangAndAutoComplete, fun
     });
 });
 
-router.get('/newPCBangTest', checkPCBangAndCallBack, function(req, res) {
-    res.render('newPCBangTest', {
-        ceoId: req.session.passport.user
-    });
-});
-
 router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, function(req, res, pcmaps) {
     console.log(pcmaps);
     res.render('newPCMapPage', {
