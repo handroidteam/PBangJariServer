@@ -24,7 +24,7 @@
         <div class="container">
             <h1 class="header center">
                 <a href="/">
-                    <img src="images/pbangjari-logo.png" alt="logo" width="300px">
+                    <img src="images/pbangjari-logo.png" alt="logo" width="270px">
                 </a>
             </h1>
         </div>
@@ -40,23 +40,36 @@
                 </div>
 
                 <div class="row">
-                    <div class="input-field col s12 m6">
+                    <div class="input-field col s12 m4">
                         <input placeholder="숫자 10자리를 입력하세요." name="licenseNumber" id="licenseNumber" type="text" class="validate" onkeydown="onKeyDown()" required>
                         <label for="licenseNumber">사업자등록번호</label>
                     </div>
-                    <div class="input-field col s12 m6">
+                    <div class="input-field col s12 m4">
                         <input placeholder="PC방 이름을 입력하세요." name="pcBangName" id="pcBangName" type="text" class="validate" required>
                         <label for="pcBangName">PC방 이름</label>
                     </div>
-                    <div class="input-field col s12 m6">
+                    <div class="input-field col s12 m4">
                         <input placeholder="01012345678" name="tel" id="tel" type="text" class="validate" onkeydown="onKeyDown()" required>
                         <label for="tel">PC방 전화번호</label>
                     </div>
-                    <div class="input-field col s12 m6">
-                        <input placeholder="" id="address" type="text" class="validate" required>
-                        <label for="address">PC방 주소
-                            <button type="button" name="button">주소검색</button>
-                        </label>
+                    <div class="input-field col s12 m12">
+                        <div class="row">
+                            <div class="col s12 m6">
+                                <div style="float:left; margin-top:8px;">
+                                    <a class="waves-effect waves-light btn modal-trigger" href="#modal1">
+                                        <span>주소검색</span>
+                                    </a>
+                                </div>
+                                <div style="overflow:hidden; padding-left:10px;">
+                                    <label for="roadAddress">PC방 주소</label>
+                                    <input disabled placeholder="주소검색 버튼을 눌러주세요" id="roadAddress" name="address[roadAddress]" type="text" class="validate" required>
+                                </div>
+                            </div>
+                            <div class="col s12 m6">
+                                <input placeholder="상세주소를 입력해주세요" id="detailAddress" name="address[detailAddress]" type="text" class="validate" required>
+                            </div>
+                            <input type="hidden" name="address[postCode]" value="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -120,6 +133,38 @@
         </form>
     </div>
 
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <form name="form" id="form" method="post">
+            <div class="modal-content">
+                <h4>주소 검색</h4>
+                <div>
+                    <input type="hidden" name="currentPage" value="1" />
+                    <!-- 요청 변수 설정 (현재 페이지. currentPage : n> 0) -->
+                    <input type="hidden" name="countPerPage" value="10" />
+                    <!-- 요청 변수 설정 (페이지당 출력 개수. countPerPage 범위 : 0 < n <= 100) -->
+                    <input type="hidden" name="resultType" value="json" />
+                    <!-- 요청 변수 설정 (검색결과형식 설정, json) -->
+                    <input type="hidden" name="confmKey" value="U01TX0FVVEgyMDE4MDEzMTE2NDUwNzEwNzY0NDg=" />
+                    <!-- 요청 변수 설정 (승인키) -->
+                    
+                    <!-- 요청 변수 설정 (키워드) -->
+                    <div style="float:right;">
+                        <a class="modal-action waves-effect waves-green btn-flat" onClick="getAddr();">검색</a>
+                    </div>
+                    <div style="overflow:hidden;">
+                        <input type="text" name="keyword" value="" onkeydown="enterSearch();" />
+                    </div>
+                    
+
+                    <div id="list"></div>
+                    <!-- 검색 결과 리스트 출력 영역 -->
+                </div>
+            </div>
+        </form>
+    </div>
+        
+
 
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>
@@ -174,6 +219,89 @@
             }
         }
     </script>
+
+
+    <script>
+        $(document).ready(function(){
+            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+            $('.modal').modal();
+        });
+    </script>
+
+<script>
+        function getAddr() {
+            $.ajax({
+                url: 'http://www.juso.go.kr/addrlink/addrLinkApiJsonp.do',
+                type: "post",
+                data: $("#form").serialize(),
+                dataType: "jsonp",
+                crossDomain: true,
+                success: function (jsonStr) {
+                    $("#list").html("");
+                    var errCode = jsonStr.results.common.errorCode;
+                    var errDesc = jsonStr.results.common.errorMessage;
+                    if (errCode != "0") {
+                        alert(errDesc);
+                    } else {
+                        if (jsonStr != null) {
+                            makeListJson(jsonStr);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("에러발생");
+                }
+            });
+        }
+
+        function makeListJson(jsonStr) {
+            var htmlStr = "";
+            htmlStr += "<table class='highlight'>";
+            htmlStr += "<thead><tr>";
+            htmlStr += "<th>도로명 주소</th><th>지번 주소</th><th width='70px'>우편번호</th>";
+            htmlStr += "</tr></thead><tbody>";
+            $(jsonStr.results.juso).each(function () {
+                htmlStr += "<tr>";
+                htmlStr += "<td>" + this.roadAddr + "</td>";
+                // htmlStr += "<td>" + this.roadAddrPart1 + "</td>";
+                // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
+                htmlStr += "<td>" + this.jibunAddr + "</td>";
+                // htmlStr += "<td>" + this.engAddr + "</td>";
+                htmlStr += "<td>" + this.zipNo + "</td>";
+                // htmlStr += "<td>" + this.admCd + "</td>";
+                // htmlStr += "<td>" + this.rnMgtSn + "</td>";
+                // htmlStr += "<td>" + this.bdMgtSn + "</td>";
+                // htmlStr += "<td>" + this.detBdNmList + "</td>";
+                /** API 서비스 제공항목 확대 (2017.02) **/
+                // htmlStr += "<td>" + this.bdNm + "</td>";
+                // htmlStr += "<td>" + this.bdKdcd + "</td>";
+                // // htmlStr += "<td>" + this.siNm + "</td>";
+                // // htmlStr += "<td>" + this.sggNm + "</td>";
+                // // htmlStr += "<td>" + this.emdNm + "</td>";
+                // // htmlStr += "<td>" + this.liNm + "</td>";
+                // htmlStr += "<td>" + this.rn + "</td>";
+                // htmlStr += "<td>" + this.udrtYn + "</td>";
+                // htmlStr += "<td>" + this.buldMnnm + "</td>";
+                // htmlStr += "<td>" + this.buldSlno + "</td>";
+                // htmlStr += "<td>" + this.mtYn + "</td>";
+                // htmlStr += "<td>" + this.lnbrMnnm + "</td>";
+                // htmlStr += "<td>" + this.lnbrSlno + "</td>";
+                // htmlStr += "<td>" + this.emdNo + "</td>";
+                htmlStr += "</tr>";
+            });
+            htmlStr += "</tbody></table>";
+            $("#list").html(htmlStr);
+        }
+
+        function enterSearch() {
+            var evt_code = (window.netscape) ? ev.which : event.keyCode;
+            if (evt_code === 13) {
+                event.preventDefault();
+                getAddr(); //jsonp사용시 enter검색 
+            }
+        }
+    </script>
+
 </body>
 
 </html>
