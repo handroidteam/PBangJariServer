@@ -61,7 +61,15 @@ ceoSchema.statics.createCeoDB = function({ displayName, provider, id, accessToke
 
 // CEO가 PC방 등록 시 사용하는 함수
 ceoSchema.statics.addPCBangId = function(ceoid, pcbangid) {
-    return this.update( { _id: ceoid }, { $push: { ownPCBang : pcbangid } } )
+    const query = {
+        '_id': ceoid
+    };
+    const what = {
+        $push: { 
+            'ownPCBang': pcbangid
+        }
+    };
+    return this.update( query, what ).exec();
 };
 
 // CEO 삭제 함수

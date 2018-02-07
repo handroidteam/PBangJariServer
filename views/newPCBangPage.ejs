@@ -9,14 +9,23 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="stylesheets/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="stylesheets/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
+    <style>
+        .ipDot {
+            margin: 0 5px 20px 5px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
-<body>
+<body onload="saveProto()">
     <header class="section no-pad-bot" id="index-banner">
         <br />
         <div class="container">
             <h1 class="header center">
-                <a href="/"><img src="images/pbangjari-logo.png" alt="logo" width="300px"></a>
+                <a href="/">
+                    <img src="images/pbangjari-logo.png" alt="logo" width="270px">
+                </a>
             </h1>
         </div>
         <br />
@@ -31,21 +40,36 @@
                 </div>
 
                 <div class="row">
-                    <div class="input-field col s12 m6">
+                    <div class="input-field col s12 m4">
                         <input placeholder="숫자 10자리를 입력하세요." name="licenseNumber" id="licenseNumber" type="text" class="validate" onkeydown="onKeyDown()" required>
                         <label for="licenseNumber">사업자등록번호</label>
                     </div>
-                    <div class="input-field col s12 m6">
+                    <div class="input-field col s12 m4">
                         <input placeholder="PC방 이름을 입력하세요." name="pcBangName" id="pcBangName" type="text" class="validate" required>
                         <label for="pcBangName">PC방 이름</label>
                     </div>
-                    <div class="input-field col s12 m6">
+                    <div class="input-field col s12 m4">
                         <input placeholder="01012345678" name="tel" id="tel" type="text" class="validate" onkeydown="onKeyDown()" required>
                         <label for="tel">PC방 전화번호</label>
                     </div>
-                    <div class="input-field col s12 m6">
-                        <input placeholder="" id="address" type="text" class="validate" required>
-                        <label for="address">PC방 주소  <button type="button" name="button">주소검색</button></label>
+                    <div class="input-field col s12 m12">
+                        <div class="row">
+                            <div class="col s12 m8">
+                                <div style="float:left; margin-top:8px;">
+                                    <a class="waves-effect waves-light btn modal-trigger" href="#modal1">
+                                        <span>주소검색</span>
+                                    </a>
+                                </div>
+                                <div style="overflow:hidden; padding-left:10px;">
+                                    <label for="roadAddress">PC방 주소</label>
+                                    <input disabled placeholder="주소검색 버튼을 눌러주세요" id="roadAddress" name="address[roadAddress]" type="text" class="validate" required>
+                                </div>
+                            </div>
+                            <div class="col s12 m4">
+                                <input placeholder="상세주소를 입력해주세요" id="detailAddress" name="address[detailAddress]" type="text" class="validate" required>
+                            </div>
+                            <input id="postCode" type="hidden" name="address[postCode]" value="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -68,31 +92,18 @@
                         <input placeholder="ex) 1080ti 11GB" name="pcSpec[VGA]" id="VGA" type="text" class="validate" required>
                         <label for="VGA">VGA</label>
                     </div>
-                </div>
 
-                <div id="ipList">
-                    <div class="row">
-                        <div id="ipHead">
-                            <div class="input-field col s2 m1 l1">
-                              <input placeholder="XXX" name="adminIPAddress[ipFirst]" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown()" required>
-                              <label for="ipFirst">IP주소</label>
-                            </div>
-                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                            <div class="input-field col s2 m1 l1">
-                              <input placeholder="XXX" name="adminIPAddress[ipSecond]" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown()" required>
-                              <label for="ipSecond"></label>
-                            </div>
-                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                            <div class="input-field col s2 m1 l1">
-                              <input placeholder="XXX" name="adminIPAddress[ipThird]" id="ipThird" type="text" class="validate" onkeydown="onKeyDown()" required>
-                            </div>
-                            <div class="col s1 m1 l1" style="margin-top:2.5rem">.</div>
-                            <div class="input-field col s2 m1 l1">
-                              <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate">
-                            </div>
-                        </div>
-                        <div class="col s1 m1 l1 grey-text" style="margin-top:1.5rem">
-                          <i class="material-icons" onclick="ipPlus()">add_circle_outline</i>
+                    <div id="ipList" class="input-field col s12 offset-l1 l5">
+                        <div id="ipSet" class="valign-wrapper">
+                            <label for="ipFirst">IP주소</label>
+                            <input placeholder="XXX" name="adminIPAddress[ipFirst]" id="ipFirst" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <span class="ipDot">.</span>
+                            <input placeholder="XXX" name="adminIPAddress[ipSecond]" id="ipSecond" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <span class="ipDot">.</span>
+                            <input placeholder="XXX" name="adminIPAddress[ipThird]" id="ipThird" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <span class="ipDot">.</span>
+                            <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate center" style="width:40px; height:2rem;">
+                            <i id="plusButton" class="material-icons teal-text" onclick="addIpSet()" style="margin:0 15px 15px 15px;">add_circle_outline</i>
                         </div>
                     </div>
                 </div>
@@ -118,19 +129,64 @@
                     <i class="material-icons right">send</i>
                 </button>
             </div>
+        </form>
 
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <form name="form" id="form" method="post">
+            <div class="modal-content">
+                <h4>주소 검색</h4>
+                <div>
+                    <input type="hidden" id="currentPage" name="currentPage" value="1" />
+                    <!-- 요청 변수 설정 (현재 페이지. currentPage : n> 0) -->
+                    <input type="hidden" name="countPerPage" value="5" />
+                    <!-- 요청 변수 설정 (페이지당 출력 개수. countPerPage 범위 : 0 < n <= 100) -->
+                    <input type="hidden" name="resultType" value="json" />
+                    <!-- 요청 변수 설정 (검색결과형식 설정, json) -->
+                    <input type="hidden" name="confmKey" value="U01TX0FVVEgyMDE4MDEzMTE2NDUwNzEwNzY0NDg=" />
+                    <!-- 요청 변수 설정 (승인키) -->
+                    
+                    <!-- 요청 변수 설정 (키워드) -->
+                    <div style="float:right;">
+                        <a class="modal-action waves-effect waves-green btn-flat" onClick="getAddr();">검색</a>
+                    </div>
+                    <div style="overflow:hidden;">
+                        <input type="text" name="keyword" value="" onkeydown="enterSearch();" />
+                    </div>
+                    
+
+                    <!-- 검색 결과 리스트 출력 영역 -->
+                    <div id="list"></div>
+
+                    <!-- 페이지 이동 아이콘 -->
+                    <div id="page" style="display:none;">
+                        <ul class="pagination">
+                            <li id="left" class="disabled"><a href="#" onClick="pagination(1); return false"><i class="material-icons">chevron_left</i></a></li>
+                            <li id="right" class="waves-effect"><a href="#" onClick="pagination(2); return false"><i class="material-icons">chevron_right</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
+
+    <%
+        if(pcBang) {
+            let licenseNumber = document.getElementById("licenseNumber");
+            let pcBangName = document.getElementById("pcBangName");
+            let 
+        } %>
+        
 
 
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>
     <script src="javascripts/materialize.min.js"></script>
     <script src="javascripts/init.js"></script>
+    
     <script>
-        var ipList = document.getElementById("ipList");
-        ipList.length = 0;
-        var ipHead = document.getElementById("ipHead");
         function onKeyDown() { // 숫자, 백스페이스, 탭키만 입력받게함
             if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
                 if (event.keyCode == 8 || event.keyCode == 9) {} else {
@@ -138,28 +194,207 @@
                 }
             }
         }
-        function ipPlus() { // ip를 추가함
-            ipList.length++;
-            var addIp = document.createElement("div");
-            addIp.setAttribute("class", "row");
-            addIp.innerHTML = ipHead.innerHTML;
-            var addButton = document.createElement("div");
-            addButton.setAttribute("class", "col s1 m1 l1 grey-text");
-            addButton.setAttribute("style", "margin-top:1.5rem");
-            var addRemove = document.createElement("i");
-            addRemove.setAttribute("class", "material-icons");
-            addRemove.addEventListener("click", function () { // 클릭리스너 부여
-                ipList.removeChild(this.parentElement.parentElement);
-                ipList.length--;
-                console.log(ipList.length);
-            });
-            addRemove.innerHTML = "remove_circle_outline";
-            addButton.appendChild(addRemove);
-            addIp.appendChild(addButton);
-            ipList.appendChild(addIp);
-            console.log(ipList.length);
+
+        let ipList = document.getElementById("ipList");
+        let ipSet = document.getElementById("ipSet");
+        let ipSetProto = ipSet.cloneNode(true);
+        let ipIcon = document.getElementById("ipIcon");
+        let ipLength = 1;
+
+        function saveProto() {
+            let label = ipSetProto.getElementsByTagName("label");
+            let iTag = ipSetProto.getElementsByTagName("i");
+            ipSetProto.removeChild(label[0]);
+            ipSetProto.removeChild(iTag[0]);
+        }
+
+        function addIpSet() { // ipSet 추가
+            if(ipLength <= 10) {
+                // 마이너스 버튼
+                let minusButton = document.createElement("i");
+                minusButton.setAttribute("class", "material-icons red-text text-lighten-2");
+                minusButton.setAttribute("style", "margin:0 15px 15px 15px;");
+                minusButton.innerHTML = "remove_circle_outline";
+                minusButton.addEventListener("click", function () { // 클릭리스너 부여
+                    ipList.removeChild(this.parentElement);
+                    ipLength--;
+                });
+                
+                // 추가할 ipSet
+                let newIpSet = document.createElement("div");
+                newIpSet.setAttribute("class", "valign-wrapper")
+                newIpSet.innerHTML = ipSetProto.innerHTML;
+
+                // ipListSet 삽입
+                newIpSet.appendChild(minusButton);
+                ipList.appendChild(newIpSet);
+                ipLength++;
+            } else {
+                return alert("최대 10개까지 설정 가능합니다");
+            }
         }
     </script>
+
+
+    <script>
+        $(document).ready(function(){
+            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+            $('.modal').modal();
+        });
+    </script>
+
+    <script>
+        let resultInfo;
+        let currentPage;
+        let totalCount;
+        let totalPage;
+
+        function getAddr() {
+            console.log("in getAddr(), requested page is : " + currentPage);
+            $.ajax({
+                url: 'http://www.juso.go.kr/addrlink/addrLinkApiJsonp.do',
+                type: "post",
+                data: $("#form").serialize(),
+                dataType: "jsonp",
+                crossDomain: true,
+                success: function (jsonStr) {
+                    $("#list").html("");
+                    var errCode = jsonStr.results.common.errorCode;
+                    var errDesc = jsonStr.results.common.errorMessage;
+                    if (errCode != "0") {
+                        alert(errDesc);
+                    } else {
+                        if (jsonStr != null) {
+                            makeListJson(jsonStr);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("에러발생");
+                }
+            });
+        };
+
+        function pagination(input) {
+            let req = Number(input);
+            let currentPage = document.getElementById("currentPage");
+            let value = Number(currentPage.value);
+
+            switch(req) {
+                case 1:
+                    if(value > 1) {
+                        currentPage.setAttribute("value", --value);
+                        break;
+                    } else {
+                        break;
+                    }
+                case 2:
+                    if(value < totalPage) {
+                        currentPage.setAttribute("value", ++value);
+                        break;
+                    } else {
+                        break;
+                    }
+            }
+            
+            if(value === 1) {
+                console.log("currentPage is 1")
+                document.getElementById("left").setAttribute("class", "disabled");
+                document.getElementById("right").setAttribute("class", "waves-effect");
+            } else if(value === totalPage) {
+                console.log("currentPage = totalPage");
+                document.getElementById("left").setAttribute("class", "waves-effect");
+                document.getElementById("right").setAttribute("class", "disabled");
+            } else {
+                console.log("currentPage is somewhere");
+                console.log("currentPage is : " + value + ", totalPage is " + totalPage);
+                document.getElementById("left").setAttribute("class", "waves-effect");
+                document.getElementById("right").setAttribute("class", "waves-effect");
+            };
+            getAddr();
+
+        };
+
+        function makeListJson(jsonStr) {
+            var htmlStr = "";
+            htmlStr += "<table class='highlight'>";
+            htmlStr += "<thead><tr>";
+            htmlStr += "<th>도로명 주소</th><th>지번 주소</th><th width='70px'>우편번호</th>";
+            htmlStr += "</tr></thead>";
+            htmlStr += "<tbody>";
+            $(jsonStr.results.juso).each(function () {
+                htmlStr += "<tr onclick='fillRoadAddress(this)' class='modal-close'>";
+                htmlStr += "<td>" + this.roadAddr + "</td>";
+                // htmlStr += "<td>" + this.roadAddrPart1 + "</td>";
+                // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
+                htmlStr += "<td>" + this.jibunAddr + "</td>";
+                // htmlStr += "<td>" + this.engAddr + "</td>";
+                htmlStr += "<td>" + this.zipNo + "</td>";
+                // htmlStr += "<td>" + this.admCd + "</td>";
+                // htmlStr += "<td>" + this.rnMgtSn + "</td>";
+                // htmlStr += "<td>" + this.bdMgtSn + "</td>";
+                // htmlStr += "<td>" + this.detBdNmList + "</td>";
+                /** API 서비스 제공항목 확대 (2017.02) **/
+                // htmlStr += "<td>" + this.bdNm + "</td>";
+                // htmlStr += "<td>" + this.bdKdcd + "</td>";
+                // // htmlStr += "<td>" + this.siNm + "</td>";
+                // // htmlStr += "<td>" + this.sggNm + "</td>";
+                // // htmlStr += "<td>" + this.emdNm + "</td>";
+                // // htmlStr += "<td>" + this.liNm + "</td>";
+                // htmlStr += "<td>" + this.rn + "</td>";
+                // htmlStr += "<td>" + this.udrtYn + "</td>";
+                // htmlStr += "<td>" + this.buldMnnm + "</td>";
+                // htmlStr += "<td>" + this.buldSlno + "</td>";
+                // htmlStr += "<td>" + this.mtYn + "</td>";
+                // htmlStr += "<td>" + this.lnbrMnnm + "</td>";
+                // htmlStr += "<td>" + this.lnbrSlno + "</td>";
+                // htmlStr += "<td>" + this.emdNo + "</td>";
+                htmlStr += "</tr>";
+            });
+            htmlStr += "</tbody></table>";
+
+            resultInfo = jsonStr.results.common;
+            currentPage = Number(resultInfo.currentPage);
+            totalCount = Number(resultInfo.totalCount);
+            totalPage = Math.ceil(totalCount / 5);
+            console.log("************* result info *************")
+            console.log(resultInfo);
+            console.log("***************************************")
+
+            if(totalCount > 5) {
+                var page = document.getElementById("page");
+                page.setAttribute("style", "diplay:inherit")
+                if(currentPage === 1) {
+                    document.getElementById("left").setAttribute("class", "disabled");
+                    document.getElementById("right").setAttribute("class", "waves-effect");
+                } else if(currentPage === totalPage) {
+                    document.getElementById("left").setAttribute("class", "waves-effect");
+                    document.getElementById("right").setAttribute("class", "disabled");
+                } else {
+                    document.getElementById("left").setAttribute("class", "waves-effect");
+                    document.getElementById("right").setAttribute("class", "waves-effect");
+                };
+            };
+
+            $("#list").html(htmlStr);
+        };
+
+        function enterSearch() {
+            var evt_code = (window.netscape) ? ev.which : event.keyCode;
+            if (evt_code === 13) {
+                event.preventDefault();
+                getAddr(); //jsonp사용시 enter검색 
+            }
+        };
+
+        function fillRoadAddress(selectedAddress) {
+            let roadAddress = document.getElementById("roadAddress");
+            let postCode = document.getElementById("postCode");
+            roadAddress.value = selectedAddress.children[0].innerHTML;
+            postCode.value = selectedAddress.children[2].innerHTML;
+        }
+    </script>
+
 </body>
 
 </html>
