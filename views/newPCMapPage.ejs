@@ -88,14 +88,18 @@
         <input type="button" onclick="removeRightLine()" value="Right-">
         <input type="button" onclick="reset()" value="재배치">
 
-        <form id="pcMapForm" method="post" enctype="application/json" action="api/pcMap/create/5a6e8895506b33295c5d73ab">
-            <input type="hidden" name="pcBangId" value="5a6e8895506b33295c5d73ab" />
+        <form id="pcMapForm" method="post" enctype="application/json" action="api/pcMap/create/<%=pcBangId%>">
+            <input type="hidden" name="pcBangId" value="<%=pcBangId%>" />
             <input type="hidden" name="pcMapTable[sector]" value="1층" />
             <div id="pcInfo">
                 <!-- pc방 정보들 입력 -->
             </div>
             <input type="button" onclick="pcMapSend()" value="배치완료" />
+            <input type="button" onclick="location.href='/ipSet'" value="ip설정페이지로" />
         </form>
+    </div>
+    <div id="test">
+        <%=pcMaps%>
     </div>
 
 
@@ -111,6 +115,12 @@
         let Row, Col; // 행(세로) 열(가로) 크기
         let click_check = false; // 클릭한 상태인지(드래그를 위해)
         let add_check = false; // 추가상태인지
+        // let test = JSON.parse(document.getElementById("test").innerHTML);
+        // let tt = document.getElementById("test").innerHTML;
+        // let test = JSON.parse(tt);
+        // console.log(test);
+        var pcMaps = <%-JSON.stringify(pcMaps)%>
+        console.log(pcMaps.length);
 
         function pcMapSend(){
             let pcInfo = document.getElementById("pcInfo");
@@ -451,8 +461,10 @@
             MapDiv.removeChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
             PcTable = document.createElement("table"); // 표시할 테이블 재설정
             createPcMap(Row, Col); // page 열면 테이블 출력
+
         }
     </script>
+
 
 </body>
 
