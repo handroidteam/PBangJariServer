@@ -32,7 +32,7 @@
     </header>
 
     <div class="container">
-        <form method="post" enctype="application/json" action="api/pcBang/create/<%=ceoId%>">
+        <form method="post" id="createForm" enctype="application/json" action="api/pcBang/create/<%=ceoId%>">
             <div class="divider"></div>
             <div class="section">
                 <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
@@ -62,7 +62,7 @@
                                 </div>
                                 <div style="overflow:hidden; padding-left:10px;">
                                     <label for="roadAddress">PC방 주소</label>
-                                    <input disabled placeholder="주소검색 버튼을 눌러주세요" id="roadAddress" name="address[roadAddress]" type="text" class="validate" required>
+                                    <input placeholder="주소검색 버튼을 눌러주세요" id="roadAddress" name="address[roadAddress]" type="text" required readonly>
                                 </div>
                             </div>
                             <div class="col s12 m4">
@@ -114,10 +114,10 @@
                         <div class="file-field input-field col s12">
                             <div class="btn small disabled">
                                 <span>찾아보기</span>
-                                <input disabled type="file" name="pcBangImage" multiple>
+                                <input disabled type="file" id="pcBangImage" name="pcBangImage" multiple>
                             </div>
                             <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text" placeholder="&nbsp;&nbsp;이미지 업로드 기능 준비중">
+                                <input disabled class="file-path validate" type="text" placeholder="&nbsp;&nbsp;이미지 업로드 기능 준비중">
                             </div>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
             </div>
 
             <div class="row center" style="margin-bottom:50px">
-                <button class="btn-large waves-effect waves-light pulse" type="submit" name="action">등록하기
+                <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">등록하기
                     <i class="material-icons right">send</i>
                 </button>
             </div>
@@ -172,14 +172,26 @@
         </form>
     </div>
 
-    <%
+    <script>
+        var pcBang = <%- JSON.stringify(pcBang) %>;
         if(pcBang) {
-            let licenseNumber = document.getElementById("licenseNumber");
-            let pcBangName = document.getElementById("pcBangName");
-            let 
-        } %>
+            document.getElementById("createForm").action = "api/pcBang/update/<%=ceoId%>";
+            document.getElementById("licenseNumber").value = pcBang.licenseNumber;
+            document.getElementById("pcBangName").value = pcBang.pcBangName;
+            document.getElementById("tel").value = pcBang.tel;
+            document.getElementById("roadAddress").value = pcBang.address.roadAddress;
+            document.getElementById("detailAddress").value = pcBang.address.detailAddress;
+            document.getElementById("CPU").value = pcBang.pcSpec.CPU;
+            document.getElementById("RAM").value = pcBang.pcSpec.RAM;
+            document.getElementById("VGA").value = pcBang.pcSpec.VGA;
+            document.getElementById("ipFirst").value = pcBang.adminIPAddress[0].ipFirst;
+            document.getElementById("ipSecond").value = pcBang.adminIPAddress[0].ipSecond;
+            document.getElementById("ipThird").value = pcBang.adminIPAddress[0].ipThird;
+            document.getElementById("regButton").setAttribute("disabled", "disabled")
+            // document.getElementById("pcBangImage").value = pcBang.pcBangImage;
+        }
         
-
+    </script>
 
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>

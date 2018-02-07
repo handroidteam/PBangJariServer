@@ -23,7 +23,8 @@ function checkPCBangAndCallBack(req, res, next) {
     if(userInfo) {
         if(userInfo.ownPCBang.length === 0) {
             res.render('newPCBangPage', {
-                ceoId: userInfo._id
+                ceoId: userInfo._id,
+                pcBang: null
             });
         } else
             return next();
