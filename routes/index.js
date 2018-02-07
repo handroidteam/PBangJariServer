@@ -128,4 +128,8 @@ router.get('/doro', function(req, res) {
     res.render('doroTestPage');
 });
 
+router.get('/ipSet', function(req, res) {
+    res.render('ipSetPage');
+});
+
 module.exports = router;
