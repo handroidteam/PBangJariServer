@@ -12,7 +12,8 @@
 
     <style>
         .ipSetButton {
-            width: 80px;
+            width:80px;
+            padding:0 0 0 0;
             margin: 0 5px 5px 5px;
             font-weight: bold;
         }
@@ -38,31 +39,27 @@
     </header>
 
     <div class="container">
-        <form method="post" enctype="application/json" action="api/pcBang/create/ServerTest">
+        <form id="ipForm" method="post" enctype="application/json">
             <div class="divider"></div>
             <div class="section">
                 <div class="row text-darken-1" style="margin:0 1rem 0 0">
-                    <div class="col s12 m2" style="margin-top:0">
-                        <button class="ipSetButton" onclick="allCheck(0)" type="button" name="autoButton">자동설정</button>
-                    </div>
-                    <div class="col s12 m2" style="margin-top:0">
-                        <button class="ipSetButton" onclick="allCheck(1)" type="button" name="autoButton">전체선택</button>
-                    </div>
-                    <div class="col s12 m2" style="margin-top:0">
-                        <button class="ipSetButton" onclick="allCheck(2)" type="button" name="autoButton">전체해제</button>
-                    </div>
-                    <div class="col s12 m2" style="margin-top:0">
-                        <button class="ipSetButton" type="button" onclick="allCheck(3)" name="autoButton">+1</button>
-                    </div>
-                    <div class="col s12 m2" style="margin-top:0">
-                        <button class="ipSetButton" type="button" onclick="allCheck(4)" name="autoButton">-1</button>
-                    </div>
                     <blockquote class="right" style="margin: 0 0 0 0">IP 상세설정</blockquote>
                 </div>
-
             </div>
 
-            <div class="section">
+            <div class="section" >
+                <div class="row text-darken-1 valign-wrapper">
+                    <a id="selectIp" class="ipSetButton col s12 center dropdown-button btn" data-beloworigin="true" href='#' data-activates='dropdown' value='0'>IP선택</a>
+                    <ul id='dropdown1' style="padding:0 0 0 0;" class='dropdown-content'>
+                    </ul>
+                    <a class="ipSetButton col s12 waves-effect waves-light btn" onclick="allCheck(0)"  type="button" name="autoButton">자동설정</a>
+                    <a class="ipSetButton col s12 waves-effect waves-light btn" onclick="allCheck(1)"  type="button" name="autoButton">전체선택</a>
+                    <a class="ipSetButton col s12 waves-effect waves-light btn" onclick="allCheck(2)"  type="button" name="autoButton">전체해제</a>
+                    <a class="ipSetButton col s12 waves-effect waves-light btn" onclick="allCheck(3)"  type="button" name="autoButton">+1</a>
+                    <a class="ipSetButton col s12 waves-effect waves-light btn" onclick="allCheck(4)"  type="button" name="autoButton">-1</a>
+                    </div>
+                </div>
+
                 <div class="row">
                     <!-- <div id="ipList" class="col s7 m5 push-l1"> -->
                     <div id="ipList" class="center">
@@ -81,30 +78,53 @@
                             <input class="center" name="adminIPAddress[ipFourth]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFourth" type="text" onkeydown="onKeyDown()" class="validate" required>
                             <br/>
                         </div>
-
                     </div>
                 </div>
             </div>
 
             <div class="row center" style="margin-bottom:50px">
-                <button class="btn-large waves-effect waves-light pulse" type="submit" name="action">등록완료
-                    <i class="material-icons right">send</i>
+                <button class="btn-large waves-effect waves-light pulse" type="button" onclick="ipSend()">
+                    등록완료<i class="material-icons right">send</i>
                 </button>
             </div>
         </form>
     </div>
+
+    <script src="javascripts/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/materialize.min.js"></script>
+    <script src="javascripts/init.js"></script>
     <script>
-        // var pcMaps = <%-JSON.stringify("")%> 데이터베이스정보를 불러온다.
-        var testLength = 100; // 선택한 pc좌석이 10일 경우
-        var testIpFirst = 192;
-        var testIpSecond = 168;
-        var testIpThird = 46;
-        // 테스트 IP
+        // var pcMaps = <%-JSON.stringify("")%> 데이터베이스정보를 불러올 준비
+
+        var testLength = 10; // 선택한 pc좌석 length 샘플
+        var testIp = [ // IP샘플
+            {ipFirst: 192, ipSecond: 168, ipThird: 146},
+            {ipFirst: 191, ipSecond: 150, ipThird: 66}
+        ];
+        // 테스트 샘플
+
+
         var ipList = document.getElementById('ipList');
         var ipSet = document.getElementById('ipSet');
-        function getMapData(){
-            for (var i = 0; i < testLength; i++) {
-                var addDiv = ipSet.cloneNode(true);
+        var selectIp = document.getElementById('selectIp');
+        var dropdown = document.getElementById('dropdown');
+
+        function getMapData(){ // 데이터베이스 불러오기
+            for (var i = 0; i < testIp.length; i++) { // ip설정 리스트 생성
+                dropdown1.appendChild(document.createElement('li'));
+                let addList = dropdown1.children[i]; // addList : 등록된 ip
+                addList.appendChild(document.createElement('a'));
+                addList.setAttribute('class', 'center-align, valign-wrapper');
+                addList.children[0].setAttribute('style', 'padding: 0 0 0 0;');
+                addList.children[0].innerHTML = testIp[i].ipFirst+'.'+testIp[i].ipSecond+'.'+testIp[i].ipThird;
+                addList.addEventListener('click', function(){
+                    selectIp.innerHTML = this.children[0].innerHTML;
+                    selectIp.value = Array.prototype.indexOf.call(this.parentElement.children, this)+1;
+                });
+            }
+
+            for (var i = 0; i < testLength; i++) { // ip입력할 공간 생성
+                var addDiv = ipSet.cloneNode(true); // addDiv : 입력할 ip한줄
                 addDiv.setAttribute('style','margin-bottom: 0px;');
                 addDiv.children[0].children[0].setAttribute('id', 'ipCheck'+i);
                 addDiv.children[0].children[1].setAttribute('for', 'ipCheck'+i);
@@ -115,7 +135,7 @@
                 addDiv.children[8].setAttribute('value', ' ');
                 ipList.appendChild(addDiv);
             }
-            ipList.removeChild(ipList.children[0]);
+            ipList.removeChild(ipList.children[0]); // 기존 틀은 삭제
         }
         function onKeyDown() { // 숫자, 백스페이스, 탭키만 입력받게함
             if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
@@ -127,13 +147,17 @@
 
         function allCheck(check) {
             for (var i = 0; i < testLength; i++) {
-                let checkState = ipList.children[i].children[0].children[0];
-                let checkNum = ipList.children[i].children[8];
+                let checkState = ipList.children[i].children[0].children[0]; // 체크상태
+                let checkNum = ipList.children[i].children[8]; // ip 뒷자리 번호
                 if (check==0) { // 자동설정
+                    if (selectIp.value==0) {
+                        console.log('ip를 선택하세요.');
+                        break;
+                    }
                     if (checkState.checked) {
-                        ipList.children[i].children[2].value = testIpFirst;
-                        ipList.children[i].children[4].value = testIpSecond;
-                        ipList.children[i].children[6].value = testIpThird;
+                        ipList.children[i].children[2].value = testIp[selectIp.value-1].ipFirst;
+                        ipList.children[i].children[4].value = testIp[selectIp.value-1].ipSecond;
+                        ipList.children[i].children[6].value = testIp[selectIp.value-1].ipThird;
                         ipList.children[i].children[8].value = i+1;
                     }
                 }
@@ -160,6 +184,12 @@
                     }
                 }
             }
+        }
+        function ipSend(){ // ip정보 전송버튼
+            for (var i = 0; i < testLength; i++) {
+                console.log(ipList.children[i].children[2].value+'.'+ipList.children[i].children[4].value+'.'+ipList.children[i].children[6].value+'.'+ipList.children[i].children[8].value);
+            }
+            // document.getElementById("ipForm").submit();
         }
     </script>
 </body>
