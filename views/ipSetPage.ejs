@@ -50,7 +50,7 @@
             <div class="section" >
                 <div class="row text-darken-1 valign-wrapper">
                     <a id="selectIp" class="ipSetButton col s12 center dropdown-button btn" data-beloworigin="true" href='#' data-activates='dropdown' value='0'>IP선택</a>
-                    <ul id='dropdown1' style="padding:0 0 0 0;" class='dropdown-content'>
+                    <ul id='dropdown' style="padding:0 0 0 0;" class='dropdown-content'>
                     </ul>
                     <a class="ipSetButton col s12 waves-effect waves-light btn" onclick="allCheck(0)"  type="button" name="autoButton">자동설정</a>
                     <a class="ipSetButton col s12 waves-effect waves-light btn" onclick="allCheck(1)"  type="button" name="autoButton">전체선택</a>
@@ -69,13 +69,13 @@
                                 <label for="ipCheck"></label>
                             </span>
                             <span id="ipNum" style="width:30px; height:2rem; margin-top:10px;"></span>
-                            <input class="center" name="adminIPAddress[ipFirst]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown()" required>
+                            <input class="center" name="adminIPAddress[ipFirst]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="adminIPAddress[ipSecond]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown()" required>
+                            <input class="center" name="adminIPAddress[ipSecond]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="adminIPAddress[ipThird]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipThird" type="text" class="validate" onkeydown="onKeyDown()" required>
+                            <input class="center" name="adminIPAddress[ipThird]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipThird" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="adminIPAddress[ipFourth]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFourth" type="text" onkeydown="onKeyDown()" class="validate" required>
+                            <input class="center" name="adminIPAddress[ipFourth]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFourth" type="text" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" class="validate" required>
                             <br/>
                         </div>
                     </div>
@@ -111,8 +111,8 @@
 
         function getMapData(){ // 데이터베이스 불러오기
             for (var i = 0; i < testIp.length; i++) { // ip설정 리스트 생성
-                dropdown1.appendChild(document.createElement('li'));
-                let addList = dropdown1.children[i]; // addList : 등록된 ip
+                dropdown.appendChild(document.createElement('li'));
+                let addList = dropdown.children[i]; // addList : 등록된 ip
                 addList.appendChild(document.createElement('a'));
                 addList.setAttribute('class', 'center-align, valign-wrapper');
                 addList.children[0].setAttribute('style', 'padding: 0 0 0 0;');
@@ -129,18 +129,44 @@
                 addDiv.children[0].children[0].setAttribute('id', 'ipCheck'+i);
                 addDiv.children[0].children[1].setAttribute('for', 'ipCheck'+i);
                 addDiv.children[1].innerHTML = (i+1)+'.&nbsp;&nbsp;';
-                addDiv.children[2].setAttribute('value', ' ');
-                addDiv.children[4].setAttribute('value', ' ');
-                addDiv.children[6].setAttribute('value', ' ');
-                addDiv.children[8].setAttribute('value', ' ');
+                addDiv.children[2].setAttribute('value', '');
+                addDiv.children[4].setAttribute('value', '');
+                addDiv.children[6].setAttribute('value', '');
+                addDiv.children[8].setAttribute('value', '');
                 ipList.appendChild(addDiv);
             }
             ipList.removeChild(ipList.children[0]); // 기존 틀은 삭제
         }
-        function onKeyDown() { // 숫자, 백스페이스, 탭키만 입력받게함
+        function onKeyDown(child) { // 숫자, 백스페이스, 탭키만 입력받게함
+            let childLength = Array.prototype.indexOf.call(child.parentElement.children, child);
             if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
                 if (event.keyCode == 8 || event.keyCode == 9) {} else {
+                    if (event.keyCode==190&&childLength!=8) {
+                        child.parentElement.children[childLength+2].focus();
+                    }
                     event.preventDefault(); // 입력안되게 함
+                }
+            }
+            else {
+                if (event.keyCode>95) {
+                    if (Number(child.value)*10+event.keyCode-96>255) {
+                        event.preventDefault(); // 입력안되게 함
+                        child.value = 255;
+                    }
+                }
+                else {
+                    if (Number(child.value)*10+event.keyCode-48>255) {
+                        event.preventDefault(); // 입력안되게 함
+                        child.value = 255;
+                    }
+                }
+            }
+        }
+        function onKeyUp(child){
+            let childLength = Array.prototype.indexOf.call(child.parentElement.children, child);
+            if (child.value.length==3) {
+                if (childLength!=8) { // ip 뒷번호가 아니면 다음 탭으로
+                    child.parentElement.children[childLength+2].focus();
                 }
             }
         }
