@@ -3,7 +3,7 @@ const Ceo           = require('../../models/ceo');
 
 // 모든 PC방 조회
 const getAllPCBang = (req, res) => {
-    Pcbang.findAllPCBang(req, res)
+    Pcbang.findAllPCBang()
         .then((pcbangs) => {
             if(pcbangs.length === 0)
                 return res.status(404).json({

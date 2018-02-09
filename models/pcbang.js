@@ -112,7 +112,7 @@ const pcBangSchema = new Schema(
 
 ////////////////// 외부 사용 가능 함수 //////////////////
 // PC방 DB 전체 조회 함수
-pcBangSchema.statics.findAllPCBang = function(req, res) {
+pcBangSchema.statics.findAllPCBang = function() {
     const proj = {
         'pcBangName': 1,
         'tel': 1,

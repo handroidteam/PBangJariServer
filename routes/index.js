@@ -24,7 +24,7 @@ function checkPCBangAndCallBack(req, res, next) {
         if(userInfo.ownPCBang.length === 0) {
             res.render('newPCBangPage', {
                 ceoId: userInfo._id,
-                pcBang: null
+                pcBang: null,
             });
         } else
             return next();
@@ -117,11 +117,11 @@ router.get('/newPCBang', checkPCBangAndCallBack, checkPCBangAndAutoComplete, fun
     });
 });
 
-router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, function(req, res, pcmaps) {
-    console.log(pcmaps);
+router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, function(req, res) {
     res.render('newPCMapPage', {
         ceoId: req.session.passport.user,
-        pcBangId: req.user.ownPCBang[0]
+        pcBangId: req.user.ownPCBang[0],
+        pcMaps: null,
     });
 });
 

@@ -18,7 +18,7 @@
     </style>
 </head>
 
-<body onload="saveProto()">
+<body>
     <header class="section no-pad-bot" id="index-banner">
         <br />
         <div class="container">
@@ -125,9 +125,9 @@
             </div>
 
             <div class="row center" style="margin-bottom:50px">
-                <!-- <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">
+                <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">
                     등록하기<i class="material-icons right">send</i>
-                </button> -->
+                </button>
                 <button id="updateButton" class="btn-large waves-effect waves-light pulse" style="display:none;">
                     수정하기<i class="material-icons right">send</i>
                 </button>
@@ -195,9 +195,6 @@
         let ipIcon = document.getElementById("ipIcon");
         let ipLength = ipList.children.length;
 
-        function saveProto() {
-        }
-
         function addIpSet() { // ipSet 추가
             if(ipLength <= 10) {
                 // 마이너스 버튼
@@ -236,12 +233,12 @@
     </script>
 
     <script>    // PC방 정보가 들어왔을 때 각 요소를 수정 폼으로 변경해주기
-        var pcBang = <%- JSON.stringify(pcBang) %>;
+        let pcBang = <%- JSON.stringify(pcBang) %>;
         if(pcBang) {
-            //document.getElementById("regButton").setAttribute("style", "display:none;");
+            document.getElementById("regButton").setAttribute("style", "display:none;");
             document.getElementById("updateButton").setAttribute("style", "");
 
-            document.getElementById("createForm").action = "api/pcBang/update/"+pcBang._id;
+            document.getElementById("createForm").action = "api/pcBang/update/" + pcBang._id;
             document.getElementById("licenseNumber").value = pcBang.licenseNumber;
             document.getElementById("pcBangName").value = pcBang.pcBangName;
             document.getElementById("tel").value = pcBang.tel;
