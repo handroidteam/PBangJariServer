@@ -48,6 +48,18 @@ const getPCBangDetail = (req, res) => {
         });
 };
 
+// PC맵 업데이트
+const postUpdatePCBang = (req, res) => {
+    
+    Pcbang.updatePCBang(req)
+        .then(
+            res.redirect('/ceo')
+        ).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
+        });
+};
+
 // 특정 PC방 삭제
 const deletePCBang = (req, res) => {
     Pcbang.deletePCBangById(res)
@@ -81,6 +93,7 @@ module.exports = {
     getAllPCBang, 
     postCreatePCBang, 
     getPCBangDetail, 
+    postUpdatePCBang,
     deletePCBang,
     getPCBangsInHere
 };

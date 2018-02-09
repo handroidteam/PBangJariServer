@@ -32,7 +32,7 @@
     </header>
 
     <div class="container">
-        <form method="post" enctype="application/json" action="api/pcBang/create/ServerTest">
+        <form method="post" id="createForm" enctype="application/json" action="api/pcBang/create/<%=ceoId%>">
             <div class="divider"></div>
             <div class="section">
                 <div class="row grey-text text-darken-1" style="margin:0 1rem 0 0">
@@ -54,7 +54,7 @@
                     </div>
                     <div class="input-field col s12 m12">
                         <div class="row">
-                            <div class="col s12 m6">
+                            <div class="col s12 m8">
                                 <div style="float:left; margin-top:8px;">
                                     <a class="waves-effect waves-light btn modal-trigger" href="#modal1">
                                         <span>주소검색</span>
@@ -62,13 +62,13 @@
                                 </div>
                                 <div style="overflow:hidden; padding-left:10px;">
                                     <label for="roadAddress">PC방 주소</label>
-                                    <input disabled placeholder="주소검색 버튼을 눌러주세요" id="roadAddress" name="address[roadAddress]" type="text" class="validate" required>
+                                    <input placeholder="주소검색 버튼을 눌러주세요" id="roadAddress" name="address[roadAddress]" type="text" required readonly>
                                 </div>
                             </div>
-                            <div class="col s12 m6">
+                            <div class="col s12 m4">
                                 <input placeholder="상세주소를 입력해주세요" id="detailAddress" name="address[detailAddress]" type="text" class="validate" required>
                             </div>
-                            <input type="hidden" name="address[postCode]" value="">
+                            <input id="postCode" type="hidden" name="address[postCode]" value="">
                         </div>
                     </div>
                 </div>
@@ -96,11 +96,11 @@
                     <div id="ipList" class="input-field col s12 offset-l1 l5">
                         <div id="ipSet" class="valign-wrapper">
                             <label for="ipFirst">IP주소</label>
-                            <input placeholder="XXX" name="adminIPAddress[ipFirst]" id="ipFirst" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <input placeholder="XXX" name="adminIPAddress[0][ipFirst]" id="ipFirst" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
                             <span class="ipDot">.</span>
-                            <input placeholder="XXX" name="adminIPAddress[ipSecond]" id="ipSecond" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <input placeholder="XXX" name="adminIPAddress[0][ipSecond]" id="ipSecond" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
                             <span class="ipDot">.</span>
-                            <input placeholder="XXX" name="adminIPAddress[ipThird]" id="ipThird" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <input placeholder="XXX" name="adminIPAddress[0][ipThird]" id="ipThird" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
                             <span class="ipDot">.</span>
                             <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate center" style="width:40px; height:2rem;">
                             <i id="plusButton" class="material-icons teal-text" onclick="addIpSet()" style="margin:0 15px 15px 15px;">add_circle_outline</i>
@@ -114,10 +114,10 @@
                         <div class="file-field input-field col s12">
                             <div class="btn small disabled">
                                 <span>찾아보기</span>
-                                <input disabled type="file" name="pcBangImage" multiple>
+                                <input disabled type="file" id="pcBangImage" name="pcBangImage" multiple>
                             </div>
                             <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text" placeholder="&nbsp;&nbsp;이미지 업로드 기능 준비중">
+                                <input disabled class="file-path validate" type="text" placeholder="&nbsp;&nbsp;이미지 업로드 기능 준비중">
                             </div>
                         </div>
                     </div>
@@ -125,12 +125,15 @@
             </div>
 
             <div class="row center" style="margin-bottom:50px">
-                <button class="btn-large waves-effect waves-light pulse" type="submit" name="action">등록하기
-                    <i class="material-icons right">send</i>
+                <!-- <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">
+                    등록하기<i class="material-icons right">send</i>
+                </button> -->
+                <button id="updateButton" class="btn-large waves-effect waves-light pulse" style="display:none;">
+                    수정하기<i class="material-icons right">send</i>
                 </button>
             </div>
-
         </form>
+
     </div>
 
     <!-- Modal Structure -->
@@ -139,9 +142,9 @@
             <div class="modal-content">
                 <h4>주소 검색</h4>
                 <div>
-                    <input type="hidden" name="currentPage" value="1" />
+                    <input type="hidden" id="currentPage" name="currentPage" value="1" />
                     <!-- 요청 변수 설정 (현재 페이지. currentPage : n> 0) -->
-                    <input type="hidden" name="countPerPage" value="10" />
+                    <input type="hidden" name="countPerPage" value="5" />
                     <!-- 요청 변수 설정 (페이지당 출력 개수. countPerPage 범위 : 0 < n <= 100) -->
                     <input type="hidden" name="resultType" value="json" />
                     <!-- 요청 변수 설정 (검색결과형식 설정, json) -->
@@ -157,14 +160,20 @@
                     </div>
                     
 
-                    <div id="list"></div>
                     <!-- 검색 결과 리스트 출력 영역 -->
+                    <div id="list"></div>
+
+                    <!-- 페이지 이동 아이콘 -->
+                    <div id="page" style="display:none;">
+                        <ul class="pagination">
+                            <li id="left" class="disabled"><a href="#" onClick="pagination(1); return false"><i class="material-icons">chevron_left</i></a></li>
+                            <li id="right" class="waves-effect"><a href="#" onClick="pagination(2); return false"><i class="material-icons">chevron_right</i></a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
-        
-
 
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>
@@ -184,13 +193,9 @@
         let ipSet = document.getElementById("ipSet");
         let ipSetProto = ipSet.cloneNode(true);
         let ipIcon = document.getElementById("ipIcon");
-        let ipLength = 1;
+        let ipLength = ipList.children.length;
 
         function saveProto() {
-            let label = ipSetProto.getElementsByTagName("label");
-            let iTag = ipSetProto.getElementsByTagName("i");
-            ipSetProto.removeChild(label[0]);
-            ipSetProto.removeChild(iTag[0]);
         }
 
         function addIpSet() { // ipSet 추가
@@ -210,14 +215,59 @@
                 newIpSet.setAttribute("class", "valign-wrapper")
                 newIpSet.innerHTML = ipSetProto.innerHTML;
 
-                // ipListSet 삽입
+                newIpSet.removeChild(newIpSet.children[0]);
+                newIpSet.removeChild(newIpSet.children[7]);
+
+                // name = adminIPAddress[i][ipXXX] 형식으로 변경
+                newIpSet.children[0].setAttribute("name", "adminIPAddress[" + ipLength + "][ipFirst]");
+                newIpSet.children[2].setAttribute("name", "adminIPAddress[" + ipLength + "][ipSecond]");
+                newIpSet.children[4].setAttribute("name", "adminIPAddress[" + ipLength + "][ipThird]");
+
+                // ipList에 newIpSet 삽입
                 newIpSet.appendChild(minusButton);
                 ipList.appendChild(newIpSet);
                 ipLength++;
+
+                
             } else {
                 return alert("최대 10개까지 설정 가능합니다");
             }
         }
+    </script>
+
+    <script>    // PC방 정보가 들어왔을 때 각 요소를 수정 폼으로 변경해주기
+        var pcBang = <%- JSON.stringify(pcBang) %>;
+        if(pcBang) {
+            //document.getElementById("regButton").setAttribute("style", "display:none;");
+            document.getElementById("updateButton").setAttribute("style", "");
+
+            document.getElementById("createForm").action = "api/pcBang/update/"+pcBang._id;
+            document.getElementById("licenseNumber").value = pcBang.licenseNumber;
+            document.getElementById("pcBangName").value = pcBang.pcBangName;
+            document.getElementById("tel").value = pcBang.tel;
+            document.getElementById("roadAddress").value = pcBang.address.roadAddress;
+            document.getElementById("detailAddress").value = pcBang.address.detailAddress;
+            document.getElementById("CPU").value = pcBang.pcSpec.CPU;
+            document.getElementById("RAM").value = pcBang.pcSpec.RAM;
+            document.getElementById("VGA").value = pcBang.pcSpec.VGA;
+
+            if(pcBang.adminIPAddress.length > 1) {
+                for(let i=0; i<pcBang.adminIPAddress.length-1; i++) {
+                    addIpSet();
+                }
+            }
+
+            for(let i=0; i<pcBang.adminIPAddress.length; i++) {
+                
+
+                let ipList = document.getElementById("ipList");
+                ipList.children[i].getElementsByTagName("input")[0].value = Number(pcBang.adminIPAddress[i].ipFirst);
+                ipList.children[i].getElementsByTagName("input")[1].value = Number(pcBang.adminIPAddress[i].ipSecond);
+                ipList.children[i].getElementsByTagName("input")[2].value = Number(pcBang.adminIPAddress[i].ipThird);
+            }
+            // document.getElementById("pcBangImage").value = pcBang.pcBangImage;
+        }
+        
     </script>
 
 
@@ -228,8 +278,14 @@
         });
     </script>
 
-<script>
+    <script>
+        let resultInfo;
+        let currentPage;
+        let totalCount;
+        let totalPage;
+
         function getAddr() {
+            console.log("in getAddr(), requested page is : " + currentPage);
             $.ajax({
                 url: 'http://www.juso.go.kr/addrlink/addrLinkApiJsonp.do',
                 type: "post",
@@ -252,22 +308,63 @@
                     alert("에러발생");
                 }
             });
-        }
+        };
+
+        function pagination(input) {
+            let req = Number(input);
+            let currentPage = document.getElementById("currentPage");
+            let value = Number(currentPage.value);
+
+            switch(req) {
+                case 1:
+                    if(value > 1) {
+                        currentPage.setAttribute("value", --value);
+                        break;
+                    } else {
+                        break;
+                    }
+                case 2:
+                    if(value < totalPage) {
+                        currentPage.setAttribute("value", ++value);
+                        break;
+                    } else {
+                        break;
+                    }
+            }
+            
+            if(value === 1) {
+                console.log("currentPage is 1")
+                document.getElementById("left").setAttribute("class", "disabled");
+                document.getElementById("right").setAttribute("class", "waves-effect");
+            } else if(value === totalPage) {
+                console.log("currentPage = totalPage");
+                document.getElementById("left").setAttribute("class", "waves-effect");
+                document.getElementById("right").setAttribute("class", "disabled");
+            } else {
+                console.log("currentPage is somewhere");
+                console.log("currentPage is : " + value + ", totalPage is " + totalPage);
+                document.getElementById("left").setAttribute("class", "waves-effect");
+                document.getElementById("right").setAttribute("class", "waves-effect");
+            };
+            getAddr();
+
+        };
 
         function makeListJson(jsonStr) {
             var htmlStr = "";
             htmlStr += "<table class='highlight'>";
             htmlStr += "<thead><tr>";
-            htmlStr += "<th>도로명 주소</th><th>지번 주소</th><th width='70px'>우편번호</th>";
-            htmlStr += "</tr></thead><tbody>";
+            htmlStr += "<th>도로명 주소</th><th>지번 주소</th>";
+            htmlStr += "</tr></thead>";
+            htmlStr += "<tbody>";
             $(jsonStr.results.juso).each(function () {
-                htmlStr += "<tr>";
+                htmlStr += "<tr onclick='fillRoadAddress(this)' class='modal-close'>";
                 htmlStr += "<td>" + this.roadAddr + "</td>";
                 // htmlStr += "<td>" + this.roadAddrPart1 + "</td>";
                 // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
                 htmlStr += "<td>" + this.jibunAddr + "</td>";
                 // htmlStr += "<td>" + this.engAddr + "</td>";
-                htmlStr += "<td>" + this.zipNo + "</td>";
+                // htmlStr += "<td>" + this.zipNo + "</td>";
                 // htmlStr += "<td>" + this.admCd + "</td>";
                 // htmlStr += "<td>" + this.rnMgtSn + "</td>";
                 // htmlStr += "<td>" + this.bdMgtSn + "</td>";
@@ -290,8 +387,32 @@
                 htmlStr += "</tr>";
             });
             htmlStr += "</tbody></table>";
+
+            resultInfo = jsonStr.results.common;
+            currentPage = Number(resultInfo.currentPage);
+            totalCount = Number(resultInfo.totalCount);
+            totalPage = Math.ceil(totalCount / 5);
+            console.log("************* result info *************")
+            console.log(resultInfo);
+            console.log("***************************************")
+
+            if(totalCount > 5) {
+                var page = document.getElementById("page");
+                page.setAttribute("style", "diplay:inherit")
+                if(currentPage === 1) {
+                    document.getElementById("left").setAttribute("class", "disabled");
+                    document.getElementById("right").setAttribute("class", "waves-effect");
+                } else if(currentPage === totalPage) {
+                    document.getElementById("left").setAttribute("class", "waves-effect");
+                    document.getElementById("right").setAttribute("class", "disabled");
+                } else {
+                    document.getElementById("left").setAttribute("class", "waves-effect");
+                    document.getElementById("right").setAttribute("class", "waves-effect");
+                };
+            };
+
             $("#list").html(htmlStr);
-        }
+        };
 
         function enterSearch() {
             var evt_code = (window.netscape) ? ev.which : event.keyCode;
@@ -299,6 +420,11 @@
                 event.preventDefault();
                 getAddr(); //jsonp사용시 enter검색 
             }
+        };
+
+        function fillRoadAddress(selectedAddress) {
+            let roadAddress = document.getElementById("roadAddress");
+            roadAddress.value = selectedAddress.children[0].innerHTML;
         }
     </script>
 

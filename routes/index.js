@@ -23,7 +23,8 @@ function checkPCBangAndCallBack(req, res, next) {
     if(userInfo) {
         if(userInfo.ownPCBang.length === 0) {
             res.render('newPCBangPage', {
-                ceoId: userInfo._id
+                ceoId: userInfo._id,
+                pcBang: null
             });
         } else
             return next();
@@ -126,6 +127,10 @@ router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, funct
 
 router.get('/doro', function(req, res) {
     res.render('doroTestPage');
+});
+
+router.get('/ipSet', function(req, res) {
+    res.render('ipSetPage');
 });
 
 module.exports = router;
