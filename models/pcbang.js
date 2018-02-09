@@ -27,11 +27,6 @@ const pcBangSchema = new Schema(
             lat: Number,
             lon: Number
         },
-        nearStation: [                  // 주변 지하철역
-            {
-                type: String
-            }
-        ],
         adminIPAddress: [               // 사용하는 IP 주소 입력 (도메인 앞 세자리)
             {
                 ipFirst: Number,
@@ -106,11 +101,10 @@ const pcBangSchema = new Schema(
         },
         modifiedDate: {
             type: Date,
-            default: ''
+            default: Date.now,
         },
         modifiedBy: {
-            type: Date,
-            default: ''
+            type: String,
         }
     }
 );
@@ -184,6 +178,30 @@ pcBangSchema.statics.findPCBangForm = function(req) {
     };
 
     return this.find( key, proj );
+};
+
+// PC방 고유 ID로 PC방 정보 수정하는 함수
+pcBangSchema.statics.updatePCBang = function(req) {
+    const key = {
+        '_id': req.params.pcBangId,
+    };
+
+    const updatedInfo = {
+        'licenseNumber': req.body.licenseNumber,
+        'pcBangName': req.body.pcBangName,
+        'tel': req.body.tel,
+        'address': req.body.address,
+        'location': req.body.location,
+        'adminIPAddress': req.body.adminIPAddress,
+        'pcSpec': req.body.pcSpec,
+        'pcBangImage': req.body.pcBangImage,
+        'modifiedBy': req.session.passport.user,
+        'modifiedDate': '',
+    };
+
+    return this.update( key, { $set: updatedInfo } );
+    
+
 };
 
 // PC방 고유 ID로 PC방을 찾아 삭제하는 함수

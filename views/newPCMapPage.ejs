@@ -98,10 +98,6 @@
             <input type="button" onclick="location.href='/ipSet'" value="ip설정페이지로" />
         </form>
     </div>
-    <div id="test">
-        <%=pcMaps%>
-    </div>
-
 
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>
@@ -119,7 +115,7 @@
         // let tt = document.getElementById("test").innerHTML;
         // let test = JSON.parse(tt);
         // console.log(test);
-        var pcMaps = <%-JSON.stringify(pcMaps)%>
+        var pcMaps = <%- JSON.stringify(pcMaps) %>
         console.log(pcMaps.length);
 
         function pcMapSend(){

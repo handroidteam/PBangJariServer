@@ -96,11 +96,11 @@
                     <div id="ipList" class="input-field col s12 offset-l1 l5">
                         <div id="ipSet" class="valign-wrapper">
                             <label for="ipFirst">IP주소</label>
-                            <input placeholder="XXX" name="adminIPAddress[ipFirst]" id="ipFirst" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <input placeholder="XXX" name="adminIPAddress[0][ipFirst]" id="ipFirst" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
                             <span class="ipDot">.</span>
-                            <input placeholder="XXX" name="adminIPAddress[ipSecond]" id="ipSecond" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <input placeholder="XXX" name="adminIPAddress[0][ipSecond]" id="ipSecond" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
                             <span class="ipDot">.</span>
-                            <input placeholder="XXX" name="adminIPAddress[ipThird]" id="ipThird" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
+                            <input placeholder="XXX" name="adminIPAddress[0][ipThird]" id="ipThird" type="text" class="validate center" onkeydown="onKeyDown()" style="width:40px; height:2rem;" required>
                             <span class="ipDot">.</span>
                             <input disabled placeholder="XXX" id="ipFourth" type="text" class="validate center" style="width:40px; height:2rem;">
                             <i id="plusButton" class="material-icons teal-text" onclick="addIpSet()" style="margin:0 15px 15px 15px;">add_circle_outline</i>
@@ -125,8 +125,11 @@
             </div>
 
             <div class="row center" style="margin-bottom:50px">
-                <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">등록하기
-                    <i class="material-icons right">send</i>
+                <!-- <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">
+                    등록하기<i class="material-icons right">send</i>
+                </button> -->
+                <button id="updateButton" class="btn-large waves-effect waves-light pulse" style="display:none;">
+                    수정하기<i class="material-icons right">send</i>
                 </button>
             </div>
         </form>
@@ -172,27 +175,6 @@
         </form>
     </div>
 
-    <script>
-        var pcBang = <%- JSON.stringify(pcBang) %>;
-        if(pcBang) {
-            document.getElementById("createForm").action = "api/pcBang/update/<%=ceoId%>";
-            document.getElementById("licenseNumber").value = pcBang.licenseNumber;
-            document.getElementById("pcBangName").value = pcBang.pcBangName;
-            document.getElementById("tel").value = pcBang.tel;
-            document.getElementById("roadAddress").value = pcBang.address.roadAddress;
-            document.getElementById("detailAddress").value = pcBang.address.detailAddress;
-            document.getElementById("CPU").value = pcBang.pcSpec.CPU;
-            document.getElementById("RAM").value = pcBang.pcSpec.RAM;
-            document.getElementById("VGA").value = pcBang.pcSpec.VGA;
-            document.getElementById("ipFirst").value = pcBang.adminIPAddress[0].ipFirst;
-            document.getElementById("ipSecond").value = pcBang.adminIPAddress[0].ipSecond;
-            document.getElementById("ipThird").value = pcBang.adminIPAddress[0].ipThird;
-            document.getElementById("regButton").setAttribute("disabled", "disabled")
-            // document.getElementById("pcBangImage").value = pcBang.pcBangImage;
-        }
-        
-    </script>
-
     <!--Scripts-->
     <script src="javascripts/jquery-2.1.1.min.js"></script>
     <script src="javascripts/materialize.min.js"></script>
@@ -211,13 +193,9 @@
         let ipSet = document.getElementById("ipSet");
         let ipSetProto = ipSet.cloneNode(true);
         let ipIcon = document.getElementById("ipIcon");
-        let ipLength = 1;
+        let ipLength = ipList.children.length;
 
         function saveProto() {
-            let label = ipSetProto.getElementsByTagName("label");
-            let iTag = ipSetProto.getElementsByTagName("i");
-            ipSetProto.removeChild(label[0]);
-            ipSetProto.removeChild(iTag[0]);
         }
 
         function addIpSet() { // ipSet 추가
@@ -237,14 +215,59 @@
                 newIpSet.setAttribute("class", "valign-wrapper")
                 newIpSet.innerHTML = ipSetProto.innerHTML;
 
-                // ipListSet 삽입
+                newIpSet.removeChild(newIpSet.children[0]);
+                newIpSet.removeChild(newIpSet.children[7]);
+
+                // name = adminIPAddress[i][ipXXX] 형식으로 변경
+                newIpSet.children[0].setAttribute("name", "adminIPAddress[" + ipLength + "][ipFirst]");
+                newIpSet.children[2].setAttribute("name", "adminIPAddress[" + ipLength + "][ipSecond]");
+                newIpSet.children[4].setAttribute("name", "adminIPAddress[" + ipLength + "][ipThird]");
+
+                // ipList에 newIpSet 삽입
                 newIpSet.appendChild(minusButton);
                 ipList.appendChild(newIpSet);
                 ipLength++;
+
+                
             } else {
                 return alert("최대 10개까지 설정 가능합니다");
             }
         }
+    </script>
+
+    <script>    // PC방 정보가 들어왔을 때 각 요소를 수정 폼으로 변경해주기
+        var pcBang = <%- JSON.stringify(pcBang) %>;
+        if(pcBang) {
+            //document.getElementById("regButton").setAttribute("style", "display:none;");
+            document.getElementById("updateButton").setAttribute("style", "");
+
+            document.getElementById("createForm").action = "api/pcBang/update/"+pcBang._id;
+            document.getElementById("licenseNumber").value = pcBang.licenseNumber;
+            document.getElementById("pcBangName").value = pcBang.pcBangName;
+            document.getElementById("tel").value = pcBang.tel;
+            document.getElementById("roadAddress").value = pcBang.address.roadAddress;
+            document.getElementById("detailAddress").value = pcBang.address.detailAddress;
+            document.getElementById("CPU").value = pcBang.pcSpec.CPU;
+            document.getElementById("RAM").value = pcBang.pcSpec.RAM;
+            document.getElementById("VGA").value = pcBang.pcSpec.VGA;
+
+            if(pcBang.adminIPAddress.length > 1) {
+                for(let i=0; i<pcBang.adminIPAddress.length-1; i++) {
+                    addIpSet();
+                }
+            }
+
+            for(let i=0; i<pcBang.adminIPAddress.length; i++) {
+                
+
+                let ipList = document.getElementById("ipList");
+                ipList.children[i].getElementsByTagName("input")[0].value = Number(pcBang.adminIPAddress[i].ipFirst);
+                ipList.children[i].getElementsByTagName("input")[1].value = Number(pcBang.adminIPAddress[i].ipSecond);
+                ipList.children[i].getElementsByTagName("input")[2].value = Number(pcBang.adminIPAddress[i].ipThird);
+            }
+            // document.getElementById("pcBangImage").value = pcBang.pcBangImage;
+        }
+        
     </script>
 
 
@@ -331,7 +354,7 @@
             var htmlStr = "";
             htmlStr += "<table class='highlight'>";
             htmlStr += "<thead><tr>";
-            htmlStr += "<th>도로명 주소</th><th>지번 주소</th><th width='70px'>우편번호</th>";
+            htmlStr += "<th>도로명 주소</th><th>지번 주소</th>";
             htmlStr += "</tr></thead>";
             htmlStr += "<tbody>";
             $(jsonStr.results.juso).each(function () {
@@ -341,7 +364,7 @@
                 // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
                 htmlStr += "<td>" + this.jibunAddr + "</td>";
                 // htmlStr += "<td>" + this.engAddr + "</td>";
-                htmlStr += "<td>" + this.zipNo + "</td>";
+                // htmlStr += "<td>" + this.zipNo + "</td>";
                 // htmlStr += "<td>" + this.admCd + "</td>";
                 // htmlStr += "<td>" + this.rnMgtSn + "</td>";
                 // htmlStr += "<td>" + this.bdMgtSn + "</td>";
@@ -401,9 +424,7 @@
 
         function fillRoadAddress(selectedAddress) {
             let roadAddress = document.getElementById("roadAddress");
-            let postCode = document.getElementById("postCode");
             roadAddress.value = selectedAddress.children[0].innerHTML;
-            postCode.value = selectedAddress.children[2].innerHTML;
         }
     </script>
 
