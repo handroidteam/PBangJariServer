@@ -15,6 +15,12 @@
             margin: 0 5px 20px 5px;
             font-weight: bold;
         }
+
+        #map {
+            margin-top: 30px;
+            height: 400px;
+            background-color: grey;
+        }
     </style>
 </head>
 
@@ -68,7 +74,11 @@
                             <div class="col s12 m4">
                                 <input placeholder="상세주소를 입력해주세요" id="detailAddress" name="address[detailAddress]" type="text" class="validate" required>
                             </div>
-                            <input id="postCode" type="hidden" name="address[postCode]" value="">
+                            <input id="hiddenAddress" type="hidden" name="address[hidden]" value="">
+                            <input id="locationLat" type="hidden" name="location[lat]" value="">
+                            <input id="locationLon" type="hidden" name="location[lon]" value="">
+
+                            <div id="map" class="col s12 m10 offset-m1 l8 offset-l2"></div>
                         </div>
                     </div>
                 </div>
@@ -235,6 +245,7 @@
     <script>    // PC방 정보가 들어왔을 때 각 요소를 수정 폼으로 변경해주기
         let pcBang = <%- JSON.stringify(pcBang) %>;
         if(pcBang) {
+            console.log(pcBang);
             document.getElementById("regButton").setAttribute("style", "display:none;");
             document.getElementById("updateButton").setAttribute("style", "");
 
@@ -244,6 +255,9 @@
             document.getElementById("tel").value = pcBang.tel;
             document.getElementById("roadAddress").value = pcBang.address.roadAddress;
             document.getElementById("detailAddress").value = pcBang.address.detailAddress;
+            document.getElementById("hiddenAddress").value = pcBang.address.hidden;
+            document.getElementById("locationLat").value = pcBang.location.lat;
+            document.getElementById("locationLon").value = pcBang.location.lon;
             document.getElementById("CPU").value = pcBang.pcSpec.CPU;
             document.getElementById("RAM").value = pcBang.pcSpec.RAM;
             document.getElementById("VGA").value = pcBang.pcSpec.VGA;
@@ -255,8 +269,6 @@
             }
 
             for(let i=0; i<pcBang.adminIPAddress.length; i++) {
-                
-
                 let ipList = document.getElementById("ipList");
                 ipList.children[i].getElementsByTagName("input")[0].value = Number(pcBang.adminIPAddress[i].ipFirst);
                 ipList.children[i].getElementsByTagName("input")[1].value = Number(pcBang.adminIPAddress[i].ipSecond);
@@ -265,6 +277,64 @@
             // document.getElementById("pcBangImage").value = pcBang.pcBangImage;
         }
         
+    </script>
+
+    <!-- Google Maps API -->
+    <script>
+        let geocoder;
+        let map = document.getElementById('map');
+        let uluru;
+
+        function initMap() {
+            geocoder = new google.maps.Geocoder();
+
+
+            if(pcBang) {
+                uluru = { lat: pcBang.location.lat, lng: pcBang.location.lon };
+            } else {
+                uluru = { lat: 37.581779, lng: 127.010364 };
+            }
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: uluru,
+                disableDefaultUI: true,
+                gestureHandling: 'none'
+            });
+            let marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+
+        function fillRoadAddress(selectedAddress) {
+            let roadAddress = document.getElementById("roadAddress");
+            let hiddenAddress = document.getElementById("hiddenAddress");
+            roadAddress.value = selectedAddress.children[0].innerHTML;
+            hiddenAddress.value = selectedAddress.children[2].innerHTML;
+            codeAddress(hiddenAddress.value);
+        }
+
+        function codeAddress(address) {
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                    let lat = document.getElementById("locationLat");
+                    let lon = document.getElementById("locationLon");
+                    lat.value = results[0].geometry.location.lat();
+                    lon.value = results[0].geometry.location.lng();
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbayvClu-2tIZSvkeY2OfId40gkZgRt_g&callback=initMap">
     </script>
 
 
@@ -357,9 +427,9 @@
             $(jsonStr.results.juso).each(function () {
                 htmlStr += "<tr onclick='fillRoadAddress(this)' class='modal-close'>";
                 htmlStr += "<td>" + this.roadAddr + "</td>";
-                // htmlStr += "<td>" + this.roadAddrPart1 + "</td>";
-                // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
                 htmlStr += "<td>" + this.jibunAddr + "</td>";
+                htmlStr += "<td style='display:none;'>" + this.roadAddrPart1 + "</td>";
+                // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
                 // htmlStr += "<td>" + this.engAddr + "</td>";
                 // htmlStr += "<td>" + this.zipNo + "</td>";
                 // htmlStr += "<td>" + this.admCd + "</td>";
@@ -369,10 +439,10 @@
                 /** API 서비스 제공항목 확대 (2017.02) **/
                 // htmlStr += "<td>" + this.bdNm + "</td>";
                 // htmlStr += "<td>" + this.bdKdcd + "</td>";
-                // // htmlStr += "<td>" + this.siNm + "</td>";
-                // // htmlStr += "<td>" + this.sggNm + "</td>";
-                // // htmlStr += "<td>" + this.emdNm + "</td>";
-                // // htmlStr += "<td>" + this.liNm + "</td>";
+                // htmlStr += "<td>" + this.siNm + "</td>";
+                // htmlStr += "<td>" + this.sggNm + "</td>";
+                // htmlStr += "<td>" + this.emdNm + "</td>";
+                // htmlStr += "<td>" + this.liNm + "</td>";
                 // htmlStr += "<td>" + this.rn + "</td>";
                 // htmlStr += "<td>" + this.udrtYn + "</td>";
                 // htmlStr += "<td>" + this.buldMnnm + "</td>";
@@ -418,11 +488,6 @@
                 getAddr(); //jsonp사용시 enter검색 
             }
         };
-
-        function fillRoadAddress(selectedAddress) {
-            let roadAddress = document.getElementById("roadAddress");
-            roadAddress.value = selectedAddress.children[0].innerHTML;
-        }
     </script>
 
 </body>

@@ -61,8 +61,8 @@ function checkPCMapAndAutoComplete(req, res, next) {
             else
                 return res.render('newPCMapPage', {
                     ceoId: req.session.passport.user,
-                    pcBang: req.user.ownPCBang[0],
-                    pcMaps: pcmaps
+                    pcBangId: req.user.ownPCBang[0]._id,
+                    pcMaps: pcmaps,
                 });
         }).catch( (err) => {
             console.log(err);
@@ -120,7 +120,7 @@ router.get('/newPCBang', checkPCBangAndCallBack, checkPCBangAndAutoComplete, fun
 router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, function(req, res) {
     res.render('newPCMapPage', {
         ceoId: req.session.passport.user,
-        pcBangId: req.user.ownPCBang[0],
+        pcBangId: req.user.ownPCBang[0]._id,
         pcMaps: null,
     });
 });

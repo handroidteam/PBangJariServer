@@ -84,7 +84,7 @@ const postCreatePCMap = (req, res) => {
 };
 
 // PC맵 업데이트
-const putUpdatePCMap = (req, res) => { // pcmap 업데이트
+const postUpdatePCMap = (req, res) => { // pcmap 업데이트
     var updateMap = {
         'floor': req.body.floor,
         'pcTableSize.horizontal': req.body.horizontal,
@@ -124,6 +124,6 @@ module.exports = {
     getPCStatus,
     getPCMapDetail,
     postCreatePCMap,
-    putUpdatePCMap,
+    postUpdatePCMap,
     deletePCMap
 };

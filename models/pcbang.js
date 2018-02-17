@@ -19,9 +19,9 @@ const pcBangSchema = new Schema(
             require: true
         },
         address: {                      // 우편번호, 도로명, 상세주소
-            postCode: String,
             roadAddress: String,
             detailAddress: String,
+            hidden: String,
         },
         location: {                     // 위도, 경도
             lat: Number,
@@ -171,6 +171,7 @@ pcBangSchema.statics.findPCBangForm = function(req) {
         'pcBangName': 1,
         'tel': 1,
         'address': 1,
+        'location': 1,
         'adminIPAddress': 1,
         'pcSpec': 1,
         'pcBangImage': 1,
