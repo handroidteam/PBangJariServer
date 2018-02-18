@@ -39,7 +39,7 @@
     </header>
 
     <div class="container">
-        <form id="ipForm" method="post" enctype="application/json">
+        <form id="ipForm" method="post" enctype="application/json" action="api/pcMap/create/<%=pcMaps[0]._id%>">
             <div class="divider"></div>
             <div class="section">
                 <div class="row text-darken-1" style="margin:0 1rem 0 0">
@@ -69,13 +69,13 @@
                                 <label for="ipCheck"></label>
                             </span>
                             <span id="ipNum" style="width:30px; height:2rem; margin-top:10px;"></span>
-                            <input class="center" name="adminIPAddress[ipFirst]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
+                            <input class="center" name="pcIP[First]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="adminIPAddress[ipSecond]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
+                            <input class="center" name="pcIP[Second]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="adminIPAddress[ipThird]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipThird" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
+                            <input class="center" name="pcIP[Third]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipThird" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="adminIPAddress[ipFourth]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFourth" type="text" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" class="validate" required>
+                            <input class="center" name="pcIP[Fourth]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFourth" type="text" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" class="validate" required>
                             <br/>
                         </div>
                     </div>
@@ -95,13 +95,10 @@
     <script src="javascripts/init.js"></script>
     <script>
         var pcMaps = <%- JSON.stringify(pcMaps) %>
-
-        var testLength = 10; // 선택한 pc좌석 length 샘플
-        var testIp = [ // IP샘플
-            {ipFirst: 192, ipSecond: 168, ipThird: 146},
-            {ipFirst: 191, ipSecond: 150, ipThird: 66}
-        ];
-        // 테스트 샘플
+        var pcBang = <%- JSON.stringify(pcBang) %>
+        console.log(pcMaps);
+        var testLength = pcMaps[0].pcInfo.length; // 선택한 pc좌석 length 샘플
+        var testIp = pcBang[0].adminIPAddress;
 
 
         var ipList = document.getElementById('ipList');
@@ -215,7 +212,7 @@
             for (var i = 0; i < testLength; i++) {
                 console.log(ipList.children[i].children[2].value+'.'+ipList.children[i].children[4].value+'.'+ipList.children[i].children[6].value+'.'+ipList.children[i].children[8].value);
             }
-            // document.getElementById("ipForm").submit();
+            document.getElementById("ipForm").submit();
         }
     </script>
 </body>
