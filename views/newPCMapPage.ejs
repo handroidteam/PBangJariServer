@@ -57,35 +57,13 @@
             <a id="btnBottom" class="btn-floating btn grey lighten-3 black-text" onclick="addBottomLine()">+</a>
         </div>
 
-        <div class="row">
-            <div class="input-field col s12">
-                <select>
-                    <option value="" disabled selected>Choose your option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-                <label>Materialize Select</label>
-            </div>
-        </div>
-
-
-        <input type="button" onclick="addTopLine()" value="Top+" />
-        <input type="button" onclick="removeTopLine()" value="Top-" />
-        <input type="button" onclick="addBottomLine()" value="Bottom+" />
-        <input type="button" onclick="removeBottomLine()" value="Bottom-" />
-        <input type="button" onclick="addLeftLine()" value="Left+">
-        <input type="button" onclick="removeLeftLine()" value="Left-">
-        <input type="button" onclick="addRightLine()" value="Right+">
-        <input type="button" onclick="removeRightLine()" value="Right-">
-        <input type="button" onclick="reset()" value="재배치">
-
         <form id="pcMapForm" method="post" enctype="application/json" action="api/pcMap/create/<%=pcBangId%>">
             <input type="hidden" name="pcBangId" value="<%=pcBangId%>" />
             <input type="hidden" name="pcMapTable[sector]" value="1층" />
             <div id="pcInfo">
                 <!-- pc방 정보들 입력 -->
             </div>
+            <input type="button" onclick="reset()" value="재배치">
             <input type="button" onclick="pcMapSend()" value="배치완료" />
             <input type="button" onclick="location.href='/ipSet'" value="ip설정페이지로" />
         </form>
@@ -126,7 +104,6 @@
                 checkSet.innerHTML = pcNum.length; // 선택한 셀의 html을 pcNum과 동일하게
                 checkSet.style.backgroundColor = "lime"; // 선택한 셀의 배경색 변경
             }
-            console.log(pcNum);
         }
         function pcMapSend(){
             let pcInfo = document.getElementById("pcInfo");
@@ -159,7 +136,6 @@
                 pcInfo.appendChild(pcInfoNumber);
                 pcInfo.appendChild(pcInfoPlace);
             }
-            console.log(pcMapForm);
             document.getElementById("pcMapForm").submit();
         }
         function createPcMap(ro, co) { // 맵생성
@@ -482,6 +458,7 @@
             MapDiv.removeChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
             PcTable = document.createElement("table"); // 표시할 테이블 재설정
             createPcMap(Row, Col); // page 열면 테이블 출력
+            MapDiv.appendChild(PcTable);
         }
     </script>
 

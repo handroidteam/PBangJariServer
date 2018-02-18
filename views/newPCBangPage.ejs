@@ -245,7 +245,6 @@
     <script>    // PC방 정보가 들어왔을 때 각 요소를 수정 폼으로 변경해주기
         let pcBang = <%- JSON.stringify(pcBang) %>;
         if(pcBang) {
-            console.log(pcBang);
             document.getElementById("regButton").setAttribute("style", "display:none;");
             document.getElementById("updateButton").setAttribute("style", "");
 
@@ -352,7 +351,6 @@
         let totalPage;
 
         function getAddr() {
-            console.log("in getAddr(), requested page is : " + currentPage);
             $.ajax({
                 url: 'http://www.juso.go.kr/addrlink/addrLinkApiJsonp.do',
                 type: "post",
@@ -400,16 +398,12 @@
             }
             
             if(value === 1) {
-                console.log("currentPage is 1")
                 document.getElementById("left").setAttribute("class", "disabled");
                 document.getElementById("right").setAttribute("class", "waves-effect");
             } else if(value === totalPage) {
-                console.log("currentPage = totalPage");
                 document.getElementById("left").setAttribute("class", "waves-effect");
                 document.getElementById("right").setAttribute("class", "disabled");
             } else {
-                console.log("currentPage is somewhere");
-                console.log("currentPage is : " + value + ", totalPage is " + totalPage);
                 document.getElementById("left").setAttribute("class", "waves-effect");
                 document.getElementById("right").setAttribute("class", "waves-effect");
             };
@@ -459,9 +453,6 @@
             currentPage = Number(resultInfo.currentPage);
             totalCount = Number(resultInfo.totalCount);
             totalPage = Math.ceil(totalCount / 5);
-            console.log("************* result info *************")
-            console.log(resultInfo);
-            console.log("***************************************")
 
             if(totalCount > 5) {
                 var page = document.getElementById("page");
