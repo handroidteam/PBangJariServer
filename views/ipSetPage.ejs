@@ -94,7 +94,7 @@
     <script src="javascripts/materialize.min.js"></script>
     <script src="javascripts/init.js"></script>
     <script>
-        // var pcMaps = <%-JSON.stringify("")%> 데이터베이스정보를 불러올 준비
+        var pcMaps = <%- JSON.stringify(pcMaps) %>
 
         var testLength = 10; // 선택한 pc좌석 length 샘플
         var testIp = [ // IP샘플

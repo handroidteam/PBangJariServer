@@ -19,7 +19,7 @@
     </style>
 </head>
 
-<body onload="createPcMap(10,10)" oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
     <header class="section no-pad-bot" id="index-banner">
         <br />
         <div class="container">
@@ -111,18 +111,31 @@
         let Row, Col; // 행(세로) 열(가로) 크기
         let click_check = false; // 클릭한 상태인지(드래그를 위해)
         let add_check = false; // 추가상태인지
+        createPcMap(10,10);
+        MapDiv.appendChild(PcTable); // 만들 PcTable을 MapDiv(div)의 자식속성으로 추가
         // let test = JSON.parse(document.getElementById("test").innerHTML);
         // let tt = document.getElementById("test").innerHTML;
         // let test = JSON.parse(tt);
         // console.log(test);
-
         let pcMaps = <%- JSON.stringify(pcMaps) %>
         if(pcMaps) {
+            while (PcTable.firstChild) {
+                PcTable.removeChild(PcTable.firstChild);
+            }
             document.getElementById("pcMapForm").action = "api/pcMap/update/" + pcMaps[0].pcBangId;
-            
-            
+            changePcMapSize(pcMaps[0].pcMapTable[0].row, pcMaps[0].pcMapTable[0].col, 7);
+            for (let i = 0; i < pcMaps[0].pcInfo.length; i++) {
+                // (Col - 1) * i + j + 1
+                let checkSet = PcTable.children[Math.floor((pcMaps[0].pcInfo[i].pcPlace-1)/Col)].children[((pcMaps[0].pcInfo[i].pcPlace-1)%Col)];
+                pcNum[pcNum.length] = document.createElement("td"); // pcNum배열원소를 td로 생성
+                pcNum[pcNum.length - 1].setAttribute("value", checkSet.innerHTML); // pcNum의 value를 선택한 번호값 입력
+                pcNum[pcNum.length - 1].innerHTML = pcNum.length; // pcNum의 html을 배열의 순서(index+1)번호를 부여
+                checkSet.setAttribute("value", pcNum[pcNum.length - 1].getAttribute("value")); // 선택한 셀의 value를 pcNum과 동일하게
+                checkSet.innerHTML = pcNum.length; // 선택한 셀의 html을 pcNum과 동일하게
+                checkSet.style.backgroundColor = "lime"; // 선택한 셀의 배경색 변경
+            }
+            console.log(pcNum);
         }
-
         function pcMapSend(){
             let pcInfo = document.getElementById("pcInfo");
             let pcInfoSector = document.getElementsByName("pcMapTable[sector]");
@@ -131,15 +144,12 @@
             pcMapRow.setAttribute("type", "hidden");
             pcMapRow.setAttribute("name", "pcMapTable[row]");
             pcMapRow.setAttribute("value", Row);
-
             let pcMapCol = document.createElement("input");
             pcMapCol.setAttribute("type", "hidden");
             pcMapCol.setAttribute("name", "pcMapTable[col]");
             pcMapCol.setAttribute("value", Col);
-
             pcInfo.appendChild(pcMapRow);
             pcInfo.appendChild(pcMapCol);
-
             for (var i = 0; i < pcNum.length; i++) {
                 let pcInfoSector = document.createElement("input");
                 pcInfoSector.setAttribute("type", "hidden");
@@ -160,7 +170,6 @@
             console.log(pcMapForm);
             document.getElementById("pcMapForm").submit();
         }
-
         function createPcMap(ro, co) { // 맵생성
             for (let i = 0; i < ro; i++) {
                 let newTr = document.createElement("tr"); // 세로크기만큼 tr 생성
@@ -172,11 +181,8 @@
                 }
                 PcTable.appendChild(newTr); // PcTable에 i번째 tr을 하나씩 추가
             }
-            MapDiv.appendChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
             Col = PcTable.children[0].children.length; // 가로크기 설정
             Row = PcTable.children.length; // 세로크기 설정
-
-
             // body에 mouseup 이벤트 리스너 추가
             let doc = document;
             doc.addEventListener("mouseup", function(){
@@ -185,8 +191,11 @@
                 }
             });
         }
-
         function changePcMapSize(ro, co, state) { // 맵변경
+            if (state == 7) {
+                createPcMap(ro, co); // page 열면 테이블 출력
+                return;
+            }
             for (let j = 0; j < co; j++) {
                 for (let i = 0; i < ro; i++) {
                     let changeCell = PcTable.children[i].children[j]; // 변경될 셀
@@ -213,7 +222,6 @@
                             }
                         }
                     } else if (state == 3) { // 왼쪽줄 추가할 때
-
                         if (changeCell.getAttribute("value") === "null") { // 선택된 셀이 아니면
                             changeCell.innerHTML = co * i + j + 1; // 번호부여
                         } else {
@@ -276,7 +284,6 @@
                 }
             }
         }
-
         function insertTd(checkCell) { // checkCell(선택한 셀)Td속성부여
             // pcNum -> (value : 좌석번호 + innerHTML : index+1)
             // 선택된 각 Cell -> (value : 좌석번호 + innerHTML : index+1)
@@ -316,7 +323,6 @@
                 }
             });
         }
-
         function deleteTd(delCell) { // pcNum배열에서 삭제한 셀을 빼는 함수
             for (let i = delCell.innerHTML; i < pcNum.length; i++) { // 선택한 셀의 html(배열의 순서)부터 배열이 끝까지
                 pcNum[i].innerHTML = i; // html값을 하나씩 줄인다. (선택한 셀을 삭제할 것이기 때문에)
@@ -337,7 +343,6 @@
             delCell.setAttribute("value", "null"); // p원소의 value null 값으로 초기화
             delCell.style.backgroundColor = "white"; // p원소의 배경색 변경
         }
-
         function changeTd(frontCell, backendCell) { // p와 q의 정보를 바꾼다.
             let swapCell = document.createElement("td"); // 빈 td 객체 생성(교환하기 위해)
             swapCell.setAttribute("value", backendCell.getAttribute("value"));
@@ -350,7 +355,6 @@
             frontCell.innerHTML = swapCell.innerHTML;
             frontCell.style.backgroundColor = swapCell.style.backgroundColor;
         }
-
         function addTopLine() { // 위로 줄 추가
             let row = PcTable.insertRow(0); // PcTable의 윗줄을 추가한다.
             for (let i = 0; i < Col; i++) {
@@ -363,7 +367,6 @@
             document.getElementById('rows').innerHTML = Row; // 행 크기 출력
             changePcMapSize(Row, Col, 1);
         }
-
         function removeTopLine() {
             if (Row < 2) return; // 세로가 2보다 작으면 삭제하지 않고 함수종료
             for (let i = 0; i < Row; i++) {
@@ -384,7 +387,6 @@
             PcTable.deleteRow(Row); // 윗줄을 아랫줄로 옮겼으므로 삭제
             document.getElementById('rows').innerHTML = Row; // 행 크기 출력
         }
-
         function addBottomLine() {
             let row = PcTable.insertRow(Row); // PcTable의 윗줄을 추가한다.
             for (let i = 0; i < Col; i++) {
@@ -400,7 +402,6 @@
             Row = PcTable.children.length; // 세로크기 설정
             document.getElementById('rows').innerHTML = Row; // 행 크기 출력
         }
-
         function removeBottomLine() {
             if (Row < 2) return; // 세로가 2보다 작으면 삭제하지 않고 함수종료
             for (let i = 0; i < Col; i++) {
@@ -413,7 +414,6 @@
             PcTable.deleteRow(Row); // 마지막줄 삭제
             document.getElementById('rows').innerHTML = Row; // 행 크기 출력
         }
-
         function addLeftLine() {
             for (let i = 0; i < Row; i++) {
                 let inTd = PcTable.children[i].insertCell(0); // Tr의 첫번째 부분에 Td를 추가한다.
@@ -424,7 +424,6 @@
             document.getElementById('cols').innerHTML = Col; // 열 크기 출력
             changePcMapSize(Row, Col, 3); // 맵 수정
         }
-
         function removeLeftLine() {
             if (Col < 2) return;
             changePcMapSize(Row, Col, 5); // 삭제할 왼쪽열 오른쪽끝으로 옮기기
@@ -433,9 +432,7 @@
             for (let i = 0; i < Row; i++) {
                 PcTable.children[i].deleteCell(Col); // Tr의 첫번째 부분에 있던 Td를 삭제한다.
             }
-
         }
-
         function addRightLine() {
             for (let i = 0; i < Row; i++) {
                 let inTd = PcTable.children[i].insertCell(Col); // Tr의 첫번째 부분에 Td를 추가한다.
@@ -446,7 +443,6 @@
             document.getElementById('cols').innerHTML = Col; // 열 크기 출력
             changePcMapSize(Row, Col, 4); // 맵 수정
         }
-
         function removeRightLine() {
             if (Col < 2) return; // 가로가 2보다 작으면 삭제하지 않고 함수종료
             changePcMapSize(Row, Col, 6);
@@ -456,13 +452,11 @@
                 PcTable.children[i].deleteCell(Col); // Tr의 마지막 부분에 Td를 삭제한다.
             }
         }
-
         function reset() { // 좌석배치 초기화
             pcNum = []; // 선택한 좌석 (pc방 컴퓨터) 배열 초기화
             MapDiv.removeChild(PcTable); // 만든 PcTable을 MapDiv(div)의 자식속성으로 추가
             PcTable = document.createElement("table"); // 표시할 테이블 재설정
             createPcMap(Row, Col); // page 열면 테이블 출력
-
         }
     </script>
 
