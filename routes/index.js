@@ -33,6 +33,22 @@ function checkPCBangAndCallBack(req, res, next) {
     }
 }
 
+// 세션에 PCMap 정보 없으면 PCMap 등록페이지 표시
+function checkPCMapAndCallBack(req, res, next) {
+    const userInfo = req.user;
+    if(userInfo) {
+        if(userInfo.ownPCBang.length === 0) {
+            res.render('newPCBangPage', {
+                ceoId: userInfo._id,
+                pcBang: null,
+            });
+        } else
+            return next();
+    } else {
+        res.redirect('/');
+    }
+}
+
 // 로그인 한 사용자의 DB에 PCBang 정보가 있으면, PCBang 페이지에 정보 로딩
 function checkPCBangAndAutoComplete(req, res, next) {
     req.params.pcBangId = req.user.ownPCBang[0];
@@ -53,15 +69,15 @@ function checkPCBangAndAutoComplete(req, res, next) {
 
 // 로그인 한 사용자의 DB에 PCMap 정보가 있으면, PCMap 페이지에 정보 로딩
 function checkPCMapAndAutoComplete(req, res, next) {
-    req.params.pcBangId = req.user.ownPCBang[0];
+    // req.params.pcBangId = req.user.ownPCBang[0];
     Pcmap.findPCMapsByPCBangId(req)
         .then((pcmaps) => {
-            if(pcmaps.length === 0)
+            if(pcmaps.length === 0) 
                 return next();
             else
                 return res.render('newPCMapPage', {
                     ceoId: req.session.passport.user,
-                    pcBangId: req.user.ownPCBang[0]._id,
+                    pcBangId: req.user.ownPCBang[0],
                     pcMaps: pcmaps,
                 });
         }).catch( (err) => {
@@ -120,17 +136,17 @@ router.get('/newPCBang', checkPCBangAndCallBack, checkPCBangAndAutoComplete, fun
 router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, function(req, res) {
     res.render('newPCMapPage', {
         ceoId: req.session.passport.user,
-        pcBangId: req.user.ownPCBang[0]._id,
+        pcBangId: req.user.ownPCBang[0],
         pcMaps: null,
     });
 });
 
-router.get('/doro', function(req, res) {
-    res.render('doroTestPage');
-});
-
-router.get('/ipSet', function(req, res) {
-    res.render('ipSetPage');
+router.get('/ipSet', checkPCMapAndAutoComplete, function(req, res) {
+    res.render('ipSetPage', { 
+        ceoId: req.session.passport.user,
+        pcBangId: req.user.ownPCBang[0],
+        pcMaps: null,
+    });
 });
 
 module.exports = router;

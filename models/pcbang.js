@@ -187,6 +187,7 @@ pcBangSchema.statics.updatePCBang = function(req) {
         '_id': req.params.pcBangId,
     };
 
+    const now = new Date();
     const updatedInfo = {
         'licenseNumber': req.body.licenseNumber,
         'pcBangName': req.body.pcBangName,
@@ -197,12 +198,10 @@ pcBangSchema.statics.updatePCBang = function(req) {
         'pcSpec': req.body.pcSpec,
         'pcBangImage': req.body.pcBangImage,
         'modifiedBy': req.session.passport.user,
-        'modifiedDate': '',
+        'modifiedDate': now,
     };
 
     return this.update( key, { $set: updatedInfo } );
-    
-
 };
 
 // PC방 고유 ID로 PC방을 찾아 삭제하는 함수

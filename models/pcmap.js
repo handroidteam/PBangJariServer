@@ -35,7 +35,10 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
                     type: Number
                 },
                 pcIP: {             // IP
-                    type: String
+                    First: Number,
+                    Second: Number,
+                    Third: Number,
+                    Fourth: Number,
                 },
                 availableFlag: {    // 사용 가능한 PC인지 확인
                     type: Number    // 0 -> 점검중, 1 -> On, 2 -> Off
