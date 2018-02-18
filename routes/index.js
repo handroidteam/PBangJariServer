@@ -41,11 +41,14 @@ function checkPCMapAndCallBack(req, res) {
             if(pcmaps.length === 0)
                 res.redirect('/newPCMap');
             else {
-                res.render('ipSetPage', { 
-                    ceoId: req.session.passport.user,
-                    pcBangId: req.user.ownPCBang[0],
-                    pcMaps: pcmaps,
-                });
+                Pcbang.findPCBangIP(req)
+                    .then(pcbang => {
+                        res.render('ipSetPage', {
+                            ceoId: req.session.passport.user,
+                            pcBang: pcbang,
+                            pcMaps: pcmaps,
+                        });
+                })
             }
         }).catch( (err) => {
             console.log(err);

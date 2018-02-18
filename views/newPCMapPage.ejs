@@ -41,28 +41,20 @@
             </div>
 
             <div class="row valign-wrapper">
-                <div class="col s1 right">
-                    <i class="material-icons" onclick="addLeftLine()">add</i>
-                    <i class="material-icons" onclick="removeLeftLine()">remove</i>
-                </div>
-                <div class="col s10 center">
-                    <div class="row">
-                        <i class="material-icons" onclick="removeTopLine()">remove</i>
-                        <i class="material-icons" onclick="addTopLine()">add</i>
-                    </div>
-                    <div class="row">
-                        <div id="MapDiv" class="center-align"></div>
-                    </div>
-                    <div class="row">
-                        <i class="material-icons" onclick="removeBottomLine()">remove</i>
-                        <i class="material-icons" onclick="addBottomLine()">add</i>
-                    </div>
-                </div>
-                <div class="col s1 left">
-                    <i class="material-icons" onclick="addRightLine()">add</i>
-                    <i class="material-icons" onclick="removeRightLine()">remove</i>
+                <div class="col s12 center">
+                    <div id="MapDiv" class="center-align"></div>
                 </div>
             </div>
+        </div>
+        <div class="fixed-action-btn center-align" style="background-image: url('images/remoteBackground.png'); background-position: center;
+        background-repeat: no-repeat; padding: 5px; bottom: 15px; right: 15px;">
+            <a id="btnTop" class="btn-floating btn grey lighten-3 black-text" onclick="addTopLine()">+</a>
+            <br>
+            <a id="btnLeft" class="btn-floating btn grey lighten-3 black-text" onclick="addLeftLine()">+</a>
+            <a id="btnChange" class="btn-floating btn red lighten-1" style="margin: 5px 3px 5px 3px;" onclick="changeBtn()">-</a>
+            <a id="btnRight" class="btn-floating btn grey lighten-3 black-text" onclick="addRightLine()">+</a>
+            <br>
+            <a id="btnBottom" class="btn-floating btn grey lighten-3 black-text" onclick="addBottomLine()">+</a>
         </div>
 
         <div class="row">
@@ -450,6 +442,39 @@
             document.getElementById('cols').innerHTML = Col; // 열 크기 출력
             for (let i = 0; i < Row; i++) {
                 PcTable.children[i].deleteCell(Col); // Tr의 마지막 부분에 Td를 삭제한다.
+            }
+        }
+        function changeBtn(){
+            let btnState = document.getElementById('btnChange');
+            let btnTop = document.getElementById('btnTop');
+            let btnLeft = document.getElementById('btnLeft');
+            let btnRight = document.getElementById('btnRight');
+            let btnBottom = document.getElementById('btnBottom');
+            if (btnState.innerHTML == '-') {
+                console.log('빼기상태로 전환');
+                btnTop.setAttribute('onclick', 'removeTopLine()');
+                btnLeft.setAttribute('onclick', 'removeLeftLine()');
+                btnRight.setAttribute('onclick', 'removeRightLine()');
+                btnBottom.setAttribute('onclick', 'removeBottomLine()');
+                btnState.setAttribute('class', 'btn-floating btn blue');
+                btnTop.innerHTML = '-';
+                btnLeft.innerHTML = '-';
+                btnRight.innerHTML = '-';
+                btnBottom.innerHTML = '-';
+                btnState.innerHTML = '+';
+            }
+            else {
+                console.log('더하기상태로 전환');
+                btnTop.setAttribute('onclick', 'addTopLine()');
+                btnLeft.setAttribute('onclick', 'addLeftLine()');
+                btnRight.setAttribute('onclick', 'addRightLine()');
+                btnBottom.setAttribute('onclick', 'addBottomLine()');
+                btnState.setAttribute('class', 'btn-floating btn red');
+                btnTop.innerHTML = '+';
+                btnLeft.innerHTML = '+';
+                btnRight.innerHTML = '+';
+                btnBottom.innerHTML = '+';
+                btnState.innerHTML = '-';
             }
         }
         function reset() { // 좌석배치 초기화

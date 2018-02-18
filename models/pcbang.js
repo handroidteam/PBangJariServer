@@ -181,6 +181,18 @@ pcBangSchema.statics.findPCBangForm = function(req) {
     return this.find( key, proj );
 };
 
+// PC방 고유 ID로 PC방에 등록된 IP를 가져오는 함수
+pcBangSchema.statics.findPCBangIP = function(req) {
+    const key = {
+        '_id': req.params.pcBangId
+    };
+    const proj = {
+        'adminIPAddress': 1,
+    };
+
+    return this.find( key, proj );
+};
+
 // PC방 고유 ID로 PC방 정보 수정하는 함수
 pcBangSchema.statics.updatePCBang = function(req) {
     const key = {
@@ -222,7 +234,7 @@ pcBangSchema.statics.findPCBangsByLonLat = function(req) {
         'location.lon': { $lt: rightLon, $gt: leftLon },
         'location.lat': { $lt: topLat, $gt: bottomLat }
     };
-    
+
     return this.find( comp );
 };
 
