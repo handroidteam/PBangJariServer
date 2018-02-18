@@ -48,7 +48,7 @@ const getPCBangDetail = (req, res) => {
         });
 };
 
-// PC맵 업데이트
+// PC방 업데이트
 const postUpdatePCBang = (req, res) => {
     
     Pcbang.updatePCBang(req)

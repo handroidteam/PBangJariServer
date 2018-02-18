@@ -73,4 +73,28 @@ pcMapSchema.statics.createPCMap = function(req) {
     return newPCMap.save();
 };
 
+// PC맵 수정 함수
+pcMapSchema.statics.updatePCMap = function(req) {
+    const key = {
+        'pcBangId': req.params.pcBangId,
+    };
+
+    const updatedInfo = {
+        'pcMapTable': req.body.pcMapTable,
+        'pcInfo': req.body.pcInfo,
+    };
+
+    return this.update( key, { $set: updatedInfo } );
+};
+
+// PC IP 입력 함수
+pcMapSchema.statics.createPCIP = function(req) {
+    
+};
+
+// PC IP 수정 함수
+pcMapSchema.statics.updatePCIP = function(req) {
+
+};
+
 module.exports = mongoose.model('pcmap', pcMapSchema);
