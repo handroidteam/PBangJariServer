@@ -87,14 +87,17 @@ pcMapSchema.statics.updatePCMap = function(req) {
     return this.update( key, { $set: updatedInfo } );
 };
 
-// PC IP 입력 함수
-pcMapSchema.statics.createPCIP = function(req) {
-    
-};
-
-// PC IP 수정 함수
+// PC IP 입력(수정) 함수
 pcMapSchema.statics.updatePCIP = function(req) {
+    const key = {
+        'pcMapId': req.body.pcMapId,
+    };
 
+    const updatedInfo = {
+        'pcInfo': req.body.pcInfo,
+    };
+
+    return this.update( key, { $set: updatedInfo } );
 };
 
 module.exports = mongoose.model('pcmap', pcMapSchema);

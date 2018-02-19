@@ -48,7 +48,7 @@ function checkPCMapAndCallBack(req, res) {
                             pcBang: pcbang,
                             pcMaps: pcmaps,
                         });
-                })
+                    });
             }
         }).catch( (err) => {
             console.log(err);

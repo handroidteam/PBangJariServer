@@ -31,7 +31,6 @@ router.post('/pcMap/update/:pcBangId', pcMapAPI.postUpdatePCMap);
 router.delete('/pcMap/delete/:pcBangId', pcMapAPI.deletePCMap);
 
 // PC IP API
-router.post('/pcMap/create/:pcMapId', pcMapAPI.postCreatePCIP);
-router.post('/pcMap/update/:pcMapId', pcMapAPI.postUpdatePCIP);
+router.post('/pcIP/update/:pcMapId', pcMapAPI.postUpdatePCIP);
 
 module.exports = router;

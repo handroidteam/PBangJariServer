@@ -107,12 +107,15 @@ const deletePCMap = (req, res) => { // pcmap 삭제
     });
 };
 
-const postCreatePCIP = (req, res) => {
-    
-};
-
+// PC IP 입력(수정)
 const postUpdatePCIP = (req, res) => {
-
+    Pcmap.updatePCIP(req)
+        .then(
+            res.redirect('/ceo')
+        ).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 };
 
 
@@ -122,6 +125,5 @@ module.exports = {
     postCreatePCMap,
     postUpdatePCMap,
     deletePCMap,
-    postCreatePCIP,
     postUpdatePCIP,
 };
