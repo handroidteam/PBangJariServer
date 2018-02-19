@@ -27,7 +27,10 @@ router.post('/pcBang/getRange', pcBangAPI.getPCBangsInHere);
 router.get('/pcMap/status/:pcBangId', pcMapAPI.getPCStatus);
 router.get('/pcMap/getDetail/:pcBangId', pcMapAPI.getPCMapDetail);
 router.post('/pcMap/create/:pcBangId', pcMapAPI.postCreatePCMap);
-router.put('/pcMap/update/:pcBangId', pcMapAPI.putUpdatePCMap);
+router.post('/pcMap/update/:pcBangId', pcMapAPI.postUpdatePCMap);
 router.delete('/pcMap/delete/:pcBangId', pcMapAPI.deletePCMap);
+
+// PC IP API
+router.post('/pcIP/update/:pcMapId', pcMapAPI.postUpdatePCIP);
 
 module.exports = router;

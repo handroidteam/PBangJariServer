@@ -19,9 +19,9 @@ const pcBangSchema = new Schema(
             require: true
         },
         address: {                      // 우편번호, 도로명, 상세주소
-            postCode: String,
             roadAddress: String,
             detailAddress: String,
+            hidden: String,
         },
         location: {                     // 위도, 경도
             lat: Number,
@@ -112,7 +112,7 @@ const pcBangSchema = new Schema(
 
 ////////////////// 외부 사용 가능 함수 //////////////////
 // PC방 DB 전체 조회 함수
-pcBangSchema.statics.findAllPCBang = function(req, res) {
+pcBangSchema.statics.findAllPCBang = function() {
     const proj = {
         'pcBangName': 1,
         'tel': 1,
@@ -171,10 +171,23 @@ pcBangSchema.statics.findPCBangForm = function(req) {
         'pcBangName': 1,
         'tel': 1,
         'address': 1,
+        'location': 1,
         'adminIPAddress': 1,
         'pcSpec': 1,
         'pcBangImage': 1,
         'modifiedDate': 1
+    };
+
+    return this.find( key, proj );
+};
+
+// PC방 고유 ID로 PC방에 등록된 IP를 가져오는 함수
+pcBangSchema.statics.findPCBangIP = function(req) {
+    const key = {
+        '_id': req.params.pcBangId
+    };
+    const proj = {
+        'adminIPAddress': 1,
     };
 
     return this.find( key, proj );
@@ -186,6 +199,7 @@ pcBangSchema.statics.updatePCBang = function(req) {
         '_id': req.params.pcBangId,
     };
 
+    const now = new Date();
     const updatedInfo = {
         'licenseNumber': req.body.licenseNumber,
         'pcBangName': req.body.pcBangName,
@@ -196,12 +210,10 @@ pcBangSchema.statics.updatePCBang = function(req) {
         'pcSpec': req.body.pcSpec,
         'pcBangImage': req.body.pcBangImage,
         'modifiedBy': req.session.passport.user,
-        'modifiedDate': '',
+        'modifiedDate': now,
     };
 
     return this.update( key, { $set: updatedInfo } );
-    
-
 };
 
 // PC방 고유 ID로 PC방을 찾아 삭제하는 함수
@@ -222,7 +234,7 @@ pcBangSchema.statics.findPCBangsByLonLat = function(req) {
         'location.lon': { $lt: rightLon, $gt: leftLon },
         'location.lat': { $lt: topLat, $gt: bottomLat }
     };
-    
+
     return this.find( comp );
 };
 

@@ -35,7 +35,10 @@ const pcMapSchema = new Schema(     // PC방 자리배치 정보
                     type: Number
                 },
                 pcIP: {             // IP
-                    type: String
+                    First: Number,
+                    Second: Number,
+                    Third: Number,
+                    Fourth: Number,
                 },
                 availableFlag: {    // 사용 가능한 PC인지 확인
                     type: Number    // 0 -> 점검중, 1 -> On, 2 -> Off
@@ -68,6 +71,33 @@ pcMapSchema.statics.createPCMap = function(req) {
     });
 
     return newPCMap.save();
+};
+
+// PC맵 수정 함수
+pcMapSchema.statics.updatePCMap = function(req) {
+    const key = {
+        'pcBangId': req.params.pcBangId,
+    };
+
+    const updatedInfo = {
+        'pcMapTable': req.body.pcMapTable,
+        'pcInfo': req.body.pcInfo,
+    };
+
+    return this.update( key, { $set: updatedInfo } );
+};
+
+// PC IP 입력(수정) 함수
+pcMapSchema.statics.updatePCIP = function(req) {
+    const key = {
+        '_id': req.params.pcMapId,
+    };
+
+    const updatedInfo = {
+        'pcInfo': req.body.pcInfo,
+    };
+
+    return this.update( key, { $set: updatedInfo } );
 };
 
 module.exports = mongoose.model('pcmap', pcMapSchema);

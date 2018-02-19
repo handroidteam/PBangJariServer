@@ -1,7 +1,7 @@
-const PCmap         = require('../../models/pcmap');
+const Pcmap         = require('../../models/pcmap');
 
 const getPCStatus = (pcMapId, searchDate) => {
-    PCmap.findOne({ '_id': pcMapId }, (err, pcmap) => {
+    Pcmap.findOne({ '_id': pcMapId }, (err, pcmap) => {
         if(err) {
             // 에러 처리
             res.status(500).end();
@@ -29,7 +29,7 @@ const getPCStatus = (pcMapId, searchDate) => {
                         hosts[i] = pcStatus;
                         if (pcmap.pcIPArray.length == hosts.length) {
                             console.log(hosts);
-                            console.log(PCmap.pcIPArray);
+                            console.log(Pcmap.pcIPArray);
                             pcmap.update({
                                 $set: {
                                     'pcFlagArray': hosts,
@@ -39,7 +39,7 @@ const getPCStatus = (pcMapId, searchDate) => {
                                 if(err) {
                                     res.status(404).end();
                                 } else {
-                                    PCmap.findOne({
+                                    Pcmap.findOne({
                                         '_id': req.params.pcMapId
                                     }, (err, pcmap) => {
                                         res.status(200).json(pcmap);
@@ -57,7 +57,7 @@ const getPCStatus = (pcMapId, searchDate) => {
 // PC맵 조회
 const getPCMapDetail = (req, res) => { // pcmap 조회
     console.log('***** PCMap was requested by PCBangId => "' + req.params.pcBangId + '" *****');
-    PCmap.findPCMapsByPCBangId(req)
+    Pcmap.findPCMapsByPCBangId(req)
         .then((pcmaps) => {
             if(pcmaps.length === 0)
                 return res.status(404).json({
@@ -74,7 +74,7 @@ const getPCMapDetail = (req, res) => { // pcmap 조회
 // PC맵 생성
 const postCreatePCMap = (req, res) => {
     console.log('***** PCMap creating was requested by PCBangId => "' + req.params.pcBangId + '" *****');
-    PCmap.createPCMap(req)
+    Pcmap.createPCMap(req)
         .then(() => {
             res.redirect('/ceo');
         }).catch( (err) => {
@@ -83,34 +83,21 @@ const postCreatePCMap = (req, res) => {
         });
 };
 
-// PC맵 업데이트
-const putUpdatePCMap = (req, res) => { // pcmap 업데이트
-    var updateMap = {
-        'floor': req.body.floor,
-        'pcTableSize.horizontal': req.body.horizontal,
-        'pcTableSize.vertical': req.body.vertical,
-        'pcNumberArray':req.body.pcNumberArray,
-        'pcPlaceArray':req.body.pcPlaceArray,
-        'pcIPArray':req.body.pcIPArray,
-        'pcFlagArray':req.body.pcFlagArray
-    };
+// PC맵 수정
+const postUpdatePCMap = (req, res) => {
+    console.log(req.body.pcInfo);
 
-    PCmap.update({
-        '_id': req.params.pcMapId
-    }, {
-        $set: {
-            updateMap
-        }
-    }, (err) => {
-        if (err) res.status(404).end();
-        else res.status(200).json({
-            message: 'update sucess'
+    Pcmap.updatePCMap(req)
+        .then(
+            res.redirect('/ceo')
+        ).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
         });
-    });
 };
 
 const deletePCMap = (req, res) => { // pcmap 삭제
-    PCmap.remove({
+    Pcmap.remove({
         '_id': req.params.pcMapId
     }, (err) => {
         if (err) res.status(404).end();
@@ -120,10 +107,24 @@ const deletePCMap = (req, res) => { // pcmap 삭제
     });
 };
 
+// PC IP 입력(수정)
+const postUpdatePCIP = (req, res) => {
+
+    Pcmap.updatePCIP(req)
+        .then(
+            res.redirect('/ceo')
+        ).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
+        });
+};
+
+
 module.exports = {
     getPCStatus,
     getPCMapDetail,
     postCreatePCMap,
-    putUpdatePCMap,
-    deletePCMap
+    postUpdatePCMap,
+    deletePCMap,
+    postUpdatePCIP,
 };

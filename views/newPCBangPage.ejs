@@ -15,10 +15,16 @@
             margin: 0 5px 20px 5px;
             font-weight: bold;
         }
+
+        #map {
+            margin-top: 30px;
+            height: 400px;
+            background-color: grey;
+        }
     </style>
 </head>
 
-<body onload="saveProto()">
+<body>
     <header class="section no-pad-bot" id="index-banner">
         <br />
         <div class="container">
@@ -68,7 +74,11 @@
                             <div class="col s12 m4">
                                 <input placeholder="상세주소를 입력해주세요" id="detailAddress" name="address[detailAddress]" type="text" class="validate" required>
                             </div>
-                            <input id="postCode" type="hidden" name="address[postCode]" value="">
+                            <input id="hiddenAddress" type="hidden" name="address[hidden]" value="">
+                            <input id="locationLat" type="hidden" name="location[lat]" value="">
+                            <input id="locationLon" type="hidden" name="location[lon]" value="">
+
+                            <div id="map" class="col s12 m10 offset-m1 l8 offset-l2"></div>
                         </div>
                     </div>
                 </div>
@@ -125,9 +135,9 @@
             </div>
 
             <div class="row center" style="margin-bottom:50px">
-                <!-- <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">
+                <button id="regButton" class="btn-large waves-effect waves-light pulse" type="submit" name="action">
                     등록하기<i class="material-icons right">send</i>
-                </button> -->
+                </button>
                 <button id="updateButton" class="btn-large waves-effect waves-light pulse" style="display:none;">
                     수정하기<i class="material-icons right">send</i>
                 </button>
@@ -195,9 +205,6 @@
         let ipIcon = document.getElementById("ipIcon");
         let ipLength = ipList.children.length;
 
-        function saveProto() {
-        }
-
         function addIpSet() { // ipSet 추가
             if(ipLength <= 10) {
                 // 마이너스 버튼
@@ -236,17 +243,20 @@
     </script>
 
     <script>    // PC방 정보가 들어왔을 때 각 요소를 수정 폼으로 변경해주기
-        var pcBang = <%- JSON.stringify(pcBang) %>;
+        let pcBang = <%- JSON.stringify(pcBang) %>;
         if(pcBang) {
-            //document.getElementById("regButton").setAttribute("style", "display:none;");
+            document.getElementById("regButton").setAttribute("style", "display:none;");
             document.getElementById("updateButton").setAttribute("style", "");
 
-            document.getElementById("createForm").action = "api/pcBang/update/"+pcBang._id;
+            document.getElementById("createForm").action = "api/pcBang/update/" + pcBang._id;
             document.getElementById("licenseNumber").value = pcBang.licenseNumber;
             document.getElementById("pcBangName").value = pcBang.pcBangName;
             document.getElementById("tel").value = pcBang.tel;
             document.getElementById("roadAddress").value = pcBang.address.roadAddress;
             document.getElementById("detailAddress").value = pcBang.address.detailAddress;
+            document.getElementById("hiddenAddress").value = pcBang.address.hidden;
+            document.getElementById("locationLat").value = pcBang.location.lat;
+            document.getElementById("locationLon").value = pcBang.location.lon;
             document.getElementById("CPU").value = pcBang.pcSpec.CPU;
             document.getElementById("RAM").value = pcBang.pcSpec.RAM;
             document.getElementById("VGA").value = pcBang.pcSpec.VGA;
@@ -258,8 +268,6 @@
             }
 
             for(let i=0; i<pcBang.adminIPAddress.length; i++) {
-                
-
                 let ipList = document.getElementById("ipList");
                 ipList.children[i].getElementsByTagName("input")[0].value = Number(pcBang.adminIPAddress[i].ipFirst);
                 ipList.children[i].getElementsByTagName("input")[1].value = Number(pcBang.adminIPAddress[i].ipSecond);
@@ -268,6 +276,64 @@
             // document.getElementById("pcBangImage").value = pcBang.pcBangImage;
         }
         
+    </script>
+
+    <!-- Google Maps API -->
+    <script>
+        let geocoder;
+        let map = document.getElementById('map');
+        let uluru;
+
+        function initMap() {
+            geocoder = new google.maps.Geocoder();
+
+
+            if(pcBang) {
+                uluru = { lat: pcBang.location.lat, lng: pcBang.location.lon };
+            } else {
+                uluru = { lat: 37.581779, lng: 127.010364 };
+            }
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: uluru,
+                disableDefaultUI: true,
+                gestureHandling: 'none'
+            });
+            let marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+
+        function fillRoadAddress(selectedAddress) {
+            let roadAddress = document.getElementById("roadAddress");
+            let hiddenAddress = document.getElementById("hiddenAddress");
+            roadAddress.value = selectedAddress.children[0].innerHTML;
+            hiddenAddress.value = selectedAddress.children[2].innerHTML;
+            codeAddress(hiddenAddress.value);
+        }
+
+        function codeAddress(address) {
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                    let lat = document.getElementById("locationLat");
+                    let lon = document.getElementById("locationLon");
+                    lat.value = results[0].geometry.location.lat();
+                    lon.value = results[0].geometry.location.lng();
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbayvClu-2tIZSvkeY2OfId40gkZgRt_g&callback=initMap">
     </script>
 
 
@@ -285,7 +351,6 @@
         let totalPage;
 
         function getAddr() {
-            console.log("in getAddr(), requested page is : " + currentPage);
             $.ajax({
                 url: 'http://www.juso.go.kr/addrlink/addrLinkApiJsonp.do',
                 type: "post",
@@ -333,16 +398,12 @@
             }
             
             if(value === 1) {
-                console.log("currentPage is 1")
                 document.getElementById("left").setAttribute("class", "disabled");
                 document.getElementById("right").setAttribute("class", "waves-effect");
             } else if(value === totalPage) {
-                console.log("currentPage = totalPage");
                 document.getElementById("left").setAttribute("class", "waves-effect");
                 document.getElementById("right").setAttribute("class", "disabled");
             } else {
-                console.log("currentPage is somewhere");
-                console.log("currentPage is : " + value + ", totalPage is " + totalPage);
                 document.getElementById("left").setAttribute("class", "waves-effect");
                 document.getElementById("right").setAttribute("class", "waves-effect");
             };
@@ -360,9 +421,9 @@
             $(jsonStr.results.juso).each(function () {
                 htmlStr += "<tr onclick='fillRoadAddress(this)' class='modal-close'>";
                 htmlStr += "<td>" + this.roadAddr + "</td>";
-                // htmlStr += "<td>" + this.roadAddrPart1 + "</td>";
-                // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
                 htmlStr += "<td>" + this.jibunAddr + "</td>";
+                htmlStr += "<td style='display:none;'>" + this.roadAddrPart1 + "</td>";
+                // htmlStr += "<td>" + this.roadAddrPart2 + "</td>";
                 // htmlStr += "<td>" + this.engAddr + "</td>";
                 // htmlStr += "<td>" + this.zipNo + "</td>";
                 // htmlStr += "<td>" + this.admCd + "</td>";
@@ -372,10 +433,10 @@
                 /** API 서비스 제공항목 확대 (2017.02) **/
                 // htmlStr += "<td>" + this.bdNm + "</td>";
                 // htmlStr += "<td>" + this.bdKdcd + "</td>";
-                // // htmlStr += "<td>" + this.siNm + "</td>";
-                // // htmlStr += "<td>" + this.sggNm + "</td>";
-                // // htmlStr += "<td>" + this.emdNm + "</td>";
-                // // htmlStr += "<td>" + this.liNm + "</td>";
+                // htmlStr += "<td>" + this.siNm + "</td>";
+                // htmlStr += "<td>" + this.sggNm + "</td>";
+                // htmlStr += "<td>" + this.emdNm + "</td>";
+                // htmlStr += "<td>" + this.liNm + "</td>";
                 // htmlStr += "<td>" + this.rn + "</td>";
                 // htmlStr += "<td>" + this.udrtYn + "</td>";
                 // htmlStr += "<td>" + this.buldMnnm + "</td>";
@@ -392,9 +453,6 @@
             currentPage = Number(resultInfo.currentPage);
             totalCount = Number(resultInfo.totalCount);
             totalPage = Math.ceil(totalCount / 5);
-            console.log("************* result info *************")
-            console.log(resultInfo);
-            console.log("***************************************")
 
             if(totalCount > 5) {
                 var page = document.getElementById("page");
@@ -421,11 +479,6 @@
                 getAddr(); //jsonp사용시 enter검색 
             }
         };
-
-        function fillRoadAddress(selectedAddress) {
-            let roadAddress = document.getElementById("roadAddress");
-            roadAddress.value = selectedAddress.children[0].innerHTML;
-        }
     </script>
 
 </body>

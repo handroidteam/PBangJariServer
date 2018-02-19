@@ -24,13 +24,36 @@ function checkPCBangAndCallBack(req, res, next) {
         if(userInfo.ownPCBang.length === 0) {
             res.render('newPCBangPage', {
                 ceoId: userInfo._id,
-                pcBang: null
+                pcBang: null,
             });
         } else
             return next();
     } else {
         res.redirect('/');
     }
+}
+
+// 세션에 PCMap 정보 없으면 PCMap 등록페이지 표시
+function checkPCMapAndCallBack(req, res) {
+    req.params.pcBangId = req.user.ownPCBang[0];
+    Pcmap.findPCMapsByPCBangId(req)
+        .then((pcmaps) => {
+            if(pcmaps.length === 0)
+                res.redirect('/newPCMap');
+            else {
+                Pcbang.findPCBangIP(req)
+                    .then(pcbang => {
+                        res.render('ipSetPage', {
+                            ceoId: req.session.passport.user,
+                            pcBang: pcbang,
+                            pcMaps: pcmaps,
+                        });
+                    });
+            }
+        }).catch( (err) => {
+            console.log(err);
+            res.status(500).end();
+        });
 }
 
 // 로그인 한 사용자의 DB에 PCBang 정보가 있으면, PCBang 페이지에 정보 로딩
@@ -61,8 +84,8 @@ function checkPCMapAndAutoComplete(req, res, next) {
             else
                 return res.render('newPCMapPage', {
                     ceoId: req.session.passport.user,
-                    pcBang: req.user.ownPCBang[0],
-                    pcMaps: pcmaps
+                    pcBangId: req.user.ownPCBang[0],
+                    pcMaps: pcmaps,
                 });
         }).catch( (err) => {
             console.log(err);
@@ -117,20 +140,16 @@ router.get('/newPCBang', checkPCBangAndCallBack, checkPCBangAndAutoComplete, fun
     });
 });
 
-router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, function(req, res, pcmaps) {
-    console.log(pcmaps);
+router.get('/newPCMap', checkPCBangAndCallBack, checkPCMapAndAutoComplete, function(req, res) {
     res.render('newPCMapPage', {
         ceoId: req.session.passport.user,
-        pcBangId: req.user.ownPCBang[0]
+        pcBangId: req.user.ownPCBang[0],
+        pcMaps: null,
     });
 });
 
-router.get('/doro', function(req, res) {
-    res.render('doroTestPage');
-});
-
-router.get('/ipSet', function(req, res) {
-    res.render('ipSetPage');
+router.get('/ipSet', checkPCBangAndCallBack, checkPCMapAndCallBack, function(req, res) {
+    res.redirect('/');
 });
 
 module.exports = router;
