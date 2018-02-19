@@ -90,7 +90,7 @@ pcMapSchema.statics.updatePCMap = function(req) {
 // PC IP 입력(수정) 함수
 pcMapSchema.statics.updatePCIP = function(req) {
     const key = {
-        'pcMapId': req.body.pcMapId,
+        '_id': req.params.pcMapId,
     };
 
     const updatedInfo = {
