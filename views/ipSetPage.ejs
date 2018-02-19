@@ -97,7 +97,7 @@
         var pcMaps = <%- JSON.stringify(pcMaps) %>
         var pcBang = <%- JSON.stringify(pcBang) %>
         console.log(pcMaps);
-        var testLength = pcMaps[0].pcInfo.length; // 선택한 pc좌석 length 샘플
+        var testLength = pcMaps[0].pcInfo.length; // 선택한 pc좌석 length
         var testIp = pcBang[0].adminIPAddress;
 
 
@@ -210,9 +210,25 @@
         }
         function ipSend(){ // ip정보 전송버튼
             for (var i = 0; i < testLength; i++) {
-                console.log(ipList.children[i].children[2].value+'.'+ipList.children[i].children[4].value+'.'+ipList.children[i].children[6].value+'.'+ipList.children[i].children[8].value);
+                // console.log(ipList.children[i].children[2].value+'.'+ipList.children[i].children[4].value+'.'+ipList.children[i].children[6].value+'.'+ipList.children[i].children[8].value);
+                pcMaps[0].pcInfo[i].pcIP ={First: Number(ipList.children[i].children[2].value), Second: Number(ipList.children[i].children[4].value), Third:Number(ipList.children[i].children[6].value),
+                Fourth:Number(ipList.children[i].children[8].value)};
             }
-            document.getElementById("ipForm").submit();
+            insert_action();
+            console.log('완료');
+            // document.getElementById("ipForm").submit();
+        }
+        function insert_action(){
+            // var mForm = document.insert; // form의 값을 가져오기 위함
+
+            var json_data = JSON.stringify(pcMaps[0].pcInfo); // form의 값을 넣은 오브젝트를 JSON형식으로 변환
+
+            var request = $.ajax({
+                url:"http://13.124.1.90:3000/api/pcIP/update/"+pcMaps[0]._id,
+                type:"POST",
+                data:json_data, // {“user_id”:”입력값”, “user_password”:”입력값”} 형식으로 전달 됨
+                dataType:"json"
+            });
         }
     </script>
 </body>
