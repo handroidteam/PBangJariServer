@@ -24,7 +24,7 @@ router.delete('/pcBang/delete/:pcBangId', pcBangAPI.deletePCBang);
 router.post('/pcBang/getRange', pcBangAPI.getPCBangsInHere);
 
 // PCMap API
-router.get('/pcMap/status/:pcBangId', pcMapAPI.getPCStatus);
+router.get('/pcMap/getStatus/:pcBangId', pcMapAPI.getPCStatus);
 router.get('/pcMap/getDetail/:pcBangId', pcMapAPI.getPCMapDetail);
 router.post('/pcMap/create/:pcBangId', pcMapAPI.postCreatePCMap);
 router.post('/pcMap/update/:pcBangId', pcMapAPI.postUpdatePCMap);
