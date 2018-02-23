@@ -130,9 +130,14 @@
                 pcInfoPlace.setAttribute("type", "hidden");
                 pcInfoPlace.setAttribute("name", "pcInfo["+i+"][pcPlace]");
                 pcInfoPlace.setAttribute("value", Number(pcNum[i].getAttribute("value")));
+                let pcInfoFlag = document.createElement("input");
+                pcInfoFlag.setAttribute("type", "hidden");
+                pcInfoFlag.setAttribute("name", "pcInfo["+i+"][availableFlag]");
+                pcInfoFlag.setAttribute("value", 0);
                 pcInfo.appendChild(pcInfoSector);
                 pcInfo.appendChild(pcInfoNumber);
                 pcInfo.appendChild(pcInfoPlace);
+                pcInfo.appendChild(pcInfoFlag);
             }
             document.getElementById("pcMapForm").submit();
         }
@@ -458,6 +463,12 @@
             createPcMap(Row, Col); // page 열면 테이블 출력
             MapDiv.appendChild(PcTable);
         }
+        /* 2018.02.23 업데이트 내용
+        pcMapSend()로 데이터 보낼때 좌석마다 availableFlag 속성 0으로 추가
+        ※ 해야할 것
+        sector구분해서 저장하기
+        수정할 경우 동작이 바뀌도록 등록모드/수정모드 토글형식으로 만들기
+        */
     </script>
 
 

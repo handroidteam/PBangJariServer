@@ -47,15 +47,15 @@
 
                 <div class="row">
                     <div class="input-field col s12 m4">
-                        <input placeholder="숫자 10자리를 입력하세요." name="licenseNumber" id="licenseNumber" type="text" class="validate" onkeydown="onKeyDown()" required>
+                        <input placeholder="숫자 10자리를 입력하세요." name="licenseNumber" maxlength="12" id="licenseNumber" type="text" class="validate" onkeydown="licenseKeyDown(this)" required>
                         <label for="licenseNumber">사업자등록번호</label>
                     </div>
                     <div class="input-field col s12 m4">
-                        <input placeholder="PC방 이름을 입력하세요." name="pcBangName" id="pcBangName" type="text" class="validate" required>
+                        <input placeholder="PC방 이름을 입력하세요." maxlength="15" name="pcBangName" id="pcBangName" type="text" class="validate" onkeydown="nameKeyDown(this)" required>
                         <label for="pcBangName">PC방 이름</label>
                     </div>
                     <div class="input-field col s12 m4">
-                        <input placeholder="01012345678" name="tel" id="tel" type="text" class="validate" onkeydown="onKeyDown()" required>
+                        <input placeholder="01012345678" maxlength="11" name="tel" id="tel" type="text" class="validate" onkeydown="onKeyDown()" required>
                         <label for="tel">PC방 전화번호</label>
                     </div>
                     <div class="input-field col s12 m12">
@@ -198,6 +198,57 @@
                 }
             }
         }
+        function licenseKeyDown(child) { // 숫자, 백스페이스, 탭키만 입력받게함
+            if (event.keyCode < 48 || (event.keyCode > 57 && event.keyCode < 96) || event.keyCode > 105) {
+                if (event.keyCode == 8 || event.keyCode == 46 || event.keyCode == 9 || (event.keyCode <= 40 && event.keyCode >= 37)) {
+
+                }
+                else {
+                    event.preventDefault(); // 입력안되게 함
+                }
+            }
+            else{
+                if (child.value.length==12) { // 10자리 다 입력하면 다음 탭으로
+                    // child.parentElement.parentElement.children[1].children[0].focus();
+                    event.preventDefault(); // 입력안되게 함
+                }
+                else if(child.value.length==2 || child.value.length==5){
+                    if (event.keyCode>95) {
+                        child.value+=(event.keyCode-96)+'-';
+                    }
+                    else {
+                        child.value+=(event.keyCode-48)+'-';
+                    }
+                    event.preventDefault(); // 입력안되게 함
+                } 
+            }
+        }
+        function nameKeyDown(child) { // 주소 키다운함수
+            let str = child.value;
+            let rbyte = 0;
+            let one_char = '';
+            for (var i = 0; i < str.length; i++) {
+                one_char = str.charAt(i);
+        
+                if (escape(one_char).length > 4) {
+                    rbyte += 2; //한글2Byte
+                }
+                else {
+                    rbyte++; //영문 등 나머지 1Byte
+                }
+            }
+            if (rbyte>=20) { // 20자리 이상 입력하면            
+                if(event.keyCode == 8 || event.keyCode == 46 || event.keyCode == 9 || (event.keyCode <= 40 && event.keyCode >= 37)){
+                    
+                }
+                else{
+                    console.log(rbyte);
+                    window.event.returnValue = false;
+                    event.preventDefault(); // 입력안되게 함
+                }
+            }
+        }
+        
 
         let ipList = document.getElementById("ipList");
         let ipSet = document.getElementById("ipSet");
@@ -479,6 +530,14 @@
                 getAddr(); //jsonp사용시 enter검색 
             }
         };
+        /* 2018.02.23 업데이트 내용
+        input창 maxlength 부여 -> key관련 함수 수정 필요
+        사업자번호 3-2-5숫자별 -표시 기능 추가
+        ※ 해야할 것
+         - key관련 함수 수정
+         - input창에 문자가 입력되고 있으니 빨리 수정해야함
+         - 사업자번호 내용 지울 때 -표시 고려해서 자동으로 지워지게 해야함
+        */
     </script>
 
 </body>

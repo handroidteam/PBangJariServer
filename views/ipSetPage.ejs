@@ -39,7 +39,7 @@
     </header>
 
     <div class="container">
-        <form id="ipForm" name='insert' method="post" enctype="application/json">
+        <form id="ipForm" name='insert' method="post" onsubmit="return false;" enctype="application/json">
             <div class="divider"></div>
             <div class="section">
                 <div class="row text-darken-1" style="margin:0 1rem 0 0">
@@ -69,13 +69,13 @@
                                 <label for="ipCheck"></label>
                             </span>
                             <span id="ipNum" style="width:30px; height:2rem; margin-top:10px;"></span>
-                            <input class="center" name="pcIP[First]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
+                            <input class="center validate" name="pcIP[First]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFirst" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="pcIP[Second]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
+                            <input class="center validate" name="pcIP[Second]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipSecond" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="pcIP[Third]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipThird" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
+                            <input class="center validate" name="pcIP[Third]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipThird" type="text" class="validate" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" required>
                             <span class="ipDot" style="margin-bottom:2px;">.</span>
-                            <input class="center" name="pcIP[Fourth]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFourth" type="text" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" class="validate" required>
+                            <input class="center validate" name="pcIP[Fourth]" style="width:30px; height:2rem; margin-bottom:2px;" id="ipFourth" type="text" onkeydown="onKeyDown(this)" onkeyup = "onKeyUp(this)" class="validate" required>
                             <br/>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
             </div>
 
             <div class="row center" style="margin-bottom:50px">
-                <button class="btn-large waves-effect waves-light pulse" type="button" onclick="insert_action()">
+                <button class="btn-large waves-effect waves-light pulse" type="submit" onclick="ipSend()">
                     등록완료<i class="material-icons right">send</i>
                 </button>
             </div>
@@ -96,7 +96,6 @@
     <script>
         var pcMaps = <%- JSON.stringify(pcMaps) %>
         var pcBang = <%- JSON.stringify(pcBang) %>
-        console.log(pcMaps);
         var testLength = pcMaps[0].pcInfo.length; // 선택한 pc좌석 length
         var testIp = pcBang[0].adminIPAddress;
 
@@ -126,10 +125,21 @@
                 addDiv.children[0].children[0].setAttribute('id', 'ipCheck'+i);
                 addDiv.children[0].children[1].setAttribute('for', 'ipCheck'+i);
                 addDiv.children[1].innerHTML = (i+1)+'.&nbsp;&nbsp;';
-                addDiv.children[2].setAttribute('value', '');
-                addDiv.children[4].setAttribute('value', '');
-                addDiv.children[6].setAttribute('value', '');
-                addDiv.children[8].setAttribute('value', '');
+                if(pcMaps[0].pcInfo[i].pcIP.Fourth){
+                    addDiv.children[2].setAttribute('value', pcMaps[0].pcInfo[i].pcIP.First);
+                    addDiv.children[4].setAttribute('value', pcMaps[0].pcInfo[i].pcIP.Second);
+                    addDiv.children[6].setAttribute('value', pcMaps[0].pcInfo[i].pcIP.Third);
+                    addDiv.children[8].setAttribute('value', pcMaps[0].pcInfo[i].pcIP.Fourth);    
+                    console.log("데이터있음");
+                }
+                else{
+                    addDiv.children[2].setAttribute('value', testIp[0].ipFirst);
+                    addDiv.children[4].setAttribute('value', testIp[0].ipSecond);
+                    addDiv.children[6].setAttribute('value', testIp[0].ipThird);
+                    addDiv.children[8].setAttribute('value', i+1);
+                    console.log("데이터없음");
+                }
+                
                 ipList.appendChild(addDiv);
             }
             ipList.removeChild(ipList.children[0]); // 기존 틀은 삭제
@@ -208,26 +218,26 @@
                 }
             }
         }
-        function ipSend(){ // ip정보 전송버튼
+        function ipSend(){
             for (var i = 0; i < testLength; i++) {
-                // console.log(ipList.children[i].children[2].value+'.'+ipList.children[i].children[4].value+'.'+ipList.children[i].children[6].value+'.'+ipList.children[i].children[8].value);
-                pcMaps[0].pcInfo[i].pcIP ={First: Number(ipList.children[i].children[2].value), Second: Number(ipList.children[i].children[4].value), Third:Number(ipList.children[i].children[6].value),
-                Fourth:Number(ipList.children[i].children[8].value)};
-            }
-            // document.getElementById("ipForm").submit();
-        }
-        function insert_action(){
-            // var mForm = document.insert; // form의 값을 가져오기 위함
-            for (var i = 0; i < testLength; i++) {
-                // console.log(ipList.children[i].children[2].value+'.'+ipList.children[i].children[4].value+'.'+ipList.children[i].children[6].value+'.'+ipList.children[i].children[8].value);
-                pcMaps[0].pcInfo[i].pcIP ={First: Number(ipList.children[i].children[2].value), Second: Number(ipList.children[i].children[4].value), Third:Number(ipList.children[i].children[6].value),
-                Fourth:Number(ipList.children[i].children[8].value)};
+                if(ipList.children[i].children[8].value){
+                    pcMaps[0].pcInfo[i].pcIP ={
+                        First: Number(ipList.children[i].children[2].value),
+                        Second: Number(ipList.children[i].children[4].value),
+                        Third:Number(ipList.children[i].children[6].value),
+                        Fourth:Number(ipList.children[i].children[8].value)};
+                }
+                
+                else{
+                    return false;
+                }
             }
             var obj = new Object();
             obj.pcInfo = pcMaps[0].pcInfo;
             var json_data = obj; // form의 값을 넣은 오브젝트를 JSON형식으로 변환
             var request = $.ajax({
                 url:"http://13.124.1.90:3000/api/pcIP/update/"+pcMaps[0]._id,
+                //url:"http://localhost:3000/api/pcIP/update/"+pcMaps[0]._id,
                 type:"POST",
                 data:json_data, // {“user_id”:”입력값”, “user_password”:”입력값”} 형식으로 전달 됨
                 dataType:"json"
@@ -235,6 +245,17 @@
 
             console.log('완료');
         }
+        /* 2018.02.23 업데이트 내용
+        ipSand() : ip전송하는 버튼 속성 변경(type : submit, class : validate)
+        getMapData() : 저장된 ip 있다면 불러오고, 아니면 1부터 초기화시켜서 입력해줌
+        불필요 버튼 삭제 : insert_action() 내용이 ipSand()로 옮겨가고 삭제
+        불필요 주석 삭제
+        ipSand()버튼 마지막 부분 url 테스트를 위해 주석처리 해놓음
+        ※ 해야할 것
+         - input창에 문자가 입력되고 있으니 빨리 수정해야함
+         - pc방 자리가 많아서 ip입력란을 한 page에 보기 힘듬 : 탭이나 다중 page 활용할 것
+        */
+
     </script>
 </body>
 
